@@ -8,8 +8,23 @@ import swaggerUI from "@fastify/swagger-ui";
 
 import { prisma } from "@platform/database";
 
+import { Queue } from "bullmq";
+
 const app = Fastify({
   logger: true,
+});
+
+const redisUrl = new URL(
+  process.env.REDIS_URL ?? "redis://localhost:6380"
+);
+
+const jobQueue = new Queue("platform-jobs", {
+  connection: {
+    host: redisUrl.hostname,
+    port: Number(redisUrl.port || 6379),
+    username: redisUrl.username || undefined,
+    password: redisUrl.password || undefined,
+  },
 });
 
 await app.register(cors, {
@@ -59,6 +74,27 @@ app.get("/api/v1/health", async (_request, reply) => {
   }
 });
 
+app.post("/api/v1/jobs/health-check", async (_request, reply) => {
+  try {
+    const job = await jobQueue.add("health-check", {
+      requestedAt: new Date().toISOString(),
+    });
+
+    return reply.code(202).send({
+      status: "queued",
+      jobId: job.id,
+      queue: "platform-jobs",
+    });
+  } catch (error) {
+    app.log.error(error, "Failed to enqueue health-check job");
+
+    return reply.code(503).send({
+      status: "error",
+      message: "Could not enqueue job",
+    });
+  }
+});
+
 const start = async () => {
   try {
     const port = Number(process.env.API_PORT ?? 3001);
@@ -73,6 +109,7 @@ const start = async () => {
 
 const shutdown = async () => {
   await app.close();
+  await jobQueue.close();
   await prisma.$disconnect();
   process.exit(0);
 };
