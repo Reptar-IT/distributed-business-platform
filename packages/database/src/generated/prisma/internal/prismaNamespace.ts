@@ -397,7 +397,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-
+  PlatformUser: 'PlatformUser',
+  Venture: 'Venture'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,10 +414,159 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: never
+    modelProps: "platformUser" | "venture"
     txIsolationLevel: TransactionIsolationLevel
   }
-  model: {}
+  model: {
+    PlatformUser: {
+      payload: Prisma.$PlatformUserPayload<ExtArgs>
+      fields: Prisma.PlatformUserFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformUserFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformUserFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformUserFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformUserFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformUserFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformUserCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformUserCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformUserCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformUserDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>
+        }
+        update: {
+          args: Prisma.PlatformUserUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformUserDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformUserUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformUserUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformUserUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformUserPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformUserAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformUser>
+        }
+        groupBy: {
+          args: Prisma.PlatformUserGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformUserGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformUserCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformUserCountAggregateOutputType> | number
+        }
+      }
+    }
+    Venture: {
+      payload: Prisma.$VenturePayload<ExtArgs>
+      fields: Prisma.VentureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VentureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VentureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>
+        }
+        findFirst: {
+          args: Prisma.VentureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VentureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>
+        }
+        findMany: {
+          args: Prisma.VentureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>[]
+        }
+        create: {
+          args: Prisma.VentureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>
+        }
+        createMany: {
+          args: Prisma.VentureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VentureCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>[]
+        }
+        delete: {
+          args: Prisma.VentureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>
+        }
+        update: {
+          args: Prisma.VentureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>
+        }
+        deleteMany: {
+          args: Prisma.VentureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VentureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VentureUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>[]
+        }
+        upsert: {
+          args: Prisma.VentureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VenturePayload>
+        }
+        aggregate: {
+          args: Prisma.VentureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVenture>
+        }
+        groupBy: {
+          args: Prisma.VentureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VentureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VentureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VentureCountAggregateOutputType> | number
+        }
+      }
+    }
+  }
 } & {
   other: {
     payload: any
@@ -455,7 +605,128 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const PlatformUserScalarFieldEnum = {
+  id: 'id',
+  displayName: 'displayName',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
 
+export type PlatformUserScalarFieldEnum = (typeof PlatformUserScalarFieldEnum)[keyof typeof PlatformUserScalarFieldEnum]
+
+
+export const VentureScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VentureScalarFieldEnum = (typeof VentureScalarFieldEnum)[keyof typeof VentureScalarFieldEnum]
+
+
+export const SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+} as const
+
+export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+
+/**
+ * Field references
+ */
+
+
+/**
+ * Reference to a field of type 'String'
+ */
+export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+/**
+ * Reference to a field of type 'String[]'
+ */
+export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserStatus'
+ */
+export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'UserStatus[]'
+ */
+export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'VentureStatus'
+ */
+export type EnumVentureStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VentureStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'VentureStatus[]'
+ */
+export type ListEnumVentureStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VentureStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
 
 /**
  * Batch Payload for updateMany & deleteMany & createMany
@@ -607,7 +878,10 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
  * Learn more about driver adapters: https://pris.ly/d/driver-adapters
  */
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
-export type GlobalOmitConfig = {}
+export type GlobalOmitConfig = {
+  platformUser?: Prisma.PlatformUserOmit
+  venture?: Prisma.VentureOmit
+}
 
 /* Types for Logging */
 export type LogLevel = 'info' | 'query' | 'warn' | 'error'

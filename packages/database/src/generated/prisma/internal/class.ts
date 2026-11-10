@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.10.1",
   "engineVersion": "d1b3f377ca835d73fd50954a5e22128b9ebdd6b8",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum UserStatus {\n  ACTIVE\n  SUSPENDED\n  DEACTIVATED\n}\n\nenum VentureStatus {\n  DRAFT\n  UNDER_REVIEW\n  ACTIVE\n  PAUSED\n  ARCHIVED\n}\n\nmodel PlatformUser {\n  id          String     @id @default(uuid()) @db.Uuid\n  displayName String\n  status      UserStatus @default(ACTIVE)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map(\"platform_users\")\n}\n\nmodel Venture {\n  id          String        @id @default(uuid()) @db.Uuid\n  name        String\n  slug        String        @unique\n  description String?\n  status      VentureStatus @default(DRAFT)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map(\"ventures\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -32,10 +32,10 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"PlatformUser\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"displayName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"UserStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"platform_users\",\"schema\":null},\"Venture\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"VentureStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"ventures\",\"schema\":null}},\"enums\":{},\"types\":{}}")
 config.parameterizationSchema = {
-  strings: JSON.parse("[]"),
-  graph: "AAAA"
+  strings: JSON.parse("[\"where\",\"PlatformUser.findUnique\",\"PlatformUser.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"PlatformUser.findFirst\",\"PlatformUser.findFirstOrThrow\",\"PlatformUser.findMany\",\"data\",\"PlatformUser.createOne\",\"PlatformUser.createMany\",\"PlatformUser.createManyAndReturn\",\"PlatformUser.updateOne\",\"PlatformUser.updateMany\",\"PlatformUser.updateManyAndReturn\",\"create\",\"update\",\"PlatformUser.upsertOne\",\"PlatformUser.deleteOne\",\"PlatformUser.deleteMany\",\"having\",\"_count\",\"_min\",\"_max\",\"PlatformUser.groupBy\",\"PlatformUser.aggregate\",\"Venture.findUnique\",\"Venture.findUniqueOrThrow\",\"Venture.findFirst\",\"Venture.findFirstOrThrow\",\"Venture.findMany\",\"Venture.createOne\",\"Venture.createMany\",\"Venture.createManyAndReturn\",\"Venture.updateOne\",\"Venture.updateMany\",\"Venture.updateManyAndReturn\",\"Venture.upsertOne\",\"Venture.deleteOne\",\"Venture.deleteMany\",\"Venture.groupBy\",\"Venture.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"name\",\"slug\",\"description\",\"VentureStatus\",\"status\",\"createdAt\",\"updatedAt\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"contains\",\"startsWith\",\"endsWith\",\"displayName\",\"UserStatus\",\"set\"]"),
+  graph: "XBEgCCoAAE8AMCsAAAQAECwAAE8AMC0BAAAAATIAAFBCIjNAAEkAITRAAEkAIUABAEYAIQEAAAABACABAAAAAQAgCCoAAE8AMCsAAAQAECwAAE8AMC0BAEUAITIAAFBCIjNAAEkAITRAAEkAIUABAEYAIQADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAFLQEAAAABMgAAAEICM0AAAAABNEAAAAABQAEAAAABAQgAAAkAIAUtAQAAAAEyAAAAQgIzQAAAAAE0QAAAAAFAAQAAAAEBCAAACwAwAQgAAAsAMAUtAQBVACEyAABcQiIzQABYACE0QABYACFAAQBVACECAAAAAQAgCAAADgAgBS0BAFUAITIAAFxCIjNAAFgAITRAAFgAIUABAFUAIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgAxUAAFkAIBYAAFsAIBcAAFoAIAgqAABLADArAAAXABAsAABLADAtAQA0ACEyAABMQiIzQAA4ACE0QAA4ACFAAQA1ACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAoqAABEADArAAAdABAsAABEADAtAQAAAAEuAQBGACEvAQAAAAEwAQBHACEyAABIMiIzQABJACE0QABJACEBAAAAGgAgAQAAABoAIAoqAABEADArAAAdABAsAABEADAtAQBFACEuAQBGACEvAQBGACEwAQBHACEyAABIMiIzQABJACE0QABJACEBMAAAUQAgAwAAAB0AIAMAAB4AMAQAABoAIAMAAAAdACADAAAeADAEAAAaACADAAAAHQAgAwAAHgAwBAAAGgAgBy0BAAAAAS4BAAAAAS8BAAAAATABAAAAATIAAAAyAjNAAAAAATRAAAAAAQEIAAAiACAHLQEAAAABLgEAAAABLwEAAAABMAEAAAABMgAAADICM0AAAAABNEAAAAABAQgAACQAMAEIAAAkADAHLQEAVQAhLgEAVQAhLwEAVQAhMAEAVgAhMgAAVzIiM0AAWAAhNEAAWAAhAgAAABoAIAgAACcAIActAQBVACEuAQBVACEvAQBVACEwAQBWACEyAABXMiIzQABYACE0QABYACECAAAAHQAgCAAAKQAgAgAAAB0AIAgAACkAIAMAAAAaACAPAAAiACAQAAAnACABAAAAGgAgAQAAAB0AIAQVAABSACAWAABUACAXAABTACAwAABRACAKKgAAMwAwKwAAMAAQLAAAMwAwLQEANAAhLgEANQAhLwEANQAhMAEANgAhMgAANzIiM0AAOAAhNEAAOAAhAwAAAB0AIAMAAC8AMBQAADAAIAMAAAAdACADAAAeADAEAAAaACAKKgAAMwAwKwAAMAAQLAAAMwAwLQEANAAhLgEANQAhLwEANQAhMAEANgAhMgAANzIiM0AAOAAhNEAAOAAhCxUAADoAIBYAAEIAIBcAAEIAIDUBAAAAATYBAAAABDcBAAAABDgBAAAAATkBAAAAAToBAAAAATsBAAAAATwBAEMAIQ4VAAA6ACAWAABCACAXAABCACA1AQAAAAE2AQAAAAQ3AQAAAAQ4AQAAAAE5AQAAAAE6AQAAAAE7AQAAAAE8AQBBACE9AQAAAAE-AQAAAAE_AQAAAAEOFQAAPwAgFgAAQAAgFwAAQAAgNQEAAAABNgEAAAAFNwEAAAAFOAEAAAABOQEAAAABOgEAAAABOwEAAAABPAEAPgAhPQEAAAABPgEAAAABPwEAAAABBxUAADoAIBYAAD0AIBcAAD0AIDUAAAAyAjYAAAAyCDcAAAAyCDwAADwyIgsVAAA6ACAWAAA7ACAXAAA7ACA1QAAAAAE2QAAAAAQ3QAAAAAQ4QAAAAAE5QAAAAAE6QAAAAAE7QAAAAAE8QAA5ACELFQAAOgAgFgAAOwAgFwAAOwAgNUAAAAABNkAAAAAEN0AAAAAEOEAAAAABOUAAAAABOkAAAAABO0AAAAABPEAAOQAhCDUCAAAAATYCAAAABDcCAAAABDgCAAAAATkCAAAAAToCAAAAATsCAAAAATwCADoAIQg1QAAAAAE2QAAAAAQ3QAAAAAQ4QAAAAAE5QAAAAAE6QAAAAAE7QAAAAAE8QAA7ACEHFQAAOgAgFgAAPQAgFwAAPQAgNQAAADICNgAAADIINwAAADIIPAAAPDIiBDUAAAAyAjYAAAAyCDcAAAAyCDwAAD0yIg4VAAA_ACAWAABAACAXAABAACA1AQAAAAE2AQAAAAU3AQAAAAU4AQAAAAE5AQAAAAE6AQAAAAE7AQAAAAE8AQA-ACE9AQAAAAE-AQAAAAE_AQAAAAEINQIAAAABNgIAAAAFNwIAAAAFOAIAAAABOQIAAAABOgIAAAABOwIAAAABPAIAPwAhCzUBAAAAATYBAAAABTcBAAAABTgBAAAAATkBAAAAAToBAAAAATsBAAAAATwBAEAAIT0BAAAAAT4BAAAAAT8BAAAAAQ4VAAA6ACAWAABCACAXAABCACA1AQAAAAE2AQAAAAQ3AQAAAAQ4AQAAAAE5AQAAAAE6AQAAAAE7AQAAAAE8AQBBACE9AQAAAAE-AQAAAAE_AQAAAAELNQEAAAABNgEAAAAENwEAAAAEOAEAAAABOQEAAAABOgEAAAABOwEAAAABPAEAQgAhPQEAAAABPgEAAAABPwEAAAABCxUAADoAIBYAAEIAIBcAAEIAIDUBAAAAATYBAAAABDcBAAAABDgBAAAAATkBAAAAAToBAAAAATsBAAAAATwBAEMAIQoqAABEADArAAAdABAsAABEADAtAQBFACEuAQBGACEvAQBGACEwAQBHACEyAABIMiIzQABJACE0QABJACEINQEAAAABNgEAAAAENwEAAAAEOAEAAAABOQEAAAABOgEAAAABOwEAAAABPAEASgAhCzUBAAAAATYBAAAABDcBAAAABDgBAAAAATkBAAAAAToBAAAAATsBAAAAATwBAEIAIT0BAAAAAT4BAAAAAT8BAAAAAQs1AQAAAAE2AQAAAAU3AQAAAAU4AQAAAAE5AQAAAAE6AQAAAAE7AQAAAAE8AQBAACE9AQAAAAE-AQAAAAE_AQAAAAEENQAAADICNgAAADIINwAAADIIPAAAPTIiCDVAAAAAATZAAAAABDdAAAAABDhAAAAAATlAAAAAATpAAAAAATtAAAAAATxAADsAIQg1AQAAAAE2AQAAAAQ3AQAAAAQ4AQAAAAE5AQAAAAE6AQAAAAE7AQAAAAE8AQBKACEIKgAASwAwKwAAFwAQLAAASwAwLQEANAAhMgAATEIiM0AAOAAhNEAAOAAhQAEANQAhBxUAADoAIBYAAE4AIBcAAE4AIDUAAABCAjYAAABCCDcAAABCCDwAAE1CIgcVAAA6ACAWAABOACAXAABOACA1AAAAQgI2AAAAQgg3AAAAQgg8AABNQiIENQAAAEICNgAAAEIINwAAAEIIPAAATkIiCCoAAE8AMCsAAAQAECwAAE8AMC0BAEUAITIAAFBCIjNAAEkAITRAAEkAIUABAEYAIQQ1AAAAQgI2AAAAQgg3AAAAQgg8AABOQiIAAAAAAUIBAAAAAQFCAQAAAAEBQgAAADICAUJAAAAAAQAAAAFCAAAAQgIAAAAAAxUABhYABxcACAAAAAMVAAYWAAcXAAgAAAADFQAOFgAPFwAQAAAAAxUADhYADxcAEAECAQIDAQUGAQYHAQcIAQkKAQoMAgsNAwwPAQ0RAg4SBBETARIUARMVAhgYBRkZCRobChscChwfCh0gCh4hCh8jCiAlAiEmCyIoCiMqAiQrDCUsCiYtCicuAigxDSkyEQ"
 }
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
@@ -70,8 +70,8 @@ export interface PrismaClientConstructor {
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more PlatformUsers
+   * const platformUsers = await prisma.platformUser.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -94,8 +94,8 @@ export interface PrismaClientConstructor {
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more PlatformUsers
+ * const platformUsers = await prisma.platformUser.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -188,7 +188,25 @@ export interface PrismaClient<
     extArgs: ExtArgs
   }>>
 
-    
+      /**
+   * `prisma.platformUser`: Exposes CRUD operations for the **PlatformUser** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PlatformUsers
+    * const platformUsers = await prisma.platformUser.findMany()
+    * ```
+    */
+  get platformUser(): Prisma.PlatformUserDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.venture`: Exposes CRUD operations for the **Venture** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Ventures
+    * const ventures = await prisma.venture.findMany()
+    * ```
+    */
+  get venture(): Prisma.VentureDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {
