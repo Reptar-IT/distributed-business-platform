@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -26,10 +27,33 @@ model PlatformUser {
   displayName String
   status      UserStatus @default(ACTIVE)
 
+  identities  UserIdentity[]
+
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
   @@map("platform_users")
+}
+
+model UserIdentity {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @db.Uuid
+
+  issuer        String
+  subject       String
+
+  email         String?
+  emailVerified Boolean  @default(false)
+
+  user          PlatformUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([issuer, subject])
+  @@index([userId])
+
+  @@map("user_identities")
 }
 
 model Venture {
