@@ -1,0 +1,116 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #17212b;
+  background: #f5f7f9;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.header,
+.brand,
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  justify-content: flex-start;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.version,
+footer {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.hero {
+  padding: 110px 0 75px;
+  max-width: 760px;
+}
+
+.eyebrow {
+  color: #2563eb;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 12px;
+}
+
+.hero h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: 1.08;
+  letter-spacing: -3px;
+  margin: 20px 0;
+}
+
+.description {
+  max-width: 600px;
+  color: #64748b;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.principles article {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.principles article > svg {
+  color: #2563eb;
+}
+
+.principles h2 {
+  font-size: 18px;
+}
+
+.principles p {
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+footer {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 80px;
+  padding-top: 24px;
+}
+
+@media (max-width: 700px) {
+  .app {
+    padding: 20px;
+  }
+
+  .hero {
+    padding: 80px 0 50px;
+  }
+
+  .principles {
+    grid-template-columns: 1fr;
+  }
+}

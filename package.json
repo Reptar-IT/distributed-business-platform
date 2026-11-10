@@ -1,0 +1,28 @@
+{
+  "name": "distributed-business-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An international platform for creating, managing and operating independent workforce-participatory businesses.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@platform/api",
+    "dev:web": "npm run dev --workspace=@platform/web",
+    "dev:api": "npm run dev --workspace=@platform/api",
+    "dev:worker": "npm run dev --workspace=@platform/worker",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
