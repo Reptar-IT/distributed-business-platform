@@ -16,10 +16,10 @@
  */
 
 import * as runtime from "@prisma/client/runtime/client"
-import type * as Prisma from "../models.ts"
-import { type PrismaClient } from "./class.ts"
+import type * as Prisma from "../models.js"
+import { type PrismaClient } from "./class.js"
 
-export type * from '../models.ts'
+export type * from '../models.js'
 
 export type DMMF = typeof runtime.DMMF
 
@@ -398,6 +398,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   PlatformUser: 'PlatformUser',
+  UserIdentity: 'UserIdentity',
   Venture: 'Venture'
 } as const
 
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "platformUser" | "venture"
+    modelProps: "platformUser" | "userIdentity" | "venture"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -489,6 +490,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PlatformUserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PlatformUserCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserIdentity: {
+      payload: Prisma.$UserIdentityPayload<ExtArgs>
+      fields: Prisma.UserIdentityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserIdentityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserIdentityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>
+        }
+        findFirst: {
+          args: Prisma.UserIdentityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserIdentityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>
+        }
+        findMany: {
+          args: Prisma.UserIdentityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>[]
+        }
+        create: {
+          args: Prisma.UserIdentityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>
+        }
+        createMany: {
+          args: Prisma.UserIdentityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserIdentityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>[]
+        }
+        delete: {
+          args: Prisma.UserIdentityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>
+        }
+        update: {
+          args: Prisma.UserIdentityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserIdentityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserIdentityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserIdentityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserIdentityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityPayload>
+        }
+        aggregate: {
+          args: Prisma.UserIdentityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserIdentity>
+        }
+        groupBy: {
+          args: Prisma.UserIdentityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserIdentityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserIdentityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserIdentityCountAggregateOutputType> | number
         }
       }
     }
@@ -616,6 +691,20 @@ export const PlatformUserScalarFieldEnum = {
 export type PlatformUserScalarFieldEnum = (typeof PlatformUserScalarFieldEnum)[keyof typeof PlatformUserScalarFieldEnum]
 
 
+export const UserIdentityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  issuer: 'issuer',
+  subject: 'subject',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserIdentityScalarFieldEnum = (typeof UserIdentityScalarFieldEnum)[keyof typeof UserIdentityScalarFieldEnum]
+
+
 export const VentureScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -698,6 +787,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -880,6 +976,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   platformUser?: Prisma.PlatformUserOmit
+  userIdentity?: Prisma.UserIdentityOmit
   venture?: Prisma.VentureOmit
 }
 

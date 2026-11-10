@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/PlatformUser.ts'
-export type * from './models/Venture.ts'
-export type * from './commonInputTypes.ts'
+export type * from './models/PlatformUser.js'
+export type * from './models/UserIdentity.js'
+export type * from './models/Venture.js'
+export type * from './commonInputTypes.js'

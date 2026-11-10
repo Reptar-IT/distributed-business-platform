@@ -10,8 +10,8 @@
  */
 
 import type * as runtime from "@prisma/client/runtime/client"
-import * as $Enums from "./enums.ts"
-import type * as Prisma from "./internal/prismaNamespace.ts"
+import * as $Enums from "./enums.js"
+import type * as Prisma from "./internal/prismaNamespace.js"
 
 
 export type UuidFilter<$PrismaModel = never> = {
@@ -131,11 +131,9 @@ export type StringNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null
 }
 
-export type EnumVentureStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.VentureStatus | Prisma.EnumVentureStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumVentureStatusFilter<$PrismaModel> | $Enums.VentureStatus
+export type BoolFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
 export type SortOrderInput = {
@@ -159,6 +157,21 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedStringNullableFilter<$PrismaModel>
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
+}
+
+export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBoolFilter<$PrismaModel>
+  _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type EnumVentureStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.VentureStatus | Prisma.EnumVentureStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVentureStatusFilter<$PrismaModel> | $Enums.VentureStatus
 }
 
 export type EnumVentureStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -294,11 +307,9 @@ export type NestedStringNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null
 }
 
-export type NestedEnumVentureStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.VentureStatus | Prisma.EnumVentureStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumVentureStatusFilter<$PrismaModel> | $Enums.VentureStatus
+export type NestedBoolFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
 export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -327,6 +338,21 @@ export type NestedIntNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
   gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedIntNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBoolFilter<$PrismaModel>
+  _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumVentureStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.VentureStatus | Prisma.EnumVentureStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VentureStatus[] | Prisma.ListEnumVentureStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVentureStatusFilter<$PrismaModel> | $Enums.VentureStatus
 }
 
 export type NestedEnumVentureStatusWithAggregatesFilter<$PrismaModel = never> = {
