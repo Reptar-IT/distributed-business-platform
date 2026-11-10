@@ -1,9 +1,11 @@
 import { Worker, type Job } from "bullmq";
-import IORedis from "ioredis";
+import {Redis} from "ioredis";
+
+import { prisma } from "@platform/database";
 
 const redisUrl = process.env.REDIS_URL ?? "redis://localhost:6380";
 
-const connection = new IORedis(redisUrl, {
+const connection = new Redis(redisUrl, {
   maxRetriesPerRequest: null,
 });
 
@@ -41,8 +43,11 @@ worker.on("error", (error) => {
 
 const shutdown = async () => {
   console.log("Shutting down worker...");
+
   await worker.close();
   await connection.quit();
+  await prisma.$disconnect();
+
   process.exit(0);
 };
 

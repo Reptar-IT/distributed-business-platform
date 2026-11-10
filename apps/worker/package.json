@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@platform/database": "^0.1.0",
     "bullmq": "^6.7.3",
     "ioredis": "^6.0.0"
   }

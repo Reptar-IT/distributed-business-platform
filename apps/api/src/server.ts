@@ -6,6 +6,8 @@ import sensible from "@fastify/sensible";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 
+import { prisma } from "@platform/database";
+
 const app = Fastify({
   logger: true,
 });
@@ -35,11 +37,27 @@ await app.register(swaggerUI, {
   routePrefix: "/documentation",
 });
 
-app.get("/api/v1/health", async () => ({
-  status: "ok",
-  service: "distributed-business-platform-api",
-  version: "0.1.0",
-}));
+app.get("/api/v1/health", async (_request, reply) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+
+    return {
+      status: "ok",
+      service: "distributed-business-platform-api",
+      database: "connected",
+      version: "0.1.0",
+    };
+  } catch (error) {
+    app.log.error(error, "Database health check failed");
+
+    return reply.code(503).send({
+      status: "error",
+      service: "distributed-business-platform-api",
+      database: "unavailable",
+      version: "0.1.0",
+    });
+  }
+});
 
 const start = async () => {
   try {
@@ -55,6 +73,7 @@ const start = async () => {
 
 const shutdown = async () => {
   await app.close();
+  await prisma.$disconnect();
   process.exit(0);
 };
 
