@@ -22,12 +22,51 @@ enum VentureStatus {
   ARCHIVED
 }
 
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  ENDED
+}
+
+enum OrganizationalRoleStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+}
+
+enum AssignmentType {
+  PRIMARY
+  SECONDARY
+  ACTING
+}
+
+enum AssignmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum VacancyStatus {
+  OPEN
+  RECRUITING_VENTURE
+  RECRUITING_PLATFORM
+  RECRUITING_EXTERNAL
+  AWAITING_DECISION
+  AUTOMATED_PLACEMENT
+  OFFER_PENDING
+  FILLED
+  UNRESOLVED
+  CANCELLED
+}
+
 model PlatformUser {
   id          String     @id @default(uuid()) @db.Uuid
   displayName String
   status      UserStatus @default(ACTIVE)
 
   identities  UserIdentity[]
+  memberships VentureMembership[]
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -38,10 +77,8 @@ model PlatformUser {
 model UserIdentity {
   id            String   @id @default(uuid()) @db.Uuid
   userId        String   @db.Uuid
-
   issuer        String
   subject       String
-
   email         String?
   emailVerified Boolean  @default(false)
 
@@ -52,7 +89,6 @@ model UserIdentity {
 
   @@unique([issuer, subject])
   @@index([userId])
-
   @@map("user_identities")
 }
 
@@ -63,8 +99,123 @@ model Venture {
   description String?
   status      VentureStatus @default(DRAFT)
 
+  memberships VentureMembership[]
+  roles       OrganizationalRole[]
+  vacancies   RoleVacancy[]
+
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
   @@map("ventures")
+}
+
+model VentureMembership {
+  id        String           @id @default(uuid()) @db.Uuid
+  ventureId String           @db.Uuid
+  userId    String           @db.Uuid
+  status    MembershipStatus @default(PENDING)
+
+  joinedAt  DateTime?
+  endedAt   DateTime?
+
+  venture   Venture      @relation(fields: [ventureId], references: [id], onDelete: Restrict)
+  user      PlatformUser @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  assignments RoleAssignment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([id, ventureId])
+  @@index([userId])
+  @@index([ventureId, status])
+  @@map("venture_memberships")
+}
+
+model OrganizationalRole {
+  id           String                   @id @default(uuid()) @db.Uuid
+  ventureId    String                   @db.Uuid
+  parentRoleId String?                  @db.Uuid
+
+  title             String
+  description       String?
+  responsibilities Json?
+  authorityScope    Json?
+  requirements      Json?
+
+  status      OrganizationalRoleStatus @default(DRAFT)
+  isMandatory Boolean                  @default(false)
+
+  venture     Venture                  @relation(fields: [ventureId], references: [id], onDelete: Restrict)
+  parentRole  OrganizationalRole?      @relation("RoleHierarchy", fields: [parentRoleId, ventureId], references: [id, ventureId], onDelete: Restrict)
+  childRoles  OrganizationalRole[]     @relation("RoleHierarchy")
+
+  assignments RoleAssignment[]
+  vacancies   RoleVacancy[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([id, ventureId])
+  @@index([ventureId, status])
+  @@index([parentRoleId])
+  @@map("organizational_roles")
+}
+
+model RoleAssignment {
+  id                   String           @id @default(uuid()) @db.Uuid
+  membershipId         String           @db.Uuid
+  organizationalRoleId String           @db.Uuid
+  ventureId            String           @db.Uuid
+
+  assignmentType AssignmentType
+  status         AssignmentStatus @default(ACTIVE)
+
+  startsAt DateTime  @default(now())
+  endsAt   DateTime?
+
+  membership         VentureMembership @relation(fields: [membershipId, ventureId], references: [id, ventureId], onDelete: Restrict)
+  organizationalRole OrganizationalRole @relation(fields: [organizationalRoleId, ventureId], references: [id, ventureId], onDelete: Restrict)
+
+  createdVacancy RoleVacancy? @relation("VacancyPreviousAssignment")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([id, ventureId])
+  @@index([membershipId, status])
+  @@index([organizationalRoleId, status])
+  @@index([assignmentType, status])
+  @@map("role_assignments")
+}
+
+model RoleVacancy {
+  id                   String        @id @default(uuid()) @db.Uuid
+  ventureId            String        @db.Uuid
+  organizationalRoleId String       @db.Uuid
+
+  previousAssignmentId String?       @db.Uuid
+  sourceVacancyId      String?       @db.Uuid
+
+  status VacancyStatus @default(OPEN)
+
+  openedAt           DateTime  @default(now())
+  resolutionDeadline DateTime?
+  resolvedAt         DateTime?
+
+  venture              Venture             @relation(fields: [ventureId], references: [id], onDelete: Restrict)
+  organizationalRole   OrganizationalRole  @relation(fields: [organizationalRoleId, ventureId], references: [id, ventureId], onDelete: Restrict)
+  previousAssignment   RoleAssignment?      @relation("VacancyPreviousAssignment", fields: [previousAssignmentId, ventureId], references: [id, ventureId], onDelete: Restrict)
+  sourceVacancy        RoleVacancy?         @relation("VacancyCascade", fields: [sourceVacancyId, ventureId], references: [id, ventureId], onDelete: Restrict)
+  resultingVacancies   RoleVacancy[]        @relation("VacancyCascade")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([id, ventureId])
+  @@unique([previousAssignmentId, ventureId])
+  @@index([ventureId, status])
+  @@index([organizationalRoleId, status])
+  @@index([sourceVacancyId])
+  @@map("role_vacancies")
 }
