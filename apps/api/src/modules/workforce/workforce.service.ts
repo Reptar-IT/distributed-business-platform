@@ -154,13 +154,11 @@ export const endVentureMembership = async (
   });
 };
 
-
 /**
- * Ends a suspended venture membership.
+ * Permanently ends a suspended venture membership.
  *
- * All active assignments are completed by the membership service.
- * No vacancy is opened automatically because the suspended
- * membership may already be covered by an existing arrangement.
+ * The former primary role becomes vacant and enters recruitment.
+ * All active assignments are completed in the same transaction.
  *
  * Ownership and previously earned vesting are not modified.
  */
@@ -184,16 +182,45 @@ export const endSuspendedVentureMembership = async (
       );
     }
 
+    const primaryAssignments = await tx.roleAssignment.findMany({
+      where: {
+        membershipId,
+        assignmentType: "PRIMARY",
+        status: "ACTIVE",
+      },
+    });
+
+    if (primaryAssignments.length !== 1) {
+      throw new Error(
+        "The suspended membership must have exactly one active primary assignment.",
+      );
+    }
+
+    const primaryAssignment = primaryAssignments[0];
+
     const endedMembership = await endMembership(
       membershipId,
       tx,
     );
 
+    const resultingVacancy = await openVacancy(
+      {
+        ventureId: membership.ventureId,
+        organizationalRoleId:
+          primaryAssignment.organizationalRoleId,
+        previousAssignmentId: primaryAssignment.id,
+      },
+      tx,
+    );
+
     return {
       membership: endedMembership,
+      previousPrimaryAssignment: primaryAssignment,
+      resultingVacancy,
     };
   });
 };
+
 
 /**
  * Ends a pending membership when the person does not proceed
