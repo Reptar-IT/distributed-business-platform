@@ -1,5 +1,5 @@
 
-import { prisma, type Prisma } from "@platform/database";
+import { prisma, type Prisma, type MembershipEndReason } from "@platform/database";
 import type { CreateMembershipInput } from "./workforce.schemas.js";
 
 type TransactionClient = Prisma.TransactionClient;
@@ -233,9 +233,17 @@ export const reactivateMembership = async (
  *
  * Ownership and vesting records are not modified by this operation.
  */
+
+/**
+ * Ends a membership and completes all its active assignments.
+ *
+ * An optional ending reason can be recorded for lifecycle auditing.
+ * Ownership and vesting records are not modified by this operation.
+ */
 export const endMembership = async (
   membershipId: string,
   tx?: TransactionClient,
+  endReason?: MembershipEndReason,
 ) => {
   return executeInTransaction(tx, async (client) => {
     const membership = await client.ventureMembership.findUnique({
@@ -272,6 +280,7 @@ export const endMembership = async (
       data: {
         status: "ENDED",
         endedAt: now,
+        ...(endReason ? { endReason } : {}),
       },
     });
   });

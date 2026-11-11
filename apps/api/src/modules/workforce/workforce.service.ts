@@ -1,5 +1,5 @@
 
-import { prisma, type Prisma } from "@platform/database";
+import { prisma, type Prisma, type MembershipEndReason } from "@platform/database";
 
 import { endMembership } from "./membership.service.js";
 
@@ -96,22 +96,7 @@ export const failPromotionTrial = async (
   });
 };
 
-/**
- * Ends a venture membership and its active assignments atomically.
- *
- * Ownership and previously earned vesting are not modified
- * by this operation.
- */
 
-/**
- * Ends a venture membership and opens a vacancy for the
- * member's former primary role atomically.
- *
- * The former primary assignment is completed by the
- * membership service. The resulting vacancy is then opened.
- *
- * Ownership and previously earned vesting are not modified.
- */
 export const endVentureMembership = async (
   membershipId: string,
 ) => {
@@ -165,6 +150,87 @@ export const endVentureMembership = async (
       membership: endedMembership,
       previousPrimaryAssignment: primaryAssignment,
       resultingVacancy,
+    };
+  });
+};
+
+
+/**
+ * Ends a suspended venture membership.
+ *
+ * All active assignments are completed by the membership service.
+ * No vacancy is opened automatically because the suspended
+ * membership may already be covered by an existing arrangement.
+ *
+ * Ownership and previously earned vesting are not modified.
+ */
+export const endSuspendedVentureMembership = async (
+  membershipId: string,
+) => {
+  return prisma.$transaction(async (tx) => {
+    const membership = await tx.ventureMembership.findUnique({
+      where: {
+        id: membershipId,
+      },
+    });
+
+    if (!membership) {
+      throw new Error("Venture membership not found.");
+    }
+
+    if (membership.status !== "SUSPENDED") {
+      throw new Error(
+        "Only suspended venture memberships can be ended through this operation.",
+      );
+    }
+
+    const endedMembership = await endMembership(
+      membershipId,
+      tx,
+    );
+
+    return {
+      membership: endedMembership,
+    };
+  });
+};
+
+/**
+ * Ends a pending membership when the person does not proceed
+ * into an active venture role.
+ *
+ * No assignment or vacancy is created.
+ * Ownership and vesting records are not modified.
+ */
+export const endPendingVentureMembership = async (
+  membershipId: string,
+  reason: MembershipEndReason,
+) => {
+  return prisma.$transaction(async (tx) => {
+    const membership = await tx.ventureMembership.findUnique({
+      where: {
+        id: membershipId,
+      },
+    });
+
+    if (!membership) {
+      throw new Error("Venture membership not found.");
+    }
+
+    if (membership.status !== "PENDING") {
+      throw new Error(
+        "Only pending venture memberships can be ended through this operation.",
+      );
+    }
+
+    const endedMembership = await endMembership(
+      membershipId,
+      tx,
+      reason,
+    );
+
+    return {
+      membership: endedMembership,
     };
   });
 };
