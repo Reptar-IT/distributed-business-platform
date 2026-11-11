@@ -32,3 +32,23 @@ export type UserIdentity = Prisma.UserIdentityModel
  * 
  */
 export type Venture = Prisma.VentureModel
+/**
+ * Model VentureMembership
+ * 
+ */
+export type VentureMembership = Prisma.VentureMembershipModel
+/**
+ * Model OrganizationalRole
+ * 
+ */
+export type OrganizationalRole = Prisma.OrganizationalRoleModel
+/**
+ * Model RoleAssignment
+ * 
+ */
+export type RoleAssignment = Prisma.RoleAssignmentModel
+/**
+ * Model RoleVacancy
+ * 
+ */
+export type RoleVacancy = Prisma.RoleVacancyModel
