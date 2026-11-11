@@ -183,6 +183,7 @@ export type PlatformUserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"PlatformUser"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlatformUser"> | Date | string
   identities?: Prisma.UserIdentityListRelationFilter
+  memberships?: Prisma.VentureMembershipListRelationFilter
 }
 
 export type PlatformUserOrderByWithRelationInput = {
@@ -192,6 +193,7 @@ export type PlatformUserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   identities?: Prisma.UserIdentityOrderByRelationAggregateInput
+  memberships?: Prisma.VentureMembershipOrderByRelationAggregateInput
 }
 
 export type PlatformUserWhereUniqueInput = Prisma.AtLeast<{
@@ -204,6 +206,7 @@ export type PlatformUserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"PlatformUser"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlatformUser"> | Date | string
   identities?: Prisma.UserIdentityListRelationFilter
+  memberships?: Prisma.VentureMembershipListRelationFilter
 }, "id">
 
 export type PlatformUserOrderByWithAggregationInput = {
@@ -235,6 +238,7 @@ export type PlatformUserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   identities?: Prisma.UserIdentityCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateInput = {
@@ -244,6 +248,7 @@ export type PlatformUserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   identities?: Prisma.UserIdentityUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUpdateInput = {
@@ -253,6 +258,7 @@ export type PlatformUserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   identities?: Prisma.UserIdentityUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateInput = {
@@ -262,6 +268,7 @@ export type PlatformUserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   identities?: Prisma.UserIdentityUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserCreateManyInput = {
@@ -343,12 +350,27 @@ export type PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUserUpdateToOneWithWhereWithoutIdentitiesInput, Prisma.PlatformUserUpdateWithoutIdentitiesInput>, Prisma.PlatformUserUncheckedUpdateWithoutIdentitiesInput>
 }
 
+export type PlatformUserCreateNestedOneWithoutMembershipsInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutMembershipsInput, Prisma.PlatformUserUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutMembershipsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+}
+
+export type PlatformUserUpdateOneRequiredWithoutMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutMembershipsInput, Prisma.PlatformUserUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutMembershipsInput
+  upsert?: Prisma.PlatformUserUpsertWithoutMembershipsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUserUpdateToOneWithWhereWithoutMembershipsInput, Prisma.PlatformUserUpdateWithoutMembershipsInput>, Prisma.PlatformUserUncheckedUpdateWithoutMembershipsInput>
+}
+
 export type PlatformUserCreateWithoutIdentitiesInput = {
   id?: string
   displayName: string
   status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateWithoutIdentitiesInput = {
@@ -357,6 +379,7 @@ export type PlatformUserUncheckedCreateWithoutIdentitiesInput = {
   status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserCreateOrConnectWithoutIdentitiesInput = {
@@ -381,6 +404,7 @@ export type PlatformUserUpdateWithoutIdentitiesInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateWithoutIdentitiesInput = {
@@ -389,6 +413,59 @@ export type PlatformUserUncheckedUpdateWithoutIdentitiesInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserCreateWithoutMembershipsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserUncheckedCreateWithoutMembershipsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserCreateOrConnectWithoutMembershipsInput = {
+  where: Prisma.PlatformUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutMembershipsInput, Prisma.PlatformUserUncheckedCreateWithoutMembershipsInput>
+}
+
+export type PlatformUserUpsertWithoutMembershipsInput = {
+  update: Prisma.XOR<Prisma.PlatformUserUpdateWithoutMembershipsInput, Prisma.PlatformUserUncheckedUpdateWithoutMembershipsInput>
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutMembershipsInput, Prisma.PlatformUserUncheckedCreateWithoutMembershipsInput>
+  where?: Prisma.PlatformUserWhereInput
+}
+
+export type PlatformUserUpdateToOneWithWhereWithoutMembershipsInput = {
+  where?: Prisma.PlatformUserWhereInput
+  data: Prisma.XOR<Prisma.PlatformUserUpdateWithoutMembershipsInput, Prisma.PlatformUserUncheckedUpdateWithoutMembershipsInput>
+}
+
+export type PlatformUserUpdateWithoutMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserUncheckedUpdateWithoutMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -398,10 +475,12 @@ export type PlatformUserUncheckedUpdateWithoutIdentitiesInput = {
 
 export type PlatformUserCountOutputType = {
   identities: number
+  memberships: number
 }
 
 export type PlatformUserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   identities?: boolean | PlatformUserCountOutputTypeCountIdentitiesArgs
+  memberships?: boolean | PlatformUserCountOutputTypeCountMembershipsArgs
 }
 
 /**
@@ -421,6 +500,13 @@ export type PlatformUserCountOutputTypeCountIdentitiesArgs<ExtArgs extends runti
   where?: Prisma.UserIdentityWhereInput
 }
 
+/**
+ * PlatformUserCountOutputType without action
+ */
+export type PlatformUserCountOutputTypeCountMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VentureMembershipWhereInput
+}
+
 
 export type PlatformUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -429,6 +515,7 @@ export type PlatformUserSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   identities?: boolean | Prisma.PlatformUser$identitiesArgs<ExtArgs>
+  memberships?: boolean | Prisma.PlatformUser$membershipsArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformUserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platformUser"]>
 
@@ -459,6 +546,7 @@ export type PlatformUserSelectScalar = {
 export type PlatformUserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "displayName" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["platformUser"]>
 export type PlatformUserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   identities?: boolean | Prisma.PlatformUser$identitiesArgs<ExtArgs>
+  memberships?: boolean | Prisma.PlatformUser$membershipsArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformUserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlatformUserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -468,6 +556,7 @@ export type $PlatformUserPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "PlatformUser"
   objects: {
     identities: Prisma.$UserIdentityPayload<ExtArgs>[]
+    memberships: Prisma.$VentureMembershipPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -870,6 +959,7 @@ readonly fields: PlatformUserFieldRefs;
 export interface Prisma__PlatformUserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   identities<T extends Prisma.PlatformUser$identitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$identitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  memberships<T extends Prisma.PlatformUser$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VentureMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1318,6 +1408,30 @@ export type PlatformUser$identitiesArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.UserIdentityScalarFieldEnum | Prisma.UserIdentityScalarFieldEnum[]
+}
+
+/**
+ * PlatformUser.memberships
+ */
+export type PlatformUser$membershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VentureMembership
+   */
+  select?: Prisma.VentureMembershipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VentureMembership
+   */
+  omit?: Prisma.VentureMembershipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureMembershipInclude<ExtArgs> | null
+  where?: Prisma.VentureMembershipWhereInput
+  orderBy?: Prisma.VentureMembershipOrderByWithRelationInput | Prisma.VentureMembershipOrderByWithRelationInput[]
+  cursor?: Prisma.VentureMembershipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VentureMembershipScalarFieldEnum | Prisma.VentureMembershipScalarFieldEnum[]
 }
 
 /**

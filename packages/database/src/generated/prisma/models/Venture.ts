@@ -198,6 +198,9 @@ export type VentureWhereInput = {
   status?: Prisma.EnumVentureStatusFilter<"Venture"> | $Enums.VentureStatus
   createdAt?: Prisma.DateTimeFilter<"Venture"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Venture"> | Date | string
+  memberships?: Prisma.VentureMembershipListRelationFilter
+  roles?: Prisma.OrganizationalRoleListRelationFilter
+  vacancies?: Prisma.RoleVacancyListRelationFilter
 }
 
 export type VentureOrderByWithRelationInput = {
@@ -208,6 +211,9 @@ export type VentureOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  memberships?: Prisma.VentureMembershipOrderByRelationAggregateInput
+  roles?: Prisma.OrganizationalRoleOrderByRelationAggregateInput
+  vacancies?: Prisma.RoleVacancyOrderByRelationAggregateInput
 }
 
 export type VentureWhereUniqueInput = Prisma.AtLeast<{
@@ -221,6 +227,9 @@ export type VentureWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumVentureStatusFilter<"Venture"> | $Enums.VentureStatus
   createdAt?: Prisma.DateTimeFilter<"Venture"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Venture"> | Date | string
+  memberships?: Prisma.VentureMembershipListRelationFilter
+  roles?: Prisma.OrganizationalRoleListRelationFilter
+  vacancies?: Prisma.RoleVacancyListRelationFilter
 }, "id" | "slug">
 
 export type VentureOrderByWithAggregationInput = {
@@ -257,6 +266,9 @@ export type VentureCreateInput = {
   status?: $Enums.VentureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutVentureInput
+  roles?: Prisma.OrganizationalRoleCreateNestedManyWithoutVentureInput
+  vacancies?: Prisma.RoleVacancyCreateNestedManyWithoutVentureInput
 }
 
 export type VentureUncheckedCreateInput = {
@@ -267,6 +279,9 @@ export type VentureUncheckedCreateInput = {
   status?: $Enums.VentureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutVentureInput
+  roles?: Prisma.OrganizationalRoleUncheckedCreateNestedManyWithoutVentureInput
+  vacancies?: Prisma.RoleVacancyUncheckedCreateNestedManyWithoutVentureInput
 }
 
 export type VentureUpdateInput = {
@@ -277,6 +292,9 @@ export type VentureUpdateInput = {
   status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutVentureNestedInput
+  roles?: Prisma.OrganizationalRoleUpdateManyWithoutVentureNestedInput
+  vacancies?: Prisma.RoleVacancyUpdateManyWithoutVentureNestedInput
 }
 
 export type VentureUncheckedUpdateInput = {
@@ -287,6 +305,9 @@ export type VentureUncheckedUpdateInput = {
   status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutVentureNestedInput
+  roles?: Prisma.OrganizationalRoleUncheckedUpdateManyWithoutVentureNestedInput
+  vacancies?: Prisma.RoleVacancyUncheckedUpdateManyWithoutVentureNestedInput
 }
 
 export type VentureCreateManyInput = {
@@ -349,10 +370,296 @@ export type VentureMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type VentureScalarRelationFilter = {
+  is?: Prisma.VentureWhereInput
+  isNot?: Prisma.VentureWhereInput
+}
+
 export type EnumVentureStatusFieldUpdateOperationsInput = {
   set?: $Enums.VentureStatus
 }
 
+export type VentureCreateNestedOneWithoutMembershipsInput = {
+  create?: Prisma.XOR<Prisma.VentureCreateWithoutMembershipsInput, Prisma.VentureUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.VentureCreateOrConnectWithoutMembershipsInput
+  connect?: Prisma.VentureWhereUniqueInput
+}
+
+export type VentureUpdateOneRequiredWithoutMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.VentureCreateWithoutMembershipsInput, Prisma.VentureUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.VentureCreateOrConnectWithoutMembershipsInput
+  upsert?: Prisma.VentureUpsertWithoutMembershipsInput
+  connect?: Prisma.VentureWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VentureUpdateToOneWithWhereWithoutMembershipsInput, Prisma.VentureUpdateWithoutMembershipsInput>, Prisma.VentureUncheckedUpdateWithoutMembershipsInput>
+}
+
+export type VentureCreateNestedOneWithoutRolesInput = {
+  create?: Prisma.XOR<Prisma.VentureCreateWithoutRolesInput, Prisma.VentureUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.VentureCreateOrConnectWithoutRolesInput
+  connect?: Prisma.VentureWhereUniqueInput
+}
+
+export type VentureUpdateOneRequiredWithoutRolesNestedInput = {
+  create?: Prisma.XOR<Prisma.VentureCreateWithoutRolesInput, Prisma.VentureUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.VentureCreateOrConnectWithoutRolesInput
+  upsert?: Prisma.VentureUpsertWithoutRolesInput
+  connect?: Prisma.VentureWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VentureUpdateToOneWithWhereWithoutRolesInput, Prisma.VentureUpdateWithoutRolesInput>, Prisma.VentureUncheckedUpdateWithoutRolesInput>
+}
+
+export type VentureCreateNestedOneWithoutVacanciesInput = {
+  create?: Prisma.XOR<Prisma.VentureCreateWithoutVacanciesInput, Prisma.VentureUncheckedCreateWithoutVacanciesInput>
+  connectOrCreate?: Prisma.VentureCreateOrConnectWithoutVacanciesInput
+  connect?: Prisma.VentureWhereUniqueInput
+}
+
+export type VentureUpdateOneRequiredWithoutVacanciesNestedInput = {
+  create?: Prisma.XOR<Prisma.VentureCreateWithoutVacanciesInput, Prisma.VentureUncheckedCreateWithoutVacanciesInput>
+  connectOrCreate?: Prisma.VentureCreateOrConnectWithoutVacanciesInput
+  upsert?: Prisma.VentureUpsertWithoutVacanciesInput
+  connect?: Prisma.VentureWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VentureUpdateToOneWithWhereWithoutVacanciesInput, Prisma.VentureUpdateWithoutVacanciesInput>, Prisma.VentureUncheckedUpdateWithoutVacanciesInput>
+}
+
+export type VentureCreateWithoutMembershipsInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status?: $Enums.VentureStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  roles?: Prisma.OrganizationalRoleCreateNestedManyWithoutVentureInput
+  vacancies?: Prisma.RoleVacancyCreateNestedManyWithoutVentureInput
+}
+
+export type VentureUncheckedCreateWithoutMembershipsInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status?: $Enums.VentureStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  roles?: Prisma.OrganizationalRoleUncheckedCreateNestedManyWithoutVentureInput
+  vacancies?: Prisma.RoleVacancyUncheckedCreateNestedManyWithoutVentureInput
+}
+
+export type VentureCreateOrConnectWithoutMembershipsInput = {
+  where: Prisma.VentureWhereUniqueInput
+  create: Prisma.XOR<Prisma.VentureCreateWithoutMembershipsInput, Prisma.VentureUncheckedCreateWithoutMembershipsInput>
+}
+
+export type VentureUpsertWithoutMembershipsInput = {
+  update: Prisma.XOR<Prisma.VentureUpdateWithoutMembershipsInput, Prisma.VentureUncheckedUpdateWithoutMembershipsInput>
+  create: Prisma.XOR<Prisma.VentureCreateWithoutMembershipsInput, Prisma.VentureUncheckedCreateWithoutMembershipsInput>
+  where?: Prisma.VentureWhereInput
+}
+
+export type VentureUpdateToOneWithWhereWithoutMembershipsInput = {
+  where?: Prisma.VentureWhereInput
+  data: Prisma.XOR<Prisma.VentureUpdateWithoutMembershipsInput, Prisma.VentureUncheckedUpdateWithoutMembershipsInput>
+}
+
+export type VentureUpdateWithoutMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.OrganizationalRoleUpdateManyWithoutVentureNestedInput
+  vacancies?: Prisma.RoleVacancyUpdateManyWithoutVentureNestedInput
+}
+
+export type VentureUncheckedUpdateWithoutMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.OrganizationalRoleUncheckedUpdateManyWithoutVentureNestedInput
+  vacancies?: Prisma.RoleVacancyUncheckedUpdateManyWithoutVentureNestedInput
+}
+
+export type VentureCreateWithoutRolesInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status?: $Enums.VentureStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutVentureInput
+  vacancies?: Prisma.RoleVacancyCreateNestedManyWithoutVentureInput
+}
+
+export type VentureUncheckedCreateWithoutRolesInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status?: $Enums.VentureStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutVentureInput
+  vacancies?: Prisma.RoleVacancyUncheckedCreateNestedManyWithoutVentureInput
+}
+
+export type VentureCreateOrConnectWithoutRolesInput = {
+  where: Prisma.VentureWhereUniqueInput
+  create: Prisma.XOR<Prisma.VentureCreateWithoutRolesInput, Prisma.VentureUncheckedCreateWithoutRolesInput>
+}
+
+export type VentureUpsertWithoutRolesInput = {
+  update: Prisma.XOR<Prisma.VentureUpdateWithoutRolesInput, Prisma.VentureUncheckedUpdateWithoutRolesInput>
+  create: Prisma.XOR<Prisma.VentureCreateWithoutRolesInput, Prisma.VentureUncheckedCreateWithoutRolesInput>
+  where?: Prisma.VentureWhereInput
+}
+
+export type VentureUpdateToOneWithWhereWithoutRolesInput = {
+  where?: Prisma.VentureWhereInput
+  data: Prisma.XOR<Prisma.VentureUpdateWithoutRolesInput, Prisma.VentureUncheckedUpdateWithoutRolesInput>
+}
+
+export type VentureUpdateWithoutRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutVentureNestedInput
+  vacancies?: Prisma.RoleVacancyUpdateManyWithoutVentureNestedInput
+}
+
+export type VentureUncheckedUpdateWithoutRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutVentureNestedInput
+  vacancies?: Prisma.RoleVacancyUncheckedUpdateManyWithoutVentureNestedInput
+}
+
+export type VentureCreateWithoutVacanciesInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status?: $Enums.VentureStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutVentureInput
+  roles?: Prisma.OrganizationalRoleCreateNestedManyWithoutVentureInput
+}
+
+export type VentureUncheckedCreateWithoutVacanciesInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status?: $Enums.VentureStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutVentureInput
+  roles?: Prisma.OrganizationalRoleUncheckedCreateNestedManyWithoutVentureInput
+}
+
+export type VentureCreateOrConnectWithoutVacanciesInput = {
+  where: Prisma.VentureWhereUniqueInput
+  create: Prisma.XOR<Prisma.VentureCreateWithoutVacanciesInput, Prisma.VentureUncheckedCreateWithoutVacanciesInput>
+}
+
+export type VentureUpsertWithoutVacanciesInput = {
+  update: Prisma.XOR<Prisma.VentureUpdateWithoutVacanciesInput, Prisma.VentureUncheckedUpdateWithoutVacanciesInput>
+  create: Prisma.XOR<Prisma.VentureCreateWithoutVacanciesInput, Prisma.VentureUncheckedCreateWithoutVacanciesInput>
+  where?: Prisma.VentureWhereInput
+}
+
+export type VentureUpdateToOneWithWhereWithoutVacanciesInput = {
+  where?: Prisma.VentureWhereInput
+  data: Prisma.XOR<Prisma.VentureUpdateWithoutVacanciesInput, Prisma.VentureUncheckedUpdateWithoutVacanciesInput>
+}
+
+export type VentureUpdateWithoutVacanciesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutVentureNestedInput
+  roles?: Prisma.OrganizationalRoleUpdateManyWithoutVentureNestedInput
+}
+
+export type VentureUncheckedUpdateWithoutVacanciesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVentureStatusFieldUpdateOperationsInput | $Enums.VentureStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutVentureNestedInput
+  roles?: Prisma.OrganizationalRoleUncheckedUpdateManyWithoutVentureNestedInput
+}
+
+
+/**
+ * Count Type VentureCountOutputType
+ */
+
+export type VentureCountOutputType = {
+  memberships: number
+  roles: number
+  vacancies: number
+}
+
+export type VentureCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  memberships?: boolean | VentureCountOutputTypeCountMembershipsArgs
+  roles?: boolean | VentureCountOutputTypeCountRolesArgs
+  vacancies?: boolean | VentureCountOutputTypeCountVacanciesArgs
+}
+
+/**
+ * VentureCountOutputType without action
+ */
+export type VentureCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VentureCountOutputType
+   */
+  select?: Prisma.VentureCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * VentureCountOutputType without action
+ */
+export type VentureCountOutputTypeCountMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VentureMembershipWhereInput
+}
+
+/**
+ * VentureCountOutputType without action
+ */
+export type VentureCountOutputTypeCountRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationalRoleWhereInput
+}
+
+/**
+ * VentureCountOutputType without action
+ */
+export type VentureCountOutputTypeCountVacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoleVacancyWhereInput
+}
 
 
 export type VentureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -363,6 +670,10 @@ export type VentureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  memberships?: boolean | Prisma.Venture$membershipsArgs<ExtArgs>
+  roles?: boolean | Prisma.Venture$rolesArgs<ExtArgs>
+  vacancies?: boolean | Prisma.Venture$vacanciesArgs<ExtArgs>
+  _count?: boolean | Prisma.VentureCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["venture"]>
 
 export type VentureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -396,10 +707,22 @@ export type VentureSelectScalar = {
 }
 
 export type VentureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["venture"]>
+export type VentureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  memberships?: boolean | Prisma.Venture$membershipsArgs<ExtArgs>
+  roles?: boolean | Prisma.Venture$rolesArgs<ExtArgs>
+  vacancies?: boolean | Prisma.Venture$vacanciesArgs<ExtArgs>
+  _count?: boolean | Prisma.VentureCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type VentureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type VentureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $VenturePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Venture"
-  objects: {}
+  objects: {
+    memberships: Prisma.$VentureMembershipPayload<ExtArgs>[]
+    roles: Prisma.$OrganizationalRolePayload<ExtArgs>[]
+    vacancies: Prisma.$RoleVacancyPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -802,6 +1125,9 @@ readonly fields: VentureFieldRefs;
  */
 export interface Prisma__VentureClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  memberships<T extends Prisma.Venture$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Venture$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VentureMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roles<T extends Prisma.Venture$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Venture$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationalRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  vacancies<T extends Prisma.Venture$vacanciesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Venture$vacanciesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoleVacancyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -855,6 +1181,10 @@ export type VentureFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
+  /**
    * Filter, which Venture to fetch.
    */
   where: Prisma.VentureWhereUniqueInput
@@ -873,6 +1203,10 @@ export type VentureFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
+  /**
    * Filter, which Venture to fetch.
    */
   where: Prisma.VentureWhereUniqueInput
@@ -890,6 +1224,10 @@ export type VentureFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Venture
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
   /**
    * Filter, which Venture to fetch.
    */
@@ -939,6 +1277,10 @@ export type VentureFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
+  /**
    * Filter, which Venture to fetch.
    */
   where?: Prisma.VentureWhereInput
@@ -986,6 +1328,10 @@ export type VentureFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Venture
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
   /**
    * Filter, which Ventures to fetch.
    */
@@ -1035,6 +1381,10 @@ export type VentureCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
+  /**
    * The data needed to create a Venture.
    */
   data: Prisma.XOR<Prisma.VentureCreateInput, Prisma.VentureUncheckedCreateInput>
@@ -1082,6 +1432,10 @@ export type VentureUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Venture
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
   /**
    * The data needed to update a Venture.
    */
@@ -1149,6 +1503,10 @@ export type VentureUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
+  /**
    * The filter to search for the Venture to update in case it exists.
    */
   where: Prisma.VentureWhereUniqueInput
@@ -1175,6 +1533,10 @@ export type VentureDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
+  /**
    * Filter which Venture to delete.
    */
   where: Prisma.VentureWhereUniqueInput
@@ -1195,6 +1557,78 @@ export type VentureDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Venture.memberships
+ */
+export type Venture$membershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VentureMembership
+   */
+  select?: Prisma.VentureMembershipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VentureMembership
+   */
+  omit?: Prisma.VentureMembershipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureMembershipInclude<ExtArgs> | null
+  where?: Prisma.VentureMembershipWhereInput
+  orderBy?: Prisma.VentureMembershipOrderByWithRelationInput | Prisma.VentureMembershipOrderByWithRelationInput[]
+  cursor?: Prisma.VentureMembershipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VentureMembershipScalarFieldEnum | Prisma.VentureMembershipScalarFieldEnum[]
+}
+
+/**
+ * Venture.roles
+ */
+export type Venture$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationalRole
+   */
+  select?: Prisma.OrganizationalRoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrganizationalRole
+   */
+  omit?: Prisma.OrganizationalRoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationalRoleInclude<ExtArgs> | null
+  where?: Prisma.OrganizationalRoleWhereInput
+  orderBy?: Prisma.OrganizationalRoleOrderByWithRelationInput | Prisma.OrganizationalRoleOrderByWithRelationInput[]
+  cursor?: Prisma.OrganizationalRoleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrganizationalRoleScalarFieldEnum | Prisma.OrganizationalRoleScalarFieldEnum[]
+}
+
+/**
+ * Venture.vacancies
+ */
+export type Venture$vacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RoleVacancy
+   */
+  select?: Prisma.RoleVacancySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RoleVacancy
+   */
+  omit?: Prisma.RoleVacancyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoleVacancyInclude<ExtArgs> | null
+  where?: Prisma.RoleVacancyWhereInput
+  orderBy?: Prisma.RoleVacancyOrderByWithRelationInput | Prisma.RoleVacancyOrderByWithRelationInput[]
+  cursor?: Prisma.RoleVacancyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoleVacancyScalarFieldEnum | Prisma.RoleVacancyScalarFieldEnum[]
+}
+
+/**
  * Venture without action
  */
 export type VentureDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1206,4 +1640,8 @@ export type VentureDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Venture
    */
   omit?: Prisma.VentureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentureInclude<ExtArgs> | null
 }

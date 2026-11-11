@@ -27,3 +27,55 @@ export const VentureStatus = {
 } as const
 
 export type VentureStatus = (typeof VentureStatus)[keyof typeof VentureStatus]
+
+
+export const MembershipStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  ENDED: 'ENDED'
+} as const
+
+export type MembershipStatus = (typeof MembershipStatus)[keyof typeof MembershipStatus]
+
+
+export const OrganizationalRoleStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type OrganizationalRoleStatus = (typeof OrganizationalRoleStatus)[keyof typeof OrganizationalRoleStatus]
+
+
+export const AssignmentType = {
+  PRIMARY: 'PRIMARY',
+  ACTING: 'ACTING'
+} as const
+
+export type AssignmentType = (typeof AssignmentType)[keyof typeof AssignmentType]
+
+
+export const AssignmentStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type AssignmentStatus = (typeof AssignmentStatus)[keyof typeof AssignmentStatus]
+
+
+export const VacancyStatus = {
+  OPEN: 'OPEN',
+  RECRUITING_VENTURE: 'RECRUITING_VENTURE',
+  RECRUITING_PLATFORM: 'RECRUITING_PLATFORM',
+  RECRUITING_EXTERNAL: 'RECRUITING_EXTERNAL',
+  AWAITING_DECISION: 'AWAITING_DECISION',
+  AUTOMATED_PLACEMENT: 'AUTOMATED_PLACEMENT',
+  OFFER_PENDING: 'OFFER_PENDING',
+  FILLED: 'FILLED',
+  UNRESOLVED: 'UNRESOLVED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type VacancyStatus = (typeof VacancyStatus)[keyof typeof VacancyStatus]

@@ -53,7 +53,11 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   PlatformUser: 'PlatformUser',
   UserIdentity: 'UserIdentity',
-  Venture: 'Venture'
+  Venture: 'Venture',
+  VentureMembership: 'VentureMembership',
+  OrganizationalRole: 'OrganizationalRole',
+  RoleAssignment: 'RoleAssignment',
+  RoleVacancy: 'RoleVacancy'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -110,12 +114,85 @@ export const VentureScalarFieldEnum = {
 export type VentureScalarFieldEnum = (typeof VentureScalarFieldEnum)[keyof typeof VentureScalarFieldEnum]
 
 
+export const VentureMembershipScalarFieldEnum = {
+  id: 'id',
+  ventureId: 'ventureId',
+  userId: 'userId',
+  status: 'status',
+  joinedAt: 'joinedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VentureMembershipScalarFieldEnum = (typeof VentureMembershipScalarFieldEnum)[keyof typeof VentureMembershipScalarFieldEnum]
+
+
+export const OrganizationalRoleScalarFieldEnum = {
+  id: 'id',
+  ventureId: 'ventureId',
+  parentRoleId: 'parentRoleId',
+  title: 'title',
+  description: 'description',
+  responsibilities: 'responsibilities',
+  authorityScope: 'authorityScope',
+  requirements: 'requirements',
+  status: 'status',
+  isMandatory: 'isMandatory',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrganizationalRoleScalarFieldEnum = (typeof OrganizationalRoleScalarFieldEnum)[keyof typeof OrganizationalRoleScalarFieldEnum]
+
+
+export const RoleAssignmentScalarFieldEnum = {
+  id: 'id',
+  membershipId: 'membershipId',
+  organizationalRoleId: 'organizationalRoleId',
+  ventureId: 'ventureId',
+  assignmentType: 'assignmentType',
+  status: 'status',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoleAssignmentScalarFieldEnum = (typeof RoleAssignmentScalarFieldEnum)[keyof typeof RoleAssignmentScalarFieldEnum]
+
+
+export const RoleVacancyScalarFieldEnum = {
+  id: 'id',
+  ventureId: 'ventureId',
+  organizationalRoleId: 'organizationalRoleId',
+  previousAssignmentId: 'previousAssignmentId',
+  sourceVacancyId: 'sourceVacancyId',
+  status: 'status',
+  openedAt: 'openedAt',
+  resolutionDeadline: 'resolutionDeadline',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoleVacancyScalarFieldEnum = (typeof RoleVacancyScalarFieldEnum)[keyof typeof RoleVacancyScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -132,4 +209,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

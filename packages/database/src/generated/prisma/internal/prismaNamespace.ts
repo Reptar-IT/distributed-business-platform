@@ -399,7 +399,11 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   PlatformUser: 'PlatformUser',
   UserIdentity: 'UserIdentity',
-  Venture: 'Venture'
+  Venture: 'Venture',
+  VentureMembership: 'VentureMembership',
+  OrganizationalRole: 'OrganizationalRole',
+  RoleAssignment: 'RoleAssignment',
+  RoleVacancy: 'RoleVacancy'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "platformUser" | "userIdentity" | "venture"
+    modelProps: "platformUser" | "userIdentity" | "venture" | "ventureMembership" | "organizationalRole" | "roleAssignment" | "roleVacancy"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -641,6 +645,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    VentureMembership: {
+      payload: Prisma.$VentureMembershipPayload<ExtArgs>
+      fields: Prisma.VentureMembershipFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VentureMembershipFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VentureMembershipFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>
+        }
+        findFirst: {
+          args: Prisma.VentureMembershipFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VentureMembershipFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>
+        }
+        findMany: {
+          args: Prisma.VentureMembershipFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>[]
+        }
+        create: {
+          args: Prisma.VentureMembershipCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>
+        }
+        createMany: {
+          args: Prisma.VentureMembershipCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VentureMembershipCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>[]
+        }
+        delete: {
+          args: Prisma.VentureMembershipDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>
+        }
+        update: {
+          args: Prisma.VentureMembershipUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>
+        }
+        deleteMany: {
+          args: Prisma.VentureMembershipDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VentureMembershipUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VentureMembershipUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>[]
+        }
+        upsert: {
+          args: Prisma.VentureMembershipUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentureMembershipPayload>
+        }
+        aggregate: {
+          args: Prisma.VentureMembershipAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVentureMembership>
+        }
+        groupBy: {
+          args: Prisma.VentureMembershipGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VentureMembershipGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VentureMembershipCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VentureMembershipCountAggregateOutputType> | number
+        }
+      }
+    }
+    OrganizationalRole: {
+      payload: Prisma.$OrganizationalRolePayload<ExtArgs>
+      fields: Prisma.OrganizationalRoleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrganizationalRoleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrganizationalRoleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>
+        }
+        findFirst: {
+          args: Prisma.OrganizationalRoleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrganizationalRoleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>
+        }
+        findMany: {
+          args: Prisma.OrganizationalRoleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>[]
+        }
+        create: {
+          args: Prisma.OrganizationalRoleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>
+        }
+        createMany: {
+          args: Prisma.OrganizationalRoleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OrganizationalRoleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>[]
+        }
+        delete: {
+          args: Prisma.OrganizationalRoleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>
+        }
+        update: {
+          args: Prisma.OrganizationalRoleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>
+        }
+        deleteMany: {
+          args: Prisma.OrganizationalRoleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrganizationalRoleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OrganizationalRoleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>[]
+        }
+        upsert: {
+          args: Prisma.OrganizationalRoleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationalRolePayload>
+        }
+        aggregate: {
+          args: Prisma.OrganizationalRoleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrganizationalRole>
+        }
+        groupBy: {
+          args: Prisma.OrganizationalRoleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationalRoleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrganizationalRoleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationalRoleCountAggregateOutputType> | number
+        }
+      }
+    }
+    RoleAssignment: {
+      payload: Prisma.$RoleAssignmentPayload<ExtArgs>
+      fields: Prisma.RoleAssignmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RoleAssignmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RoleAssignmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>
+        }
+        findFirst: {
+          args: Prisma.RoleAssignmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RoleAssignmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>
+        }
+        findMany: {
+          args: Prisma.RoleAssignmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>[]
+        }
+        create: {
+          args: Prisma.RoleAssignmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>
+        }
+        createMany: {
+          args: Prisma.RoleAssignmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RoleAssignmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>[]
+        }
+        delete: {
+          args: Prisma.RoleAssignmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>
+        }
+        update: {
+          args: Prisma.RoleAssignmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.RoleAssignmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RoleAssignmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RoleAssignmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.RoleAssignmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAssignmentPayload>
+        }
+        aggregate: {
+          args: Prisma.RoleAssignmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRoleAssignment>
+        }
+        groupBy: {
+          args: Prisma.RoleAssignmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoleAssignmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RoleAssignmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoleAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    RoleVacancy: {
+      payload: Prisma.$RoleVacancyPayload<ExtArgs>
+      fields: Prisma.RoleVacancyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RoleVacancyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RoleVacancyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>
+        }
+        findFirst: {
+          args: Prisma.RoleVacancyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RoleVacancyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>
+        }
+        findMany: {
+          args: Prisma.RoleVacancyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>[]
+        }
+        create: {
+          args: Prisma.RoleVacancyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>
+        }
+        createMany: {
+          args: Prisma.RoleVacancyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RoleVacancyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>[]
+        }
+        delete: {
+          args: Prisma.RoleVacancyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>
+        }
+        update: {
+          args: Prisma.RoleVacancyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>
+        }
+        deleteMany: {
+          args: Prisma.RoleVacancyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RoleVacancyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RoleVacancyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>[]
+        }
+        upsert: {
+          args: Prisma.RoleVacancyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleVacancyPayload>
+        }
+        aggregate: {
+          args: Prisma.RoleVacancyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRoleVacancy>
+        }
+        groupBy: {
+          args: Prisma.RoleVacancyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoleVacancyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RoleVacancyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoleVacancyCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -718,12 +1018,85 @@ export const VentureScalarFieldEnum = {
 export type VentureScalarFieldEnum = (typeof VentureScalarFieldEnum)[keyof typeof VentureScalarFieldEnum]
 
 
+export const VentureMembershipScalarFieldEnum = {
+  id: 'id',
+  ventureId: 'ventureId',
+  userId: 'userId',
+  status: 'status',
+  joinedAt: 'joinedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VentureMembershipScalarFieldEnum = (typeof VentureMembershipScalarFieldEnum)[keyof typeof VentureMembershipScalarFieldEnum]
+
+
+export const OrganizationalRoleScalarFieldEnum = {
+  id: 'id',
+  ventureId: 'ventureId',
+  parentRoleId: 'parentRoleId',
+  title: 'title',
+  description: 'description',
+  responsibilities: 'responsibilities',
+  authorityScope: 'authorityScope',
+  requirements: 'requirements',
+  status: 'status',
+  isMandatory: 'isMandatory',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrganizationalRoleScalarFieldEnum = (typeof OrganizationalRoleScalarFieldEnum)[keyof typeof OrganizationalRoleScalarFieldEnum]
+
+
+export const RoleAssignmentScalarFieldEnum = {
+  id: 'id',
+  membershipId: 'membershipId',
+  organizationalRoleId: 'organizationalRoleId',
+  ventureId: 'ventureId',
+  assignmentType: 'assignmentType',
+  status: 'status',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoleAssignmentScalarFieldEnum = (typeof RoleAssignmentScalarFieldEnum)[keyof typeof RoleAssignmentScalarFieldEnum]
+
+
+export const RoleVacancyScalarFieldEnum = {
+  id: 'id',
+  ventureId: 'ventureId',
+  organizationalRoleId: 'organizationalRoleId',
+  previousAssignmentId: 'previousAssignmentId',
+  sourceVacancyId: 'sourceVacancyId',
+  status: 'status',
+  openedAt: 'openedAt',
+  resolutionDeadline: 'resolutionDeadline',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoleVacancyScalarFieldEnum = (typeof RoleVacancyScalarFieldEnum)[keyof typeof RoleVacancyScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -740,6 +1113,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -808,6 +1190,90 @@ export type EnumVentureStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'VentureStatus[]'
  */
 export type ListEnumVentureStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VentureStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MembershipStatus'
+ */
+export type EnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MembershipStatus[]'
+ */
+export type ListEnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'OrganizationalRoleStatus'
+ */
+export type EnumOrganizationalRoleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationalRoleStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OrganizationalRoleStatus[]'
+ */
+export type ListEnumOrganizationalRoleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationalRoleStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AssignmentType'
+ */
+export type EnumAssignmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssignmentType'>
+    
+
+
+/**
+ * Reference to a field of type 'AssignmentType[]'
+ */
+export type ListEnumAssignmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssignmentType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AssignmentStatus'
+ */
+export type EnumAssignmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssignmentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AssignmentStatus[]'
+ */
+export type ListEnumAssignmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssignmentStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'VacancyStatus'
+ */
+export type EnumVacancyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VacancyStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'VacancyStatus[]'
+ */
+export type ListEnumVacancyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VacancyStatus[]'>
     
 
 
@@ -978,6 +1444,10 @@ export type GlobalOmitConfig = {
   platformUser?: Prisma.PlatformUserOmit
   userIdentity?: Prisma.UserIdentityOmit
   venture?: Prisma.VentureOmit
+  ventureMembership?: Prisma.VentureMembershipOmit
+  organizationalRole?: Prisma.OrganizationalRoleOmit
+  roleAssignment?: Prisma.RoleAssignmentOmit
+  roleVacancy?: Prisma.RoleVacancyOmit
 }
 
 /* Types for Logging */

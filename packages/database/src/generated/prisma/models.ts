@@ -11,4 +11,8 @@
 export type * from './models/PlatformUser.js'
 export type * from './models/UserIdentity.js'
 export type * from './models/Venture.js'
+export type * from './models/VentureMembership.js'
+export type * from './models/OrganizationalRole.js'
+export type * from './models/RoleAssignment.js'
+export type * from './models/RoleVacancy.js'
 export type * from './commonInputTypes.js'
