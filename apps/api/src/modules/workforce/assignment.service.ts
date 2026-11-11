@@ -1,6 +1,24 @@
 
-import { prisma } from "@platform/database";
+import { prisma, type Prisma } from "@platform/database";
+
 import type { CreateAssignmentInput } from "./workforce.schemas.js";
+
+type TransactionClient = Prisma.TransactionClient;
+
+/**
+ * Runs an operation using an existing transaction when supplied.
+ * Otherwise, creates a new transaction.
+ */
+const executeInTransaction = <T>(
+  tx: TransactionClient | undefined,
+  operation: (client: TransactionClient) => Promise<T>,
+): Promise<T> => {
+  if (tx) {
+    return operation(tx);
+  }
+
+  return prisma.$transaction(operation);
+};
 
 /**
  * Creates an assignment for an active venture member.
@@ -17,9 +35,10 @@ import type { CreateAssignmentInput } from "./workforce.schemas.js";
  */
 export const createAssignment = async (
   input: CreateAssignmentInput,
+  tx?: TransactionClient,
 ) => {
-  return prisma.$transaction(async (tx) => {
-    const membership = await tx.ventureMembership.findUnique({
+  return executeInTransaction(tx, async (client) => {
+    const membership = await client.ventureMembership.findUnique({
       where: {
         id: input.membershipId,
       },
@@ -35,7 +54,7 @@ export const createAssignment = async (
       );
     }
 
-    const role = await tx.organizationalRole.findFirst({
+    const role = await client.organizationalRole.findFirst({
       where: {
         id: input.organizationalRoleId,
         ventureId: membership.ventureId,
@@ -50,7 +69,7 @@ export const createAssignment = async (
     }
 
     if (input.assignmentType === "PRIMARY") {
-      const existingPrimary = await tx.roleAssignment.findFirst({
+      const existingPrimary = await client.roleAssignment.findFirst({
         where: {
           membershipId: membership.id,
           status: "ACTIVE",
@@ -65,7 +84,7 @@ export const createAssignment = async (
       }
     }
 
-    return tx.roleAssignment.create({
+    return client.roleAssignment.create({
       data: {
         membershipId: membership.id,
         organizationalRoleId: role.id,
@@ -89,9 +108,10 @@ export const createAssignment = async (
  */
 export const completeAssignment = async (
   assignmentId: string,
+  tx?: TransactionClient,
 ) => {
-  return prisma.$transaction(async (tx) => {
-    const assignment = await tx.roleAssignment.findUnique({
+  return executeInTransaction(tx, async (client) => {
+    const assignment = await client.roleAssignment.findUnique({
       where: {
         id: assignmentId,
       },
@@ -120,7 +140,7 @@ export const completeAssignment = async (
       );
     }
 
-    return tx.roleAssignment.update({
+    return client.roleAssignment.update({
       where: {
         id: assignment.id,
       },
@@ -146,9 +166,10 @@ export const completeAssignment = async (
 export const transitionPrimaryAssignment = async (
   membershipId: string,
   actingAssignmentId: string,
+  tx?: TransactionClient,
 ) => {
-  return prisma.$transaction(async (tx) => {
-    const membership = await tx.ventureMembership.findUnique({
+  return executeInTransaction(tx, async (client) => {
+    const membership = await client.ventureMembership.findUnique({
       where: {
         id: membershipId,
       },
@@ -158,7 +179,7 @@ export const transitionPrimaryAssignment = async (
       throw new Error("An active membership is required.");
     }
 
-    const primaryAssignments = await tx.roleAssignment.findMany({
+    const primaryAssignments = await client.roleAssignment.findMany({
       where: {
         membershipId,
         status: "ACTIVE",
@@ -172,7 +193,7 @@ export const transitionPrimaryAssignment = async (
       );
     }
 
-    const actingAssignment = await tx.roleAssignment.findFirst({
+    const actingAssignment = await client.roleAssignment.findFirst({
       where: {
         id: actingAssignmentId,
         membershipId,
@@ -190,7 +211,7 @@ export const transitionPrimaryAssignment = async (
 
     const now = new Date();
 
-    const completedPrimary = await tx.roleAssignment.update({
+    const completedPrimary = await client.roleAssignment.update({
       where: {
         id: primaryAssignments[0].id,
       },
@@ -200,7 +221,7 @@ export const transitionPrimaryAssignment = async (
       },
     });
 
-    const newPrimary = await tx.roleAssignment.update({
+    const newPrimary = await client.roleAssignment.update({
       where: {
         id: actingAssignment.id,
       },
