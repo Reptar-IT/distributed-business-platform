@@ -1,5 +1,8 @@
-
-import { prisma, type Prisma, type MembershipEndReason } from "@platform/database";
+import {
+  prisma,
+  type Prisma,
+  type MembershipEndReason,
+} from "@platform/database";
 import type { CreateMembershipInput } from "./workforce.schemas.js";
 
 type TransactionClient = Prisma.TransactionClient;
@@ -95,14 +98,13 @@ export const activateMembership = async (
       );
     }
 
-    const existingPrimaryAssignment =
-      await client.roleAssignment.findFirst({
-        where: {
-          membershipId,
-          status: "ACTIVE",
-          assignmentType: "PRIMARY",
-        },
-      });
+    const existingPrimaryAssignment = await client.roleAssignment.findFirst({
+      where: {
+        membershipId,
+        status: "ACTIVE",
+        assignmentType: "PRIMARY",
+      },
+    });
 
     if (existingPrimaryAssignment) {
       throw new Error(
@@ -258,6 +260,18 @@ export const endMembership = async (
 
     if (membership.status === "ENDED") {
       throw new Error("This membership has already ended.");
+    }
+
+    if (membership.status === "PENDING" && !endReason) {
+      throw new Error(
+        "An ending reason is required when ending a pending membership.",
+      );
+    }
+
+    if (membership.status !== "PENDING" && endReason) {
+      throw new Error(
+        "Pending membership ending reasons cannot be used for other membership statuses.",
+      );
     }
 
     const now = new Date();
