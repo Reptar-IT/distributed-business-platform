@@ -39,6 +39,16 @@ export const MembershipStatus = {
 export type MembershipStatus = (typeof MembershipStatus)[keyof typeof MembershipStatus]
 
 
+export const MembershipEndReason = {
+  ROLE_NOT_AWARDED: 'ROLE_NOT_AWARDED',
+  APPLICATION_DECLINED: 'APPLICATION_DECLINED',
+  WITHDRAWN: 'WITHDRAWN',
+  INVITATION_EXPIRED: 'INVITATION_EXPIRED'
+} as const
+
+export type MembershipEndReason = (typeof MembershipEndReason)[keyof typeof MembershipEndReason]
+
+
 export const OrganizationalRoleStatus = {
   DRAFT: 'DRAFT',
   ACTIVE: 'ACTIVE',

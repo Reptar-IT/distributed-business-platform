@@ -28,6 +28,13 @@ enum MembershipStatus {
   ENDED
 }
 
+enum MembershipEndReason {
+  ROLE_NOT_AWARDED
+  APPLICATION_DECLINED
+  WITHDRAWN
+  INVITATION_EXPIRED
+}
+
 enum OrganizationalRoleStatus {
   DRAFT
   ACTIVE
@@ -115,6 +122,7 @@ model VentureMembership {
 
   joinedAt  DateTime?
   endedAt   DateTime?
+  endReason MembershipEndReason?
 
   venture   Venture      @relation(fields: [ventureId], references: [id], onDelete: Restrict)
   user      PlatformUser @relation(fields: [userId], references: [id], onDelete: Restrict)

@@ -202,6 +202,13 @@ export type DateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
+export type EnumMembershipEndReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipEndReason | Prisma.EnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumMembershipEndReasonNullableFilter<$PrismaModel> | $Enums.MembershipEndReason | null
+}
+
 export type EnumMembershipStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.MembershipStatus | Prisma.EnumMembershipStatusFieldRefInput<$PrismaModel>
   in?: $Enums.MembershipStatus[] | Prisma.ListEnumMembershipStatusFieldRefInput<$PrismaModel>
@@ -224,6 +231,16 @@ export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+}
+
+export type EnumMembershipEndReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipEndReason | Prisma.EnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumMembershipEndReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.MembershipEndReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMembershipEndReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMembershipEndReasonNullableFilter<$PrismaModel>
 }
 
 export type UuidNullableFilter<$PrismaModel = never> = {
@@ -571,6 +588,13 @@ export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
+export type NestedEnumMembershipEndReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipEndReason | Prisma.EnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumMembershipEndReasonNullableFilter<$PrismaModel> | $Enums.MembershipEndReason | null
+}
+
 export type NestedEnumMembershipStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.MembershipStatus | Prisma.EnumMembershipStatusFieldRefInput<$PrismaModel>
   in?: $Enums.MembershipStatus[] | Prisma.ListEnumMembershipStatusFieldRefInput<$PrismaModel>
@@ -593,6 +617,16 @@ export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumMembershipEndReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipEndReason | Prisma.EnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.MembershipEndReason[] | Prisma.ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumMembershipEndReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.MembershipEndReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMembershipEndReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMembershipEndReasonNullableFilter<$PrismaModel>
 }
 
 export type NestedUuidNullableFilter<$PrismaModel = never> = {

@@ -121,6 +121,7 @@ export const VentureMembershipScalarFieldEnum = {
   status: 'status',
   joinedAt: 'joinedAt',
   endedAt: 'endedAt',
+  endReason: 'endReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

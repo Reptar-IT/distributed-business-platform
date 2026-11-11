@@ -1025,6 +1025,7 @@ export const VentureMembershipScalarFieldEnum = {
   status: 'status',
   joinedAt: 'joinedAt',
   endedAt: 'endedAt',
+  endReason: 'endReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1204,6 +1205,20 @@ export type EnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'MembershipStatus[]'
  */
 export type ListEnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MembershipEndReason'
+ */
+export type EnumMembershipEndReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipEndReason'>
+    
+
+
+/**
+ * Reference to a field of type 'MembershipEndReason[]'
+ */
+export type ListEnumMembershipEndReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipEndReason[]'>
     
 
 

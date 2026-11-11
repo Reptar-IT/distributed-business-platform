@@ -31,6 +31,7 @@ export type VentureMembershipMinAggregateOutputType = {
   status: $Enums.MembershipStatus | null
   joinedAt: Date | null
   endedAt: Date | null
+  endReason: $Enums.MembershipEndReason | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type VentureMembershipMaxAggregateOutputType = {
   status: $Enums.MembershipStatus | null
   joinedAt: Date | null
   endedAt: Date | null
+  endReason: $Enums.MembershipEndReason | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,7 @@ export type VentureMembershipCountAggregateOutputType = {
   status: number
   joinedAt: number
   endedAt: number
+  endReason: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +69,7 @@ export type VentureMembershipMinAggregateInputType = {
   status?: true
   joinedAt?: true
   endedAt?: true
+  endReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +81,7 @@ export type VentureMembershipMaxAggregateInputType = {
   status?: true
   joinedAt?: true
   endedAt?: true
+  endReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +93,7 @@ export type VentureMembershipCountAggregateInputType = {
   status?: true
   joinedAt?: true
   endedAt?: true
+  endReason?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +178,7 @@ export type VentureMembershipGroupByOutputType = {
   status: $Enums.MembershipStatus
   joinedAt: Date | null
   endedAt: Date | null
+  endReason: $Enums.MembershipEndReason | null
   createdAt: Date
   updatedAt: Date
   _count: VentureMembershipCountAggregateOutputType | null
@@ -204,6 +211,7 @@ export type VentureMembershipWhereInput = {
   status?: Prisma.EnumMembershipStatusFilter<"VentureMembership"> | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeNullableFilter<"VentureMembership"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableFilter<"VentureMembership"> | Date | string | null
+  endReason?: Prisma.EnumMembershipEndReasonNullableFilter<"VentureMembership"> | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFilter<"VentureMembership"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VentureMembership"> | Date | string
   venture?: Prisma.XOR<Prisma.VentureScalarRelationFilter, Prisma.VentureWhereInput>
@@ -218,6 +226,7 @@ export type VentureMembershipOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  endReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   venture?: Prisma.VentureOrderByWithRelationInput
@@ -236,6 +245,7 @@ export type VentureMembershipWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumMembershipStatusFilter<"VentureMembership"> | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeNullableFilter<"VentureMembership"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableFilter<"VentureMembership"> | Date | string | null
+  endReason?: Prisma.EnumMembershipEndReasonNullableFilter<"VentureMembership"> | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFilter<"VentureMembership"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VentureMembership"> | Date | string
   venture?: Prisma.XOR<Prisma.VentureScalarRelationFilter, Prisma.VentureWhereInput>
@@ -250,6 +260,7 @@ export type VentureMembershipOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  endReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.VentureMembershipCountOrderByAggregateInput
@@ -267,6 +278,7 @@ export type VentureMembershipScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumMembershipStatusWithAggregatesFilter<"VentureMembership"> | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"VentureMembership"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"VentureMembership"> | Date | string | null
+  endReason?: Prisma.EnumMembershipEndReasonNullableWithAggregatesFilter<"VentureMembership"> | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"VentureMembership"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"VentureMembership"> | Date | string
 }
@@ -276,6 +288,7 @@ export type VentureMembershipCreateInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
   venture: Prisma.VentureCreateNestedOneWithoutMembershipsInput
@@ -290,6 +303,7 @@ export type VentureMembershipUncheckedCreateInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.RoleAssignmentUncheckedCreateNestedManyWithoutMembershipInput
@@ -300,6 +314,7 @@ export type VentureMembershipUpdateInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   venture?: Prisma.VentureUpdateOneRequiredWithoutMembershipsNestedInput
@@ -314,6 +329,7 @@ export type VentureMembershipUncheckedUpdateInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.RoleAssignmentUncheckedUpdateManyWithoutMembershipNestedInput
@@ -326,6 +342,7 @@ export type VentureMembershipCreateManyInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -335,6 +352,7 @@ export type VentureMembershipUpdateManyMutationInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -346,6 +364,7 @@ export type VentureMembershipUncheckedUpdateManyInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -372,6 +391,7 @@ export type VentureMembershipCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  endReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -383,6 +403,7 @@ export type VentureMembershipMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  endReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -394,6 +415,7 @@ export type VentureMembershipMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  endReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -495,6 +517,10 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type NullableEnumMembershipEndReasonFieldUpdateOperationsInput = {
+  set?: $Enums.MembershipEndReason | null
+}
+
 export type VentureMembershipCreateNestedOneWithoutAssignmentsInput = {
   create?: Prisma.XOR<Prisma.VentureMembershipCreateWithoutAssignmentsInput, Prisma.VentureMembershipUncheckedCreateWithoutAssignmentsInput>
   connectOrCreate?: Prisma.VentureMembershipCreateOrConnectWithoutAssignmentsInput
@@ -514,6 +540,7 @@ export type VentureMembershipCreateWithoutUserInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
   venture: Prisma.VentureCreateNestedOneWithoutMembershipsInput
@@ -526,6 +553,7 @@ export type VentureMembershipUncheckedCreateWithoutUserInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.RoleAssignmentUncheckedCreateNestedManyWithoutMembershipInput
@@ -567,6 +595,7 @@ export type VentureMembershipScalarWhereInput = {
   status?: Prisma.EnumMembershipStatusFilter<"VentureMembership"> | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeNullableFilter<"VentureMembership"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableFilter<"VentureMembership"> | Date | string | null
+  endReason?: Prisma.EnumMembershipEndReasonNullableFilter<"VentureMembership"> | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFilter<"VentureMembership"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VentureMembership"> | Date | string
 }
@@ -576,6 +605,7 @@ export type VentureMembershipCreateWithoutVentureInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.PlatformUserCreateNestedOneWithoutMembershipsInput
@@ -588,6 +618,7 @@ export type VentureMembershipUncheckedCreateWithoutVentureInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.RoleAssignmentUncheckedCreateNestedManyWithoutMembershipInput
@@ -624,6 +655,7 @@ export type VentureMembershipCreateWithoutAssignmentsInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
   venture: Prisma.VentureCreateNestedOneWithoutMembershipsInput
@@ -637,6 +669,7 @@ export type VentureMembershipUncheckedCreateWithoutAssignmentsInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -662,6 +695,7 @@ export type VentureMembershipUpdateWithoutAssignmentsInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   venture?: Prisma.VentureUpdateOneRequiredWithoutMembershipsNestedInput
@@ -675,6 +709,7 @@ export type VentureMembershipUncheckedUpdateWithoutAssignmentsInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -685,6 +720,7 @@ export type VentureMembershipCreateManyUserInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -694,6 +730,7 @@ export type VentureMembershipUpdateWithoutUserInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   venture?: Prisma.VentureUpdateOneRequiredWithoutMembershipsNestedInput
@@ -706,6 +743,7 @@ export type VentureMembershipUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.RoleAssignmentUncheckedUpdateManyWithoutMembershipNestedInput
@@ -717,6 +755,7 @@ export type VentureMembershipUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -727,6 +766,7 @@ export type VentureMembershipCreateManyVentureInput = {
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string | null
   endedAt?: Date | string | null
+  endReason?: $Enums.MembershipEndReason | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -736,6 +776,7 @@ export type VentureMembershipUpdateWithoutVentureInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutMembershipsNestedInput
@@ -748,6 +789,7 @@ export type VentureMembershipUncheckedUpdateWithoutVentureInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.RoleAssignmentUncheckedUpdateManyWithoutMembershipNestedInput
@@ -759,6 +801,7 @@ export type VentureMembershipUncheckedUpdateManyWithoutVentureInput = {
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endReason?: Prisma.NullableEnumMembershipEndReasonFieldUpdateOperationsInput | $Enums.MembershipEndReason | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -801,6 +844,7 @@ export type VentureMembershipSelect<ExtArgs extends runtime.Types.Extensions.Int
   status?: boolean
   joinedAt?: boolean
   endedAt?: boolean
+  endReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   venture?: boolean | Prisma.VentureDefaultArgs<ExtArgs>
@@ -816,6 +860,7 @@ export type VentureMembershipSelectCreateManyAndReturn<ExtArgs extends runtime.T
   status?: boolean
   joinedAt?: boolean
   endedAt?: boolean
+  endReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   venture?: boolean | Prisma.VentureDefaultArgs<ExtArgs>
@@ -829,6 +874,7 @@ export type VentureMembershipSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   status?: boolean
   joinedAt?: boolean
   endedAt?: boolean
+  endReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   venture?: boolean | Prisma.VentureDefaultArgs<ExtArgs>
@@ -842,11 +888,12 @@ export type VentureMembershipSelectScalar = {
   status?: boolean
   joinedAt?: boolean
   endedAt?: boolean
+  endReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VentureMembershipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ventureId" | "userId" | "status" | "joinedAt" | "endedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ventureMembership"]>
+export type VentureMembershipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ventureId" | "userId" | "status" | "joinedAt" | "endedAt" | "endReason" | "createdAt" | "updatedAt", ExtArgs["result"]["ventureMembership"]>
 export type VentureMembershipInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   venture?: boolean | Prisma.VentureDefaultArgs<ExtArgs>
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
@@ -876,6 +923,7 @@ export type $VentureMembershipPayload<ExtArgs extends runtime.Types.Extensions.I
     status: $Enums.MembershipStatus
     joinedAt: Date | null
     endedAt: Date | null
+    endReason: $Enums.MembershipEndReason | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["ventureMembership"]>
@@ -1310,6 +1358,7 @@ export interface VentureMembershipFieldRefs {
   readonly status: Prisma.FieldRef<"VentureMembership", 'MembershipStatus'>
   readonly joinedAt: Prisma.FieldRef<"VentureMembership", 'DateTime'>
   readonly endedAt: Prisma.FieldRef<"VentureMembership", 'DateTime'>
+  readonly endReason: Prisma.FieldRef<"VentureMembership", 'MembershipEndReason'>
   readonly createdAt: Prisma.FieldRef<"VentureMembership", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"VentureMembership", 'DateTime'>
 }
