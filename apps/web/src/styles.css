@@ -41,6 +41,53 @@ footer {
   font-size: 13px;
 }
 
+.auth-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  min-height: 44px;
+  margin-top: 20px;
+}
+
+.auth-status {
+  color: #475569;
+  font-size: 14px;
+}
+
+.auth-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #1d4ed8;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  padding: 10px 15px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-button.secondary {
+  border-color: #cbd5e1;
+  background: white;
+  color: #17212b;
+}
+
+.auth-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.auth-message {
+  margin: 12px 0 0;
+  color: #b42318;
+  text-align: right;
+  font-size: 14px;
+}
+
 .hero {
   padding: 110px 0 75px;
   max-width: 760px;
