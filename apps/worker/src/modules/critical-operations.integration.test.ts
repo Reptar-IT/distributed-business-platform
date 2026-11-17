@@ -247,6 +247,14 @@ suite("critical-operation PostgreSQL 17 and archive integration", () => {
       return id;
     };
     try{
+      const authority=await admin.query<{owner_operator_login:boolean;critical_service_is_operator:boolean;critical_service_can_issue:boolean;runtime_can_prepare:boolean;operator_can_finalize:boolean}>(
+        `SELECT (SELECT rolcanlogin FROM pg_roles WHERE rolname='dbp_platform_owner_operator') AS owner_operator_login,
+                pg_has_role('dbp_critical_operation_service','dbp_platform_owner_operator','member') AS critical_service_is_operator,
+                has_function_privilege('dbp_critical_operation_service','public.issue_platform_owner_bootstrap_credential(uuid,uuid,text,text,bytea)','EXECUTE') AS critical_service_can_issue,
+                has_function_privilege('dbp_runtime','public.prepare_platform_owner_bootstrap(uuid,uuid,bytea)','EXECUTE') AS runtime_can_prepare,
+                has_function_privilege('dbp_owner_bootstrap_operator_test','public.finalize_critical_operation(uuid)','EXECUTE') AS operator_can_finalize`,
+      );
+      expect(authority.rows[0]).toEqual({owner_operator_login:false,critical_service_is_operator:false,critical_service_can_issue:false,runtime_can_prepare:false,operator_can_finalize:false});
       await expect(issue(randomUUID())).rejects.toThrow(/ACTIVE_PLATFORM_USER_REQUIRED/);
       const suspended=await createUser("SUSPENDED");
       await expect(issue(suspended)).rejects.toThrow(/ACTIVE_PLATFORM_USER_REQUIRED/);
@@ -263,8 +271,8 @@ suite("critical-operation PostgreSQL 17 and archive integration", () => {
       const challenge=(await identityOperator.query<{id:string}>(
         "SELECT public.begin_platform_identity_link($1::uuid,$2) AS id",[identityOwner,"https://issuer.example.test/realm"],
       )).rows[0]!.id;
-      await identityCallback.query("SELECT public.complete_platform_identity_link($1::uuid,$2,$3,$4)",
-        [challenge,"https://issuer.example.test/realm","owned-by-someone-else",new Date()]);
+      await identityCallback.query("SELECT public.complete_platform_identity_link($1::uuid,$2::uuid,$3,$4,$5)",
+        [challenge,identityOwner,"https://issuer.example.test/realm","owned-by-someone-else",new Date()]);
       await expect(issue(otherUser)).rejects.toThrow(/VERIFIED_IDENTITY_REQUIRED/);
       await expect(issue(identityOwner,"https://wrong.example.test/issuer")).rejects.toThrow(/VERIFIED_IDENTITY_REQUIRED/);
     }finally{
@@ -286,9 +294,11 @@ suite("critical-operation PostgreSQL 17 and archive integration", () => {
         "SELECT public.begin_platform_identity_link($1::uuid,$2) AS id",
         [userId,"https://issuer.example.test/realm"],
       )).rows[0]!.id;
+      await expect(identityCallback.query("SELECT * FROM public.get_platform_identity_link_confirmation($1::uuid)",[challenge]))
+        .resolves.toMatchObject({rows:[{platform_user_id:userId}]});
       await expect(identityCallback.query(
-        "SELECT public.complete_platform_identity_link($1::uuid,$2,$3,$4)",
-        [challenge,"https://issuer.example.test/realm","bootstrap-owner-subject",new Date()],
+        "SELECT public.complete_platform_identity_link($1::uuid,$2::uuid,$3,$4,$5)",
+        [challenge,userId,"https://issuer.example.test/realm","bootstrap-owner-subject",new Date()],
       )).resolves.toBeTruthy();
       const credentialId=randomUUID();
       const verifier=Buffer.alloc(32,0x42);
@@ -296,6 +306,8 @@ suite("critical-operation PostgreSQL 17 and archive integration", () => {
         "SELECT public.issue_platform_owner_bootstrap_credential($1::uuid,$2::uuid,$3,$4,$5)",
         [credentialId,userId,"https://issuer.example.test/realm","test-key-v1",verifier],
       );
+      const issuedBy=await admin.query<{issued_by:string}>("SELECT \"issuedBy\" AS issued_by FROM public.owner_bootstrap_credentials WHERE id=$1",[credentialId]);
+      expect(issuedBy.rows[0]!.issued_by).toBe("dbp_owner_bootstrap_operator_test");
       const requests=await Promise.allSettled([
         ownerOperator.query<{id:string}>("SELECT public.prepare_platform_owner_bootstrap($1::uuid,$2::uuid,$3) AS id",[credentialId,userId,verifier]),
         ownerOperator.query<{id:string}>("SELECT public.prepare_platform_owner_bootstrap($1::uuid,$2::uuid,$3) AS id",[credentialId,userId,verifier]),

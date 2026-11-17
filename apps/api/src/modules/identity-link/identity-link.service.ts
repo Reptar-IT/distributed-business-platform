@@ -25,10 +25,18 @@ export function createIdentityLinkOperatorService(config: PoolConfig | string) {
 export function createIdentityLinkCallbackService(config: PoolConfig | string) {
   const pool = createPool(config, "dbp-identity-link-callback");
   return {
-    async complete(input: { challengeId: string; issuer: string; subject: string; verifiedAt: Date }): Promise<string> {
+    async getPendingTarget(challengeId: string): Promise<{ platformUserId: string } | null> {
+      const result = await pool.query<{ platform_user_id: string }>(
+        "SELECT * FROM public.get_platform_identity_link_confirmation($1::uuid)",
+        [challengeId],
+      );
+      const row = result.rows[0];
+      return row ? { platformUserId: row.platform_user_id } : null;
+    },
+    async complete(input: { challengeId: string; platformUserId: string; issuer: string; subject: string; verifiedAt: Date }): Promise<string> {
       const result = await pool.query<{ complete_platform_identity_link: string }>(
-        "SELECT public.complete_platform_identity_link($1::uuid, $2, $3, $4::timestamptz) AS complete_platform_identity_link",
-        [input.challengeId, input.issuer, input.subject, input.verifiedAt],
+        "SELECT public.complete_platform_identity_link($1::uuid, $2::uuid, $3, $4, $5::timestamptz) AS complete_platform_identity_link",
+        [input.challengeId, input.platformUserId, input.issuer, input.subject, input.verifiedAt],
       );
       return result.rows[0]!.complete_platform_identity_link;
     },

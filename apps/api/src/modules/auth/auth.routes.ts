@@ -19,7 +19,8 @@ interface AuthRouteOptions {
   redirectUri: string;
   postLogoutRedirectUri: string;
   identityLinks?: {
-    complete(input: { challengeId: string; issuer: string; subject: string; verifiedAt: Date }): Promise<string>;
+    getPendingTarget(challengeId: string): Promise<{ platformUserId: string } | null>;
+    complete(input: { challengeId: string; platformUserId: string; issuer: string; subject: string; verifiedAt: Date }): Promise<string>;
     reject(challengeId: string, outcomeCode: string): Promise<void>;
   };
 }
@@ -43,6 +44,31 @@ function cookieOptions(maxAgeSeconds: number) {
 function transactionCookieName(state: string): string {
   const prefix = process.env.NODE_ENV === "production" ? "__Host-dbp_oidc_" : "dbp_oidc_";
   return `${prefix}${state}`;
+}
+
+function identityLinkConfirmationCookieName(confirmationId: string): string {
+  const prefix = process.env.NODE_ENV === "production" ? "__Host-dbp_identity_link_" : "dbp_identity_link_";
+  return `${prefix}${confirmationId}`;
+}
+
+function identityLinkCookieOptions(maxAgeSeconds: number) {
+  return {
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict" as const,
+    maxAge: maxAgeSeconds,
+  };
+}
+
+function confirmationFields(body: unknown): { confirmationId: string; csrfToken: string; decision: "confirm" | "cancel" } | null {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return null;
+  const fields = body as Record<string, unknown>;
+  if (Object.keys(fields).sort().join(",") !== "confirmationId,csrfToken,decision" ||
+      typeof fields.confirmationId !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(fields.confirmationId) ||
+      typeof fields.csrfToken !== "string" ||
+      (fields.decision !== "confirm" && fields.decision !== "cancel")) return null;
+  return { confirmationId: fields.confirmationId, csrfToken: fields.csrfToken, decision: fields.decision };
 }
 
 export function createAuthRoutes(options: AuthRouteOptions): FastifyPluginAsync {
@@ -75,18 +101,28 @@ export function createAuthRoutes(options: AuthRouteOptions): FastifyPluginAsync 
           return reply.code(400).send({ error: "Identity linking could not be completed" });
         }
         callbackUrl.search = requestUrl.search;
+        let challengeId: string | undefined;
         try {
           const proof = await options.oidc.completeIdentityLink(callbackUrl, state);
-          const outcome = await options.identityLinks.complete({
-            ...proof.identity,
-            challengeId: proof.challengeId,
-            verifiedAt: proof.verifiedAt,
-          });
-          return reply.redirect(`${options.webOrigin}/?identity_link=${outcome === "LINKED" || outcome === "ALREADY_VERIFIED" ? "complete" : "failed"}`);
-        } catch (error) {
-          if (error instanceof IdentityLinkVerificationError) {
-            try { await options.identityLinks.reject(error.challengeId, error.outcomeCode); } catch { /* Keep callback errors generic. */ }
+          challengeId = proof.challengeId;
+          const target = await options.identityLinks.getPendingTarget(challengeId);
+          if (!target) {
+            await options.identityLinks.reject(challengeId, "confirmation_not_available");
+            return reply.redirect(`${options.webOrigin}/?identity_link=failed`);
           }
+          const confirmation = await options.oidc.createIdentityLinkConfirmation(proof, target.platformUserId);
+          reply.setCookie(
+            identityLinkConfirmationCookieName(confirmation.confirmationId),
+            confirmation.browserBinding,
+            identityLinkCookieOptions(5 * 60),
+          );
+          const confirmationUrl = new URL(options.webOrigin);
+          confirmationUrl.hash = `identity-link-confirmation/${confirmation.confirmationId}`;
+          return reply.redirect(confirmationUrl.href);
+        } catch (error) {
+          const rejectedChallengeId = error instanceof IdentityLinkVerificationError ? error.challengeId : challengeId;
+          const outcomeCode = error instanceof IdentityLinkVerificationError ? error.outcomeCode : "confirmation_unavailable";
+          if (rejectedChallengeId) try { await options.identityLinks.reject(rejectedChallengeId, outcomeCode); } catch { /* Keep callback errors generic. */ }
           return reply.redirect(`${options.webOrigin}/?identity_link=failed`);
         }
       }
@@ -134,6 +170,64 @@ export function createAuthRoutes(options: AuthRouteOptions): FastifyPluginAsync 
         return reply.redirect(options.webOrigin);
       } catch {
         return reply.redirect(`${options.webOrigin}/?auth=unavailable`);
+      }
+    });
+
+    app.get<{ Params: { confirmationId: string } }>("/api/v1/auth/identity-link/confirmation/:confirmationId", async (request, reply) => {
+      if (!requireBrowserOrigin(request, options.webOrigin) || !options.identityLinks) {
+        return reply.code(options.identityLinks ? 403 : 503).send({ error: "Identity-link confirmation is unavailable" });
+      }
+      const { confirmationId } = request.params;
+      if (!/^[A-Za-z0-9_-]{43}$/.test(confirmationId)) return reply.code(404).send({ error: "Confirmation was not found" });
+      const confirmation = await options.oidc.getIdentityLinkConfirmation(
+        confirmationId,
+        request.cookies[identityLinkConfirmationCookieName(confirmationId)] ?? "",
+      );
+      if (!confirmation) return reply.code(404).send({ error: "Confirmation was not found or has expired" });
+      const target = await options.identityLinks.getPendingTarget(confirmation.challengeId);
+      if (!target || target.platformUserId !== confirmation.platformUserId) {
+        try { await options.identityLinks.reject(confirmation.challengeId, "confirmation_target_mismatch"); } catch { /* Fail closed. */ }
+        return reply.code(410).send({ error: "Confirmation was not found or has expired" });
+      }
+      reply.header("Cache-Control", "no-store");
+      reply.header("Referrer-Policy", "no-referrer");
+      return reply.send({ platformUserId: confirmation.platformUserId, issuer: confirmation.issuer, csrfToken: confirmation.csrfToken });
+    });
+
+    app.post("/api/v1/auth/identity-link/confirmation", async (request, reply) => {
+      if (!requireBrowserOrigin(request, options.webOrigin) || !options.identityLinks) {
+        return reply.code(options.identityLinks ? 403 : 503).send({ error: "Identity-link confirmation is unavailable" });
+      }
+      const fields = confirmationFields(request.body);
+      if (!fields) return reply.code(400).send({ error: "Identity-link confirmation is invalid" });
+      const cookieName = identityLinkConfirmationCookieName(fields.confirmationId);
+      const proof = await options.oidc.consumeIdentityLinkConfirmation(
+        fields.confirmationId,
+        fields.csrfToken,
+        request.cookies[cookieName] ?? "",
+      );
+      reply.clearCookie(cookieName, identityLinkCookieOptions(0));
+      if (!proof) return reply.code(400).send({ error: "Identity-link confirmation is invalid or expired" });
+      if (fields.decision === "cancel") {
+        await options.identityLinks.reject(proof.challengeId, "holder_cancelled");
+        return reply.send({ outcome: "cancelled" });
+      }
+      const target = await options.identityLinks.getPendingTarget(proof.challengeId);
+      if (!target || target.platformUserId !== proof.platformUserId) {
+        await options.identityLinks.reject(proof.challengeId, "confirmation_target_mismatch");
+        return reply.code(409).send({ error: "Identity-link confirmation could not be completed" });
+      }
+      try {
+        const outcome = await options.identityLinks.complete({
+          challengeId: proof.challengeId,
+          platformUserId: proof.platformUserId,
+          ...proof.identity,
+          verifiedAt: proof.verifiedAt,
+        });
+        return reply.send({ outcome: outcome === "LINKED" || outcome === "ALREADY_VERIFIED" ? "linked" : "rejected" });
+      } catch {
+        try { await options.identityLinks.reject(proof.challengeId, "confirmation_processing_failed"); } catch { /* Keep callback failures generic. */ }
+        return reply.code(503).send({ error: "Identity-link confirmation could not be completed" });
       }
     });
 

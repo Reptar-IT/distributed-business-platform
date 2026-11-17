@@ -41,6 +41,10 @@ class MemoryRedis {
     this.values.delete(key);
     return value;
   }
+
+  async get(key: string): Promise<string | null> {
+    return this.values.get(key) ?? null;
+  }
 }
 
 describe("identity and OIDC services", () => {
@@ -232,6 +236,92 @@ describe("identity and OIDC services", () => {
       new URL(`https://api.example.test/api/v1/auth/callback?code=opaque&state=${state}`),
       state,
     )).rejects.toMatchObject({ challengeId: "00000000-0000-4000-8000-000000000001", outcomeCode: "oidc_proof_rejected" });
+  });
+
+  it("rejects an ID token whose authorized party names another client", async () => {
+    const service = createOidcService({
+      redis: new MemoryRedis() as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    const { state } = await service.startLogin("browser-binding");
+    oidcMocks.authorizationCodeGrant.mockResolvedValueOnce({ claims: () => ({
+      iss: "https://idp.example.test/realm",
+      sub: "external-subject",
+      azp: "another-client",
+    }) });
+    await expect(service.completeLogin(
+      new URL(`https://api.example.test/api/v1/auth/callback?code=opaque&state=${state}`), state, "browser-binding",
+    )).rejects.toThrow("OIDC identity claims are invalid");
+  });
+
+  it("rejects a mismatched authorized party during identity proof", async () => {
+    const service = createOidcService({
+      redis: new MemoryRedis() as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    await service.startIdentityLink("00000000-0000-4000-8000-000000000001");
+    const state = "il_state_value_012345678901234567890";
+    oidcMocks.authorizationCodeGrant.mockResolvedValueOnce({ claims: () => ({
+      iss: "https://idp.example.test/realm",
+      sub: "external-subject",
+      azp: "another-client",
+      auth_time: Math.floor(Date.now() / 1000),
+    }) });
+    await expect(service.completeIdentityLink(
+      new URL(`https://api.example.test/api/v1/auth/callback?code=opaque&state=${state}`), state,
+    )).rejects.toMatchObject({ outcomeCode: "oidc_proof_rejected" });
+  });
+
+  it("binds confirmation data to the selected user and consumes it once with browser and CSRF proof", async () => {
+    const redis = new MemoryRedis();
+    const service = createOidcService({
+      redis: redis as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    const proof = {
+      challengeId: "00000000-0000-4000-8000-000000000001",
+      identity: { issuer: "https://idp.example.test/realm", subject: "external-subject" },
+      verifiedAt: new Date("2026-11-17T12:00:00Z"),
+    };
+    const { confirmationId, browserBinding } = await service.createIdentityLinkConfirmation(proof, "selected-platform-user");
+    const key = `dbp:oidc:identity-link-confirmation:${confirmationId}`;
+    expect(JSON.parse(redis.values.get(key)!)).toMatchObject({
+      challengeId: proof.challengeId,
+      platformUserId: "selected-platform-user",
+      identity: proof.identity,
+    });
+    expect(await service.getIdentityLinkConfirmation(confirmationId, "wrong-browser")).toBeNull();
+    const view = await service.getIdentityLinkConfirmation(confirmationId, browserBinding);
+    expect(view).toMatchObject({
+      challengeId: proof.challengeId,
+      platformUserId: "selected-platform-user",
+      issuer: proof.identity.issuer,
+    });
+    expect(view).not.toHaveProperty("subject");
+    const consumed = await service.consumeIdentityLinkConfirmation(confirmationId, view!.csrfToken, browserBinding);
+    expect(consumed).toMatchObject({
+      challengeId: proof.challengeId,
+      platformUserId: "selected-platform-user",
+      identity: proof.identity,
+    });
+    expect(await service.consumeIdentityLinkConfirmation(confirmationId, view!.csrfToken, browserBinding)).toBeNull();
+
+    const expired = await service.createIdentityLinkConfirmation(proof, "selected-platform-user");
+    redis.values.delete(`dbp:oidc:identity-link-confirmation:${expired.confirmationId}`);
+    expect(await service.getIdentityLinkConfirmation(expired.confirmationId, expired.browserBinding)).toBeNull();
+    expect(await service.consumeIdentityLinkConfirmation(expired.confirmationId, "csrf", expired.browserBinding)).toBeNull();
   });
 
   it("rejects authorization responses when the OIDC library rejects token validation", async () => {

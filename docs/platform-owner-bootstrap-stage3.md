@@ -4,9 +4,19 @@
 
 Stage 3 establishes the first platform owner through an explicitly authorized operator using the server-side `@platform/api` CLI. There is no bootstrap HTTP endpoint, first-user-wins behavior, email matching, user provisioning, ordinary administrator privilege, owner transfer, or recovery flow. The canonical principal is an existing active `PlatformUser`; its OIDC identity is the exact `(issuer, subject)` pair and must have database verification provenance.
 
-Identity linking is a narrowly scoped prerequisite. An operator explicitly selects an existing user and starts a five-minute challenge. The identity holder completes a fresh Authorization Code + PKCE flow directly with the configured OIDC provider. Redis stores one-time state, nonce, and verifier material; callback processing validates state, nonce, PKCE, issuer, subject, and recent `auth_time`. A restricted callback database function records the exact mapping and provenance. Email claims are discarded. The mapping is immutable through this path, and an already-linked identity cannot be reassigned. Identity linking neither sets nor implies owner authority.
+Identity linking is a narrowly scoped prerequisite. An operator explicitly selects an existing user and starts a five-minute challenge. The identity holder completes a fresh Authorization Code + PKCE flow directly with the configured OIDC provider, then returns to the first-party DBP web application. That application shows the verified provider issuer and the exact selected `PlatformUser` UUID, and requires an explicit confirm or cancel action. Only confirmation sends the proof to the restricted callback function. Redis binds the single-use confirmation to the original challenge, selected user, browser cookie, and CSRF token; the database independently checks that the challenge still selects that same active user. Cancellation, expiry, replay, and substitution do not create a mapping. State, nonce, PKCE, issuer, subject, authorized party, signature, audience, expiry, and recent `auth_time` are validated. Email claims are discarded. The mapping is immutable through this path, and an already-linked identity cannot be reassigned. Identity linking neither sets nor implies owner authority.
 
-The operator login must be explicitly authorized by the platform's DBA/security process for `dbp_identity_link_operator` or `dbp_platform_owner_operator`; migrations create only `NOLOGIN` capability roles and do not grant these capabilities to ordinary administrators. Provision login roles and grant capability membership out of band. Do not put privileged passwords in migrations or ordinary API/worker configuration.
+The operator login must be explicitly authorized by the platform's DBA/security process for `dbp_identity_link_operator` or `dbp_platform_owner_operator`; migrations create only `NOLOGIN` capability roles and do not grant these capabilities to ordinary administrators. Provision one named login per human operator and grant only the required capability membership, without `ADMIN OPTION`:
+
+```sql
+CREATE ROLE dbp_identity_link_operator_alex LOGIN;
+GRANT dbp_identity_link_operator TO dbp_identity_link_operator_alex;
+
+CREATE ROLE dbp_platform_owner_operator_alex LOGIN;
+GRANT dbp_platform_owner_operator TO dbp_platform_owner_operator_alex;
+```
+
+Set credentials through the approved database IAM or secret manager. Never use a shared operator username or password. The database records `session_user` as the initiating operator, so a shared login would destroy human attribution. PostgreSQL cannot determine whether a credential is shared by multiple people; production must use individual database IAM identities or individually controlled credentials, with access review, rotation, and prompt revocation. Rotate credentials through the approved database IAM/secret manager without printing them. To revoke access, revoke the specific capability membership and disable the individual login. Do not put privileged passwords in migrations or ordinary API/worker configuration. The callback database login is a separate service identity, not a human operator login.
 
 ## CLI lifecycle
 
@@ -18,7 +28,7 @@ Run commands only from a trusted server terminal with the relevant narrowly scop
    npm run platform -- identity-link <existing-platform-user-uuid>
    ```
 
-   The operator confirms with `LINK`. The CLI prints an authorization URL for the identity holder. Complete it within five minutes in that holder's browser. The API callback records success or a bounded rejection outcome and does not create a login session.
+   The operator confirms with `LINK`. The CLI prints an authorization URL for the identity holder. Complete it within five minutes in that holder's browser, then review the DBP first-party confirmation screen and explicitly confirm or cancel the exact account association. Confirmation does not create a login session or grant owner authority.
 2. Issue a one-time owner credential after confirming the intended active user:
 
    ```sh

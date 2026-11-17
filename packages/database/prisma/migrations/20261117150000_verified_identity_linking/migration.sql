@@ -118,8 +118,20 @@ BEGIN
   RETURN v_id;
 END; $$;
 
+CREATE FUNCTION public.get_platform_identity_link_confirmation(p_challenge_id UUID)
+RETURNS TABLE(platform_user_id UUID)
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,public AS $$
+BEGIN
+  IF NOT pg_catalog.pg_has_role(session_user,'dbp_identity_link_callback','member') THEN
+    RAISE EXCEPTION 'IDENTITY_LINK_CALLBACK_REQUIRED';
+  END IF;
+  RETURN QUERY SELECT c."platformUserId" FROM public.identity_link_challenges c
+    JOIN public.platform_users u ON u.id=c."platformUserId" AND u.status='ACTIVE'
+    WHERE c.id=p_challenge_id AND c.status='PENDING' AND c."expiresAt">clock_timestamp();
+END; $$;
+
 CREATE FUNCTION public.complete_platform_identity_link(
-  p_challenge_id UUID,p_issuer TEXT,p_subject TEXT,p_verified_at TIMESTAMPTZ
+  p_challenge_id UUID,p_expected_platform_user_id UUID,p_issuer TEXT,p_subject TEXT,p_verified_at TIMESTAMPTZ
 ) RETURNS TEXT LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,public AS $$
 DECLARE v_challenge public.identity_link_challenges%ROWTYPE; v_user public.platform_users%ROWTYPE;
         v_identity public.user_identities%ROWTYPE; v_outcome TEXT; v_now TIMESTAMPTZ:=clock_timestamp();
@@ -135,6 +147,7 @@ BEGIN
     RETURN 'REJECTED';
   END IF;
   IF v_challenge."expiresAt"<=v_now THEN v_outcome:='challenge_expired';
+  ELSIF p_expected_platform_user_id IS DISTINCT FROM v_challenge."platformUserId" THEN v_outcome:='confirmation_target_mismatch';
   ELSIF p_issuer IS DISTINCT FROM v_challenge."expectedIssuer" OR p_subject IS NULL OR length(p_subject) NOT BETWEEN 1 AND 1000 THEN v_outcome:='identity_claims_mismatch';
   ELSIF p_verified_at IS NULL OR p_verified_at<v_now-interval '5 minutes' OR p_verified_at>v_now+interval '1 minute' THEN v_outcome:='fresh_authentication_required';
   ELSE
@@ -203,11 +216,14 @@ BEGIN
 END; $$;
 
 ALTER FUNCTION public.begin_platform_identity_link(UUID,TEXT) OWNER TO dbp_identity_link_owner;
-ALTER FUNCTION public.complete_platform_identity_link(UUID,TEXT,TEXT,TIMESTAMPTZ) OWNER TO dbp_identity_link_owner;
+ALTER FUNCTION public.get_platform_identity_link_confirmation(UUID) OWNER TO dbp_identity_link_owner;
+ALTER FUNCTION public.complete_platform_identity_link(UUID,UUID,TEXT,TEXT,TIMESTAMPTZ) OWNER TO dbp_identity_link_owner;
 ALTER FUNCTION public.reject_platform_identity_link(UUID,TEXT) OWNER TO dbp_identity_link_owner;
-REVOKE ALL ON FUNCTION public.begin_platform_identity_link(UUID,TEXT),public.complete_platform_identity_link(UUID,TEXT,TEXT,TIMESTAMPTZ),public.reject_platform_identity_link(UUID,TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.begin_platform_identity_link(UUID,TEXT),public.get_platform_identity_link_confirmation(UUID),
+  public.complete_platform_identity_link(UUID,UUID,TEXT,TEXT,TIMESTAMPTZ),public.reject_platform_identity_link(UUID,TEXT) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.begin_platform_identity_link(UUID,TEXT) TO dbp_identity_link_operator;
-GRANT EXECUTE ON FUNCTION public.complete_platform_identity_link(UUID,TEXT,TEXT,TIMESTAMPTZ),public.reject_platform_identity_link(UUID,TEXT) TO dbp_identity_link_callback;
+GRANT EXECUTE ON FUNCTION public.get_platform_identity_link_confirmation(UUID),
+  public.complete_platform_identity_link(UUID,UUID,TEXT,TEXT,TIMESTAMPTZ),public.reject_platform_identity_link(UUID,TEXT) TO dbp_identity_link_callback;
 REVOKE ALL ON FUNCTION public.guard_user_identity_link_write(),public.guard_identity_link_provenance(),public.guard_identity_link_challenge() FROM PUBLIC;
 
 COMMIT;
