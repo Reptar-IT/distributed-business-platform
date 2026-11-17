@@ -92,3 +92,13 @@ export type AuditExportDelivery = Prisma.AuditExportDeliveryModel
  *
  */
 export type AuditArchiveReceipt = Prisma.AuditArchiveReceiptModel
+/**
+ * Model CriticalOperation
+ *
+ */
+export type CriticalOperation = Prisma.CriticalOperationModel
+/**
+ * Model CriticalOperationGate
+ *
+ */
+export type CriticalOperationGate = Prisma.CriticalOperationGateModel

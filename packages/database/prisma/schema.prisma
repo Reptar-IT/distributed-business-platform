@@ -88,6 +88,16 @@ enum AuditDestinationType {
   HOSTED
 }
 
+enum CriticalOperationStatus {
+  PREPARED
+  AWAITING_ARCHIVE
+  READY_TO_ACTIVATE
+  REVOCATION_PENDING_ARCHIVE
+  COMPLETED
+  FAILED
+  RECONCILIATION_REQUIRED
+}
+
 model PlatformUser {
   id          String     @id @default(uuid()) @db.Uuid
   displayName String
@@ -304,6 +314,9 @@ model AuthorizationAuditEvent {
   eventHash                Bytes
 
   stream AuthorizationAuditStream @relation(fields: [streamId], references: [id], onDelete: Restrict)
+  criticalIntentOperations CriticalOperation[] @relation("CriticalIntentEvent")
+  criticalBoundaryOperations CriticalOperation[] @relation("CriticalBoundaryEvent")
+  criticalCompletionOperations CriticalOperation[] @relation("CriticalCompletionEvent")
 
   @@unique([streamId, sequence])
   @@index([actorType, actorId, occurredAt])
@@ -396,8 +409,57 @@ model AuditArchiveReceipt {
   verifiedAt        DateTime @default(now()) @db.Timestamptz(6)
 
   delivery    AuditExportDelivery @relation(fields: [batchId, destinationId], references: [batchId, destinationId], onDelete: Restrict)
+  criticalOperations CriticalOperation[]
 
   @@unique([batchId, destinationId])
   @@index([destinationId, acceptedAt])
   @@map("audit_archive_receipts")
+}
+
+model CriticalOperation {
+  id                         String                  @id @default(uuid()) @db.Uuid
+  operationType              String                  @db.VarChar(100)
+  targetType                 String                  @db.VarChar(100)
+  targetId                   String                  @db.VarChar(200)
+  idempotencyDigest          Bytes                   @unique
+  requestFingerprint         Bytes
+  status                     CriticalOperationStatus @default(PREPARED)
+  streamId                   String                  @db.Uuid
+  intentEventId              String                  @db.Uuid
+  intentSequence             BigInt
+  readyOrRevocationEventId   String?                 @db.Uuid
+  readyOrRevocationSequence  BigInt?
+  completionEventId          String?                 @db.Uuid
+  completionSequence         BigInt?
+  qualifyingReceiptId        String?                 @db.Uuid
+  qualifyingDestinationId    String?                 @db.VarChar(80)
+  qualifyingKeyId            String?                 @db.VarChar(100)
+  failureCategory            String?                 @db.VarChar(100)
+  reconciliationMetadata     Json?
+  intentEvent                AuthorizationAuditEvent @relation("CriticalIntentEvent", fields: [intentEventId], references: [id], onDelete: Restrict)
+  readyOrRevocationEvent     AuthorizationAuditEvent? @relation("CriticalBoundaryEvent", fields: [readyOrRevocationEventId], references: [id], onDelete: Restrict)
+  completionEvent            AuthorizationAuditEvent? @relation("CriticalCompletionEvent", fields: [completionEventId], references: [id], onDelete: Restrict)
+  qualifyingReceipt          AuditArchiveReceipt?    @relation(fields: [qualifyingReceiptId], references: [id], onDelete: Restrict)
+  gate                       CriticalOperationGate?
+  createdAt                  DateTime                @default(now()) @db.Timestamptz(6)
+  updatedAt                  DateTime                @default(now()) @updatedAt @db.Timestamptz(6)
+  completedAt                DateTime?               @db.Timestamptz(6)
+
+  @@index([status, createdAt])
+  @@index([targetType, targetId, createdAt])
+  @@map("critical_operations")
+}
+
+model CriticalOperationGate {
+  targetType  String   @db.VarChar(100)
+  targetId    String   @db.VarChar(200)
+  state       String   @db.VarChar(20)
+  operationId String   @db.Uuid
+  updatedAt   DateTime @default(now()) @db.Timestamptz(6)
+  operation   CriticalOperation @relation(fields: [operationId], references: [id], onDelete: Restrict)
+
+  @@id([targetType, targetId])
+  @@index([operationId])
+  @@unique([operationId])
+  @@map("critical_operation_gates")
 }
