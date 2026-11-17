@@ -90,13 +90,21 @@ export function canonicalizePg17EventV1(value: unknown): string {
     throw new Error("Audit event payload must be an object");
   }
   const entries = Object.entries(value as Record<string, unknown>);
-  for (const [key, item] of entries) {
+  const invalidEntry = entries.find(([key, item]) => {
+    if (typeof item !== "string" && item !== null) {
+      return true;
+    }
+    if (key.includes("\u0000") || (typeof item === "string" && item.includes("\u0000"))) {
+      return true;
+    }
+    return false;
+  });
+  if (invalidEntry) {
+    const [key, item] = invalidEntry;
     if (typeof item !== "string" && item !== null) {
       throw new Error(`Unsupported canonical event value for ${key}`);
     }
-    if (key.includes("\u0000") || (typeof item === "string" && item.includes("\u0000"))) {
-      throw new Error("PostgreSQL text cannot contain a NUL character");
-    }
+    throw new Error("PostgreSQL text cannot contain a NUL character");
   }
   entries.sort(([left], [right]) => compareUtf8Keys(left, right));
   return `{${entries.map(([key, item]) => `${JSON.stringify(key)}: ${JSON.stringify(item)}`).join(", ")}}`;
@@ -235,9 +243,8 @@ export function verifyArchiveReceipt(
   expected: Pick<ArchiveReceiptPayload, "destinationId" | "batchHash" | "firstSequence" | "lastSequence" | "terminalEventHash">,
   publicKey: KeyObject,
 ): void {
-  for (const [key, value] of Object.entries(expected)) {
-    if (receipt.payload[key as keyof typeof expected] !== value) throw new Error(`Archive receipt mismatch: ${key}`);
-  }
+  const mismatchedEntry = Object.entries(expected).find(([key, value]) => receipt.payload[key as keyof typeof expected] !== value);
+  if (mismatchedEntry) throw new Error(`Archive receipt mismatch: ${mismatchedEntry[0]}`);
   if (!receipt.payload.keyId || !Number.isFinite(Date.parse(receipt.payload.acceptedAt))) throw new Error("Malformed archive receipt");
   const signature = Buffer.from(receipt.signature, "base64url");
   if (signature.length !== 64 || !verify(null, canonicalReceiptPayload(receipt.payload), publicKey, signature)) {

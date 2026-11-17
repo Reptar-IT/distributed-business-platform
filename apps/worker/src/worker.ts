@@ -62,7 +62,7 @@ if (auditExporterDatabaseUrl && auditReceiptVerifierUrl && auditReceiptVerifierS
       const report = await auditExporter?.runOnce();
       if (!report) return;
       const now = Date.now();
-      for (const health of report.destinations) {
+      report.destinations.forEach((health) => {
         const degraded = health.consecutiveFailures > 0;
         const state = degraded ? `degraded:${health.lastErrorCategory ?? "UNKNOWN"}` : "healthy";
         const previous = lastAuditHealthReport.get(health.destinationId);
@@ -79,23 +79,23 @@ if (auditExporterDatabaseUrl && auditReceiptVerifierUrl && auditReceiptVerifierS
           else console.info(JSON.stringify(entry));
           lastAuditHealthReport.set(health.destinationId, { state, at: now });
         }
-      }
-      for (const destinationId of report.retryMetadataFailures) {
+      });
+      report.retryMetadataFailures.forEach((destinationId) => {
         const key = `retry-metadata:${destinationId}`;
         const previous = lastAuditHealthReport.get(key);
         if (!previous || now - previous.at >= auditHealthReportIntervalMs) {
           console.error(JSON.stringify({ service: "audit-exporter", destinationId, state: "retry-metadata-persistence-failed" }));
           lastAuditHealthReport.set(key, { state: "retry-metadata-persistence-failed", at: now });
         }
-      }
-      for (const destinationId of report.processingFailures) {
+      });
+      report.processingFailures.forEach((destinationId) => {
         const key = `processing:${destinationId}`;
         const previous = lastAuditHealthReport.get(key);
         if (!previous || now - previous.at >= auditHealthReportIntervalMs) {
           console.error(JSON.stringify({ service: "audit-exporter", destinationId, state: "delivery-processing-failed", errorCategory: "DESTINATION_PROCESSING_FAILED" }));
           lastAuditHealthReport.set(key, { state: "delivery-processing-failed", at: now });
         }
-      }
+      });
     } catch {
       const now = Date.now();
       const previous = lastAuditHealthReport.get("polling");
