@@ -51,6 +51,7 @@ describe("identity and OIDC services", () => {
       claims: () => ({
         iss: "http://localhost:8080/realms/distributed-business-platform",
         sub: "external-subject",
+        auth_time: Math.floor(Date.now() / 1000),
       }),
     });
     oidcMocks.discovery.mockResolvedValue({
@@ -65,9 +66,15 @@ describe("identity and OIDC services", () => {
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce({
         user: { id: "user-2", displayName: "Suspended", status: "SUSPENDED" },
+        verification: { id: "verified-link-2" },
       })
       .mockResolvedValueOnce({
         user: { id: "user-3", displayName: "Active", status: "ACTIVE" },
+        verification: { id: "verified-link-3" },
+      })
+      .mockResolvedValueOnce({
+        user: { id: "user-4", displayName: "Unverified", status: "ACTIVE" },
+        verification: null,
       });
     const prisma = {
       userIdentity: { findUnique },
@@ -81,9 +88,10 @@ describe("identity and OIDC services", () => {
       id: "user-3",
       displayName: "Active",
     });
+    expect(await identities.resolveActiveIdentity("issuer", "unverified-sub")).toBeNull();
     expect(findUnique).toHaveBeenCalledWith({
       where: { issuer_subject: { issuer: "issuer", subject: "active-sub" } },
-      include: { user: true },
+      include: { user: true, verification: true },
     });
   });
 
@@ -152,6 +160,78 @@ describe("identity and OIDC services", () => {
     await expect(service.completeLogin(new URL(`https://api.example.test/callback?state=${state}`), state, "browser-one"))
       .rejects.toThrow("Expired OIDC transaction");
     expect(oidcMocks.authorizationCodeGrant).not.toHaveBeenCalled();
+  });
+
+  it("requires fresh OIDC proof with state, nonce and S256 PKCE for identity linking", async () => {
+    const redis = new MemoryRedis();
+    const service = createOidcService({
+      redis: redis as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    const challengeId = "00000000-0000-4000-8000-000000000001";
+    const { authorizationUrl } = await service.startIdentityLink(challengeId);
+    const state = "il_state_value_012345678901234567890";
+    const stored = JSON.parse(redis.values.get(`dbp:oidc:identity-link:${state}`)!);
+    const parameters = oidcMocks.buildAuthorizationUrl.mock.calls[0]![1] as Record<string, string>;
+    expect(authorizationUrl).toBe("http://keycloak.test/auth");
+    expect(parameters).toMatchObject({
+      state,
+      nonce: "nonce_value_012345678901234567890",
+      code_challenge: "pkce-challenge-value",
+      code_challenge_method: "S256",
+      prompt: "login",
+      max_age: "0",
+    });
+    expect(stored).toEqual({
+      challengeId,
+      nonce: "nonce_value_012345678901234567890",
+      codeVerifier: "a-long-pkce-code-verifier-value",
+    });
+    oidcMocks.authorizationCodeGrant.mockResolvedValueOnce({ claims: () => ({
+      iss: "https://idp.example.test/realm",
+      sub: "external-subject",
+      auth_time: Math.floor(Date.now() / 1000),
+    }) });
+
+    const proof = await service.completeIdentityLink(
+      new URL(`https://api.example.test/api/v1/auth/callback?code=opaque&state=${state}`),
+      state,
+    );
+    expect(proof.challengeId).toBe(challengeId);
+    expect(proof.identity).toEqual({ issuer: "https://idp.example.test/realm", subject: "external-subject" });
+    expect(oidcMocks.authorizationCodeGrant).toHaveBeenCalledWith(expect.anything(), expect.any(URL), {
+      pkceCodeVerifier: "a-long-pkce-code-verifier-value",
+      expectedState: state,
+      expectedNonce: "nonce_value_012345678901234567890",
+    });
+    await expect(service.completeIdentityLink(new URL("https://api.example.test/callback"), state)).rejects.toThrow("Expired identity-link transaction");
+  });
+
+  it("rejects identity-link proof without recent auth_time", async () => {
+    const redis = new MemoryRedis();
+    const service = createOidcService({
+      redis: redis as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    await service.startIdentityLink("00000000-0000-4000-8000-000000000001");
+    const state = "il_state_value_012345678901234567890";
+    oidcMocks.authorizationCodeGrant.mockResolvedValueOnce({ claims: () => ({
+      iss: "https://idp.example.test/realm",
+      sub: "external-subject",
+      auth_time: Math.floor(Date.now() / 1000) - 600,
+    }) });
+    await expect(service.completeIdentityLink(
+      new URL(`https://api.example.test/api/v1/auth/callback?code=opaque&state=${state}`),
+      state,
+    )).rejects.toMatchObject({ challengeId: "00000000-0000-4000-8000-000000000001", outcomeCode: "oidc_proof_rejected" });
   });
 
   it("rejects authorization responses when the OIDC library rejects token validation", async () => {

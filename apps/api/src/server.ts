@@ -11,6 +11,7 @@ import { prisma } from "@platform/database";
 
 import { Queue } from "bullmq";
 import { Redis } from "ioredis";
+import { createIdentityLinkCallbackService } from "./modules/identity-link/identity-link.service.js";
 import { createAuthRoutes } from "./modules/auth/auth.routes.js";
 import { registerPlatformAuthentication } from "./modules/auth/auth.middleware.js";
 import { createIdentityService } from "./modules/auth/identity.service.js";
@@ -52,6 +53,9 @@ if (!clientSecret) {
 }
 
 const authSessionStore = createSessionStore(redis);
+const identityLinkCallbackService = process.env.IDENTITY_LINK_CALLBACK_DATABASE_URL
+  ? createIdentityLinkCallbackService(process.env.IDENTITY_LINK_CALLBACK_DATABASE_URL)
+  : undefined;
 const oidcService = createOidcService({
   redis,
   issuer,
@@ -98,6 +102,7 @@ await app.register(createAuthRoutes({
   webOrigin,
   redirectUri,
   postLogoutRedirectUri,
+  ...(identityLinkCallbackService ? { identityLinks: identityLinkCallbackService } : {}),
 }));
 
 app.get("/api/v1/health", async (_request, reply) => {
@@ -159,6 +164,7 @@ const shutdown = async () => {
   await app.close();
   await jobQueue.close();
   await redis.quit();
+  await identityLinkCallbackService?.close();
   await prisma.$disconnect();
   process.exit(0);
 };

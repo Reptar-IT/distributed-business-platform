@@ -9,6 +9,7 @@ import type { OidcService } from "./oidc.service.js";
 import type { PlatformSession, SessionStore } from "./session.store.js";
 
 const testState = "state_value_012345678901234567890";
+const identityLinkState = "il_state_value_012345678901234567890";
 const testSessionId = "s".repeat(43);
 
 function createHarness(identity: { id: string; displayName: string } | null = {
@@ -32,6 +33,12 @@ function createHarness(identity: { id: string; displayName: string } | null = {
         subject: "sub-1",
       };
     }),
+    startIdentityLink: vi.fn(async () => ({ authorizationUrl: "http://localhost:8080/link" })),
+    completeIdentityLink: vi.fn(async () => ({
+      challengeId: "00000000-0000-4000-8000-000000000001",
+      identity: { issuer: "https://issuer.example.test", subject: "linked-subject" },
+      verifiedAt: new Date("2026-11-17T12:00:00Z"),
+    })),
     createLogoutState: vi.fn(async () => "logout-state-value-0123456789"),
     consumeLogoutState: vi.fn(async (state) => state === "logout-state-value-0123456789"),
     buildLogoutUrl: vi.fn(async (state) => `http://localhost:8080/logout?state=${state}`),
@@ -60,6 +67,10 @@ function createHarness(identity: { id: string; displayName: string } | null = {
     resolveActiveIdentity: vi.fn(async () => identity),
     getActiveUser: vi.fn(async (userId: string) => userId === identity?.id ? identity : null),
   } as unknown as IdentityService;
+  const identityLinks = {
+    complete: vi.fn(async () => "LINKED"),
+    reject: vi.fn(async () => undefined),
+  };
 
   const app = Fastify({ logger: false });
   app.register(cookie);
@@ -71,9 +82,10 @@ function createHarness(identity: { id: string; displayName: string } | null = {
     webOrigin: "http://localhost:5174",
     redirectUri: "http://localhost:3001/api/v1/auth/callback",
     postLogoutRedirectUri: "http://localhost:5174/",
+    identityLinks,
   }));
 
-  return { app, oidc, sessions, identities };
+  return { app, oidc, sessions, identities, identityLinks };
 }
 
 function cookiePair(setCookie: string | string[] | undefined, prefix: string): string {
@@ -97,6 +109,26 @@ async function completeLogin(app: ReturnType<typeof createHarness>["app"]): Prom
 
 describe("BFF authentication routes", () => {
   beforeEach(() => vi.clearAllMocks());
+
+  it("completes an identity-link callback without creating a login session", async () => {
+    const { app, oidc, sessions, identityLinks } = createHarness();
+    const response = await app.inject({
+      method: "GET",
+      url: `/api/v1/auth/callback?code=opaque-code&state=${identityLinkState}`,
+    });
+
+    expect(response.statusCode).toBe(302);
+    expect(response.headers.location).toBe("http://localhost:5174/?identity_link=complete");
+    expect(oidc.completeIdentityLink).toHaveBeenCalledOnce();
+    expect(identityLinks.complete).toHaveBeenCalledWith({
+      challengeId: "00000000-0000-4000-8000-000000000001",
+      issuer: "https://issuer.example.test",
+      subject: "linked-subject",
+      verifiedAt: new Date("2026-11-17T12:00:00Z"),
+    });
+    expect(sessions.create).not.toHaveBeenCalled();
+    await app.close();
+  });
 
   it("starts login and establishes a session for an existing active identity", async () => {
     const { app, oidc, identities, sessions } = createHarness();

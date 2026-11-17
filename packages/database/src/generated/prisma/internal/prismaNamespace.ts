@@ -399,6 +399,11 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   PlatformUser: 'PlatformUser',
   UserIdentity: 'UserIdentity',
+  IdentityLinkChallenge: 'IdentityLinkChallenge',
+  UserIdentityVerification: 'UserIdentityVerification',
+  PlatformInitialization: 'PlatformInitialization',
+  OwnerBootstrapCredential: 'OwnerBootstrapCredential',
+  PlatformOwnerDesignation: 'PlatformOwnerDesignation',
   Venture: 'Venture',
   VentureMembership: 'VentureMembership',
   OrganizationalRole: 'OrganizationalRole',
@@ -429,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "platformUser" | "userIdentity" | "venture" | "ventureMembership" | "organizationalRole" | "roleAssignment" | "roleVacancy" | "authorizationAuditStream" | "authorizationAuditHead" | "authorizationAuditEvent" | "auditDestination" | "auditExportCheckpoint" | "auditExportBatch" | "auditExportDelivery" | "auditArchiveReceipt" | "criticalOperation" | "criticalOperationGate"
+    modelProps: "platformUser" | "userIdentity" | "identityLinkChallenge" | "userIdentityVerification" | "platformInitialization" | "ownerBootstrapCredential" | "platformOwnerDesignation" | "venture" | "ventureMembership" | "organizationalRole" | "roleAssignment" | "roleVacancy" | "authorizationAuditStream" | "authorizationAuditHead" | "authorizationAuditEvent" | "auditDestination" | "auditExportCheckpoint" | "auditExportBatch" | "auditExportDelivery" | "auditArchiveReceipt" | "criticalOperation" | "criticalOperationGate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -578,6 +583,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserIdentityCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserIdentityCountAggregateOutputType> | number
+        }
+      }
+    }
+    IdentityLinkChallenge: {
+      payload: Prisma.$IdentityLinkChallengePayload<ExtArgs>
+      fields: Prisma.IdentityLinkChallengeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IdentityLinkChallengeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IdentityLinkChallengeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>
+        }
+        findFirst: {
+          args: Prisma.IdentityLinkChallengeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IdentityLinkChallengeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>
+        }
+        findMany: {
+          args: Prisma.IdentityLinkChallengeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>[]
+        }
+        create: {
+          args: Prisma.IdentityLinkChallengeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>
+        }
+        createMany: {
+          args: Prisma.IdentityLinkChallengeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IdentityLinkChallengeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>[]
+        }
+        delete: {
+          args: Prisma.IdentityLinkChallengeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>
+        }
+        update: {
+          args: Prisma.IdentityLinkChallengeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>
+        }
+        deleteMany: {
+          args: Prisma.IdentityLinkChallengeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IdentityLinkChallengeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IdentityLinkChallengeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>[]
+        }
+        upsert: {
+          args: Prisma.IdentityLinkChallengeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdentityLinkChallengePayload>
+        }
+        aggregate: {
+          args: Prisma.IdentityLinkChallengeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIdentityLinkChallenge>
+        }
+        groupBy: {
+          args: Prisma.IdentityLinkChallengeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdentityLinkChallengeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IdentityLinkChallengeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdentityLinkChallengeCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserIdentityVerification: {
+      payload: Prisma.$UserIdentityVerificationPayload<ExtArgs>
+      fields: Prisma.UserIdentityVerificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserIdentityVerificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserIdentityVerificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>
+        }
+        findFirst: {
+          args: Prisma.UserIdentityVerificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserIdentityVerificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>
+        }
+        findMany: {
+          args: Prisma.UserIdentityVerificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>[]
+        }
+        create: {
+          args: Prisma.UserIdentityVerificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>
+        }
+        createMany: {
+          args: Prisma.UserIdentityVerificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserIdentityVerificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>[]
+        }
+        delete: {
+          args: Prisma.UserIdentityVerificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>
+        }
+        update: {
+          args: Prisma.UserIdentityVerificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserIdentityVerificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserIdentityVerificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserIdentityVerificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserIdentityVerificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserIdentityVerificationPayload>
+        }
+        aggregate: {
+          args: Prisma.UserIdentityVerificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserIdentityVerification>
+        }
+        groupBy: {
+          args: Prisma.UserIdentityVerificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserIdentityVerificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserIdentityVerificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserIdentityVerificationCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformInitialization: {
+      payload: Prisma.$PlatformInitializationPayload<ExtArgs>
+      fields: Prisma.PlatformInitializationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformInitializationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformInitializationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformInitializationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformInitializationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformInitializationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformInitializationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformInitializationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformInitializationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformInitializationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>
+        }
+        update: {
+          args: Prisma.PlatformInitializationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformInitializationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformInitializationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformInitializationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformInitializationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformInitializationPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformInitializationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformInitialization>
+        }
+        groupBy: {
+          args: Prisma.PlatformInitializationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformInitializationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformInitializationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformInitializationCountAggregateOutputType> | number
+        }
+      }
+    }
+    OwnerBootstrapCredential: {
+      payload: Prisma.$OwnerBootstrapCredentialPayload<ExtArgs>
+      fields: Prisma.OwnerBootstrapCredentialFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OwnerBootstrapCredentialFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OwnerBootstrapCredentialFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>
+        }
+        findFirst: {
+          args: Prisma.OwnerBootstrapCredentialFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OwnerBootstrapCredentialFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>
+        }
+        findMany: {
+          args: Prisma.OwnerBootstrapCredentialFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>[]
+        }
+        create: {
+          args: Prisma.OwnerBootstrapCredentialCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>
+        }
+        createMany: {
+          args: Prisma.OwnerBootstrapCredentialCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OwnerBootstrapCredentialCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>[]
+        }
+        delete: {
+          args: Prisma.OwnerBootstrapCredentialDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>
+        }
+        update: {
+          args: Prisma.OwnerBootstrapCredentialUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>
+        }
+        deleteMany: {
+          args: Prisma.OwnerBootstrapCredentialDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OwnerBootstrapCredentialUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OwnerBootstrapCredentialUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>[]
+        }
+        upsert: {
+          args: Prisma.OwnerBootstrapCredentialUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerBootstrapCredentialPayload>
+        }
+        aggregate: {
+          args: Prisma.OwnerBootstrapCredentialAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOwnerBootstrapCredential>
+        }
+        groupBy: {
+          args: Prisma.OwnerBootstrapCredentialGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerBootstrapCredentialGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OwnerBootstrapCredentialCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerBootstrapCredentialCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformOwnerDesignation: {
+      payload: Prisma.$PlatformOwnerDesignationPayload<ExtArgs>
+      fields: Prisma.PlatformOwnerDesignationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformOwnerDesignationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformOwnerDesignationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformOwnerDesignationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformOwnerDesignationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformOwnerDesignationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformOwnerDesignationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformOwnerDesignationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformOwnerDesignationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformOwnerDesignationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>
+        }
+        update: {
+          args: Prisma.PlatformOwnerDesignationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformOwnerDesignationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformOwnerDesignationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformOwnerDesignationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformOwnerDesignationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOwnerDesignationPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformOwnerDesignationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformOwnerDesignation>
+        }
+        groupBy: {
+          args: Prisma.PlatformOwnerDesignationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformOwnerDesignationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformOwnerDesignationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformOwnerDesignationCountAggregateOutputType> | number
         }
       }
     }
@@ -1755,6 +2130,76 @@ export const UserIdentityScalarFieldEnum = {
 export type UserIdentityScalarFieldEnum = (typeof UserIdentityScalarFieldEnum)[keyof typeof UserIdentityScalarFieldEnum]
 
 
+export const IdentityLinkChallengeScalarFieldEnum = {
+  id: 'id',
+  platformUserId: 'platformUserId',
+  expectedIssuer: 'expectedIssuer',
+  initiatedBy: 'initiatedBy',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  outcomeCode: 'outcomeCode',
+  createdAt: 'createdAt'
+} as const
+
+export type IdentityLinkChallengeScalarFieldEnum = (typeof IdentityLinkChallengeScalarFieldEnum)[keyof typeof IdentityLinkChallengeScalarFieldEnum]
+
+
+export const UserIdentityVerificationScalarFieldEnum = {
+  id: 'id',
+  userIdentityId: 'userIdentityId',
+  platformUserId: 'platformUserId',
+  issuer: 'issuer',
+  subject: 'subject',
+  challengeId: 'challengeId',
+  initiatingOperator: 'initiatingOperator',
+  proofMethod: 'proofMethod',
+  verifiedAt: 'verifiedAt'
+} as const
+
+export type UserIdentityVerificationScalarFieldEnum = (typeof UserIdentityVerificationScalarFieldEnum)[keyof typeof UserIdentityVerificationScalarFieldEnum]
+
+
+export const PlatformInitializationScalarFieldEnum = {
+  id: 'id',
+  state: 'state',
+  activeDesignationId: 'activeDesignationId',
+  initializedAt: 'initializedAt'
+} as const
+
+export type PlatformInitializationScalarFieldEnum = (typeof PlatformInitializationScalarFieldEnum)[keyof typeof PlatformInitializationScalarFieldEnum]
+
+
+export const OwnerBootstrapCredentialScalarFieldEnum = {
+  id: 'id',
+  platformUserId: 'platformUserId',
+  userIdentityId: 'userIdentityId',
+  verifierKeyId: 'verifierKeyId',
+  verifier: 'verifier',
+  status: 'status',
+  issuedBy: 'issuedBy',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  operationId: 'operationId',
+  createdAt: 'createdAt'
+} as const
+
+export type OwnerBootstrapCredentialScalarFieldEnum = (typeof OwnerBootstrapCredentialScalarFieldEnum)[keyof typeof OwnerBootstrapCredentialScalarFieldEnum]
+
+
+export const PlatformOwnerDesignationScalarFieldEnum = {
+  id: 'id',
+  platformUserId: 'platformUserId',
+  userIdentityId: 'userIdentityId',
+  criticalOperationId: 'criticalOperationId',
+  status: 'status',
+  preparedAt: 'preparedAt',
+  activatedAt: 'activatedAt'
+} as const
+
+export type PlatformOwnerDesignationScalarFieldEnum = (typeof PlatformOwnerDesignationScalarFieldEnum)[keyof typeof PlatformOwnerDesignationScalarFieldEnum]
+
+
 export const VentureScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -2096,6 +2541,90 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'IdentityLinkChallengeStatus'
+ */
+export type EnumIdentityLinkChallengeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdentityLinkChallengeStatus'>
+
+
+
+/**
+ * Reference to a field of type 'IdentityLinkChallengeStatus[]'
+ */
+export type ListEnumIdentityLinkChallengeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdentityLinkChallengeStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+
+
+
+/**
+ * Reference to a field of type 'PlatformInitializationState'
+ */
+export type EnumPlatformInitializationStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlatformInitializationState'>
+
+
+
+/**
+ * Reference to a field of type 'PlatformInitializationState[]'
+ */
+export type ListEnumPlatformInitializationStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlatformInitializationState[]'>
+
+
+
+/**
+ * Reference to a field of type 'Bytes'
+ */
+export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+
+
+
+/**
+ * Reference to a field of type 'Bytes[]'
+ */
+export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerBootstrapCredentialStatus'
+ */
+export type EnumOwnerBootstrapCredentialStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerBootstrapCredentialStatus'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerBootstrapCredentialStatus[]'
+ */
+export type ListEnumOwnerBootstrapCredentialStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerBootstrapCredentialStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'PlatformOwnerDesignationStatus'
+ */
+export type EnumPlatformOwnerDesignationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlatformOwnerDesignationStatus'>
+
+
+
+/**
+ * Reference to a field of type 'PlatformOwnerDesignationStatus[]'
+ */
+export type ListEnumPlatformOwnerDesignationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlatformOwnerDesignationStatus[]'>
+
+
+
+/**
  * Reference to a field of type 'VentureStatus'
  */
 export type EnumVentureStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VentureStatus'>
@@ -2222,20 +2751,6 @@ export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Bytes'
- */
-export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
-
-
-
-/**
- * Reference to a field of type 'Bytes[]'
- */
-export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
-
-
-
-/**
  * Reference to a field of type 'AuthorizationAuditActorType'
  */
 export type EnumAuthorizationAuditActorTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthorizationAuditActorType'>
@@ -2260,20 +2775,6 @@ export type EnumAuthorizationAuditDecisionFieldRefInput<$PrismaModel> = FieldRef
  * Reference to a field of type 'AuthorizationAuditDecision[]'
  */
 export type ListEnumAuthorizationAuditDecisionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthorizationAuditDecision[]'>
-
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
 
 
 
@@ -2485,6 +2986,11 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   platformUser?: Prisma.PlatformUserOmit
   userIdentity?: Prisma.UserIdentityOmit
+  identityLinkChallenge?: Prisma.IdentityLinkChallengeOmit
+  userIdentityVerification?: Prisma.UserIdentityVerificationOmit
+  platformInitialization?: Prisma.PlatformInitializationOmit
+  ownerBootstrapCredential?: Prisma.OwnerBootstrapCredentialOmit
+  platformOwnerDesignation?: Prisma.PlatformOwnerDesignationOmit
   venture?: Prisma.VentureOmit
   ventureMembership?: Prisma.VentureMembershipOmit
   organizationalRole?: Prisma.OrganizationalRoleOmit

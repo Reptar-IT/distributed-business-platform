@@ -1,4 +1,4 @@
-import { generateKeyPairSync } from "node:crypto";
+import { generateKeyPairSync, randomUUID } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -227,5 +227,135 @@ suite("critical-operation PostgreSQL 17 and archive integration", () => {
     expect(resolved.rows[0]).toEqual({ status: "FAILED", state: "INACTIVE" });
     const audit = await admin.query<{ count: string }>("SELECT count(*)::text AS count FROM public.authorization_audit_events WHERE \"correlationId\"=$1 AND \"eventType\" IN ('critical-operation-reconciliation-required','critical-operation-reconciliation-resolved')", [id]);
     expect(audit.rows[0]!.count).toBe("2");
+  });
+
+  it("rejects missing, inactive, unverified, wrong-issuer, and differently-owned bootstrap identities", async () => {
+    const operatorUrl=await roleUrl("dbp_owner_bootstrap_operator_test","dbp_platform_owner_operator");
+    const identityOperatorUrl=await roleUrl("dbp_identity_link_operator_test","dbp_identity_link_operator");
+    const identityCallbackUrl=await roleUrl("dbp_identity_link_callback_test","dbp_identity_link_callback");
+    const operator=new Pool({connectionString:operatorUrl,max:1});
+    const identityOperator=new Pool({connectionString:identityOperatorUrl,max:1});
+    const identityCallback=new Pool({connectionString:identityCallbackUrl,max:1});
+    const verifier=Buffer.alloc(32,0x24);
+    const issue=async(userId:string,issuer="https://issuer.example.test/realm")=>operator.query(
+      "SELECT public.issue_platform_owner_bootstrap_credential($1::uuid,$2::uuid,$3,$4,$5)",
+      [randomUUID(),userId,issuer,"test-key-v1",verifier],
+    );
+    const createUser=async(status="ACTIVE")=>{
+      const id=randomUUID();
+      await admin.query(`INSERT INTO public.platform_users(id,"displayName",status,"createdAt","updatedAt") VALUES($1,'Test owner',$2,clock_timestamp(),clock_timestamp())`,[id,status]);
+      return id;
+    };
+    try{
+      await expect(issue(randomUUID())).rejects.toThrow(/ACTIVE_PLATFORM_USER_REQUIRED/);
+      const suspended=await createUser("SUSPENDED");
+      await expect(issue(suspended)).rejects.toThrow(/ACTIVE_PLATFORM_USER_REQUIRED/);
+      const unverified=await createUser();
+      await admin.query("SET session_replication_role=replica");
+      try{
+        await admin.query(`INSERT INTO public.user_identities(id,"userId",issuer,subject,email,"emailVerified","createdAt","updatedAt")
+          VALUES($1,$2,'https://issuer.example.test/realm','email-only-subject','owner@example.test',true,clock_timestamp(),clock_timestamp())`,[randomUUID(),unverified]);
+      }finally{await admin.query("SET session_replication_role=origin");}
+      await expect(issue(unverified)).rejects.toThrow(/VERIFIED_IDENTITY_REQUIRED/);
+
+      const identityOwner=await createUser();
+      const otherUser=await createUser();
+      const challenge=(await identityOperator.query<{id:string}>(
+        "SELECT public.begin_platform_identity_link($1::uuid,$2) AS id",[identityOwner,"https://issuer.example.test/realm"],
+      )).rows[0]!.id;
+      await identityCallback.query("SELECT public.complete_platform_identity_link($1::uuid,$2,$3,$4)",
+        [challenge,"https://issuer.example.test/realm","owned-by-someone-else",new Date()]);
+      await expect(issue(otherUser)).rejects.toThrow(/VERIFIED_IDENTITY_REQUIRED/);
+      await expect(issue(identityOwner,"https://wrong.example.test/issuer")).rejects.toThrow(/VERIFIED_IDENTITY_REQUIRED/);
+    }finally{
+      await Promise.all([operator.end(),identityOperator.end(),identityCallback.end()]);
+    }
+  });
+
+  it("activates an initial owner only through the receipt-gated critical finalizer", async () => {
+    const operatorUrl=await roleUrl("dbp_owner_bootstrap_operator_test","dbp_platform_owner_operator");
+    const identityOperatorUrl=await roleUrl("dbp_identity_link_operator_test","dbp_identity_link_operator");
+    const identityCallbackUrl=await roleUrl("dbp_identity_link_callback_test","dbp_identity_link_callback");
+    const userId=randomUUID();
+    await admin.query(`INSERT INTO public.platform_users(id,"displayName","createdAt","updatedAt") VALUES($1,'Bootstrap owner',clock_timestamp(),clock_timestamp())`,[userId]);
+    const identityOperator=new Pool({connectionString:identityOperatorUrl,max:1});
+    const identityCallback=new Pool({connectionString:identityCallbackUrl,max:1});
+    const ownerOperator=new Pool({connectionString:operatorUrl,max:2});
+    try{
+      const challenge=(await identityOperator.query<{id:string}>(
+        "SELECT public.begin_platform_identity_link($1::uuid,$2) AS id",
+        [userId,"https://issuer.example.test/realm"],
+      )).rows[0]!.id;
+      await expect(identityCallback.query(
+        "SELECT public.complete_platform_identity_link($1::uuid,$2,$3,$4)",
+        [challenge,"https://issuer.example.test/realm","bootstrap-owner-subject",new Date()],
+      )).resolves.toBeTruthy();
+      const credentialId=randomUUID();
+      const verifier=Buffer.alloc(32,0x42);
+      await ownerOperator.query(
+        "SELECT public.issue_platform_owner_bootstrap_credential($1::uuid,$2::uuid,$3,$4,$5)",
+        [credentialId,userId,"https://issuer.example.test/realm","test-key-v1",verifier],
+      );
+      const requests=await Promise.allSettled([
+        ownerOperator.query<{id:string}>("SELECT public.prepare_platform_owner_bootstrap($1::uuid,$2::uuid,$3) AS id",[credentialId,userId,verifier]),
+        ownerOperator.query<{id:string}>("SELECT public.prepare_platform_owner_bootstrap($1::uuid,$2::uuid,$3) AS id",[credentialId,userId,verifier]),
+      ]);
+      expect(requests.filter((request)=>request.status==='fulfilled')).toHaveLength(1);
+      expect(requests.filter((request)=>request.status==='rejected')).toHaveLength(1);
+      const operationId=requests.find((request)=>request.status==='fulfilled')!.status==='fulfilled'
+        ? requests.find((request)=>request.status==='fulfilled')!.value.rows[0]!.id
+        : "";
+
+      const pending=await admin.query<{operation:string;designation:string;initialization:string}>(
+        `SELECT op.status::text AS operation,d.status::text AS designation,i.state::text AS initialization
+           FROM public.critical_operations op JOIN public.platform_owner_designations d ON d."criticalOperationId"=op.id
+           CROSS JOIN public.platform_initialization i WHERE op.id=$1`,[operationId],
+      );
+      expect(pending.rows[0]).toEqual({operation:"PREPARED",designation:"PENDING",initialization:"UNINITIALIZED"});
+      expect((await runtime.query("SELECT public.resolve_active_platform_owner($1::uuid) AS designation",[userId])).rows[0]!.designation).toBeNull();
+
+      await service.advance();
+      await service.advance();
+      const waiting=await admin.query<{status:string;gate:string}>(
+        `SELECT op.status::text AS status,g.state AS gate FROM public.critical_operations op
+         JOIN public.critical_operation_gates g ON g."operationId"=op.id WHERE op.id=$1`,[operationId],
+      );
+      expect(waiting.rows[0]).toEqual({status:"AWAITING_ARCHIVE",gate:"PROPOSED"});
+      expect((await admin.query("SELECT state::text FROM public.platform_initialization WHERE id=1")).rows[0]!.state).toBe("UNINITIALIZED");
+
+      await deliverPhysical();
+      await service.advance();
+      await admin.query(`CREATE FUNCTION public.test_fail_owner_activation_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+        BEGIN IF NEW."eventType"='platform-owner-designation-activated' THEN RAISE EXCEPTION 'injected owner activation audit failure'; END IF; RETURN NEW; END $$`);
+      await admin.query(`CREATE TRIGGER test_fail_owner_activation_audit BEFORE INSERT ON public.authorization_audit_events FOR EACH ROW EXECUTE FUNCTION public.test_fail_owner_activation_audit()`);
+      await expect(service.advance()).rejects.toThrow(/injected owner activation audit failure/);
+      await admin.query("DROP TRIGGER test_fail_owner_activation_audit ON public.authorization_audit_events");
+      await admin.query("DROP FUNCTION public.test_fail_owner_activation_audit()");
+      const rolledBack=await admin.query<{operation:string;designation:string;initialization:string}>(
+        `SELECT op.status::text AS operation,d.status::text AS designation,i.state::text AS initialization
+           FROM public.critical_operations op JOIN public.platform_owner_designations d ON d."criticalOperationId"=op.id
+           CROSS JOIN public.platform_initialization i WHERE op.id=$1`,[operationId],
+      );
+      expect(rolledBack.rows[0]).toEqual({operation:"READY_TO_ACTIVATE",designation:"PENDING",initialization:"UNINITIALIZED"});
+      await service.advance();
+      const completed=await admin.query<{operation:string;designation:string;initialization:string}>(
+        `SELECT op.status::text AS operation,d.status::text AS designation,i.state::text AS initialization
+           FROM public.critical_operations op JOIN public.platform_owner_designations d ON d."criticalOperationId"=op.id
+           CROSS JOIN public.platform_initialization i WHERE op.id=$1`,[operationId],
+      );
+      expect(completed.rows[0]).toEqual({operation:"COMPLETED",designation:"ACTIVE",initialization:"INITIALIZED"});
+      expect((await runtime.query("SELECT public.resolve_active_platform_owner($1::uuid) AS designation",[userId])).rows[0]!.designation)
+        .toBe((await admin.query<{id:string}>("SELECT id FROM public.platform_owner_designations WHERE \"criticalOperationId\"=$1",[operationId])).rows[0]!.id);
+      await expect(runtime.query("UPDATE public.platform_initialization SET state='UNINITIALIZED' WHERE id=1")).rejects.toThrow();
+      await expect(runtime.query("UPDATE public.platform_owner_designations SET status='ACTIVE'")).rejects.toThrow();
+      await expect(ownerOperator.query("SELECT public.prepare_platform_owner_bootstrap($1::uuid,$2::uuid,$3)",[credentialId,userId,verifier]))
+        .rejects.toThrow(/BOOTSTRAP_CREDENTIAL_ALREADY_USED/);
+      const audit=await admin.query<{count:string}>(
+        `SELECT count(*)::text AS count FROM public.authorization_audit_events WHERE "eventType"='platform-owner-designation-activated' AND "correlationId"=$1`,[operationId],
+      );
+      expect(audit.rows[0]!.count).toBe("1");
+    }finally{
+      await Promise.all([ownerOperator.end(),identityOperator.end(),identityCallback.end()]);
+    }
   });
 });

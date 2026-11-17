@@ -1,7 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import type { IdentityService } from "./identity.service.js";
-import { createBrowserBinding, type OidcService } from "./oidc.service.js";
+import { createBrowserBinding, IdentityLinkVerificationError, type OidcService } from "./oidc.service.js";
 import { requireBrowserOrigin } from "./auth.middleware.js";
 import {
   clearPlatformSessionCookie,
@@ -18,6 +18,10 @@ interface AuthRouteOptions {
   webOrigin: string;
   redirectUri: string;
   postLogoutRedirectUri: string;
+  identityLinks?: {
+    complete(input: { challengeId: string; issuer: string; subject: string; verifiedAt: Date }): Promise<string>;
+    reject(challengeId: string, outcomeCode: string): Promise<void>;
+  };
 }
 
 function safeEqual(left: string, right: string): boolean {
@@ -63,6 +67,29 @@ export function createAuthRoutes(options: AuthRouteOptions): FastifyPluginAsync 
     app.get("/api/v1/auth/callback", async (request, reply) => {
       const query = request.query as Record<string, unknown>;
       const state = typeof query.state === "string" ? query.state : "";
+      if (state.startsWith("il_")) {
+        if (!options.identityLinks) return reply.code(503).send({ error: "Identity linking is unavailable" });
+        const callbackUrl = new URL(options.redirectUri);
+        const requestUrl = new URL(request.raw.url ?? "/api/v1/auth/callback", callbackUrl);
+        if (requestUrl.origin !== callbackUrl.origin || requestUrl.pathname !== callbackUrl.pathname) {
+          return reply.code(400).send({ error: "Identity linking could not be completed" });
+        }
+        callbackUrl.search = requestUrl.search;
+        try {
+          const proof = await options.oidc.completeIdentityLink(callbackUrl, state);
+          const outcome = await options.identityLinks.complete({
+            ...proof.identity,
+            challengeId: proof.challengeId,
+            verifiedAt: proof.verifiedAt,
+          });
+          return reply.redirect(`${options.webOrigin}/?identity_link=${outcome === "LINKED" || outcome === "ALREADY_VERIFIED" ? "complete" : "failed"}`);
+        } catch (error) {
+          if (error instanceof IdentityLinkVerificationError) {
+            try { await options.identityLinks.reject(error.challengeId, error.outcomeCode); } catch { /* Keep callback errors generic. */ }
+          }
+          return reply.redirect(`${options.webOrigin}/?identity_link=failed`);
+        }
+      }
       const bindingCookie = state ? transactionCookieName(state) : "";
       const browserBinding = bindingCookie ? request.cookies[bindingCookie] : undefined;
       if (!state || !browserBinding) {

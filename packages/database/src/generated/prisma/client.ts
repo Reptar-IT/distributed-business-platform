@@ -52,6 +52,31 @@ export type PlatformUser = Prisma.PlatformUserModel
  */
 export type UserIdentity = Prisma.UserIdentityModel
 /**
+ * Model IdentityLinkChallenge
+ *
+ */
+export type IdentityLinkChallenge = Prisma.IdentityLinkChallengeModel
+/**
+ * Model UserIdentityVerification
+ *
+ */
+export type UserIdentityVerification = Prisma.UserIdentityVerificationModel
+/**
+ * Model PlatformInitialization
+ *
+ */
+export type PlatformInitialization = Prisma.PlatformInitializationModel
+/**
+ * Model OwnerBootstrapCredential
+ *
+ */
+export type OwnerBootstrapCredential = Prisma.OwnerBootstrapCredentialModel
+/**
+ * Model PlatformOwnerDesignation
+ *
+ */
+export type PlatformOwnerDesignation = Prisma.PlatformOwnerDesignationModel
+/**
  * Model Venture
  *
  */

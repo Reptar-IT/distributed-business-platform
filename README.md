@@ -23,4 +23,4 @@ An international platform for creating, managing and operating independent workf
 
 ## Development
 
-See [the Stage 1 audit foundation](docs/authorization-audit-stage1.md) and [the Stage 2 critical-operation engine](docs/critical-operation-engine-stage2.md) for authorization infrastructure contracts and validation.
+See [the Stage 1 audit foundation](docs/authorization-audit-stage1.md), [the Stage 2 critical-operation engine](docs/critical-operation-engine-stage2.md), and [the Stage 3 platform owner bootstrap](docs/platform-owner-bootstrap-stage3.md) for authorization infrastructure contracts and validation.
