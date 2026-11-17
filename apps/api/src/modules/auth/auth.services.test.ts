@@ -1,0 +1,196 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { Redis } from "ioredis";
+import type { PrismaClient } from "@platform/database";
+import { createIdentityService } from "./identity.service.js";
+import { createOidcService } from "./oidc.service.js";
+
+const oidcMocks = vi.hoisted(() => ({
+  discovery: vi.fn(),
+  clientSecretBasic: vi.fn(() => ({ method: "client_secret_basic" })),
+  allowInsecureRequests: vi.fn(),
+  randomState: vi.fn(() => "state_value_012345678901234567890"),
+  randomNonce: vi.fn(() => "nonce_value_012345678901234567890"),
+  randomPKCECodeVerifier: vi.fn(() => "a-long-pkce-code-verifier-value"),
+  calculatePKCECodeChallenge: vi.fn(async () => "pkce-challenge-value"),
+  buildAuthorizationUrl: vi.fn(),
+  authorizationCodeGrant: vi.fn(),
+}));
+
+vi.mock("openid-client", () => ({
+  discovery: oidcMocks.discovery,
+  ClientSecretBasic: oidcMocks.clientSecretBasic,
+  allowInsecureRequests: oidcMocks.allowInsecureRequests,
+  randomState: oidcMocks.randomState,
+  randomNonce: oidcMocks.randomNonce,
+  randomPKCECodeVerifier: oidcMocks.randomPKCECodeVerifier,
+  calculatePKCECodeChallenge: oidcMocks.calculatePKCECodeChallenge,
+  buildAuthorizationUrl: oidcMocks.buildAuthorizationUrl,
+  authorizationCodeGrant: oidcMocks.authorizationCodeGrant,
+}));
+
+class MemoryRedis {
+  values = new Map<string, string>();
+
+  async set(key: string, value: string): Promise<"OK"> {
+    this.values.set(key, value);
+    return "OK";
+  }
+
+  async getdel(key: string): Promise<string | null> {
+    const value = this.values.get(key) ?? null;
+    this.values.delete(key);
+    return value;
+  }
+}
+
+describe("identity and OIDC services", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    oidcMocks.buildAuthorizationUrl.mockReturnValue(new URL("http://keycloak.test/auth"));
+    oidcMocks.authorizationCodeGrant.mockResolvedValue({
+      claims: () => ({
+        iss: "http://localhost:8080/realms/distributed-business-platform",
+        sub: "external-subject",
+      }),
+    });
+    oidcMocks.discovery.mockResolvedValue({
+      serverMetadata: () => ({
+        end_session_endpoint: "http://localhost:8080/realms/distributed-business-platform/protocol/openid-connect/logout",
+      }),
+    });
+  });
+
+  it("resolves only by issuer plus subject and rejects non-active platform users", async () => {
+    const findUnique = vi.fn()
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        user: { id: "user-2", displayName: "Suspended", status: "SUSPENDED" },
+      })
+      .mockResolvedValueOnce({
+        user: { id: "user-3", displayName: "Active", status: "ACTIVE" },
+      });
+    const prisma = {
+      userIdentity: { findUnique },
+      platformUser: { findUnique: vi.fn() },
+    } as unknown as PrismaClient;
+    const identities = createIdentityService(prisma);
+
+    expect(await identities.resolveActiveIdentity("issuer", "unknown")).toBeNull();
+    expect(await identities.resolveActiveIdentity("issuer", "suspended-sub")).toBeNull();
+    expect(await identities.resolveActiveIdentity("issuer", "active-sub")).toEqual({
+      id: "user-3",
+      displayName: "Active",
+    });
+    expect(findUnique).toHaveBeenCalledWith({
+      where: { issuer_subject: { issuer: "issuer", subject: "active-sub" } },
+      include: { user: true },
+    });
+  });
+
+  it("starts code flow with S256 PKCE, state and nonce, then validates them at exchange", async () => {
+    const redis = new MemoryRedis();
+    const service = createOidcService({
+      redis: redis as unknown as Redis,
+      issuer: "http://localhost:8080/realms/distributed-business-platform",
+      clientId: "distributed-business-platform-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "http://localhost:3001/api/v1/auth/callback",
+      postLogoutRedirectUri: "http://localhost:5174/",
+    });
+
+    const { state, authorizationUrl } = await service.startLogin("browser-binding");
+    const storedTransaction = JSON.parse(redis.values.get(`dbp:oidc:transaction:${state}`)!);
+    const authorizationParameters = oidcMocks.buildAuthorizationUrl.mock.calls[0]![1] as Record<string, string>;
+    expect(authorizationParameters).toMatchObject({
+      response_type: "code",
+      state,
+      nonce: "nonce_value_012345678901234567890",
+      code_challenge: "pkce-challenge-value",
+      code_challenge_method: "S256",
+    });
+    expect(storedTransaction).toEqual({
+      nonce: "nonce_value_012345678901234567890",
+      codeVerifier: "a-long-pkce-code-verifier-value",
+      browserBinding: "browser-binding",
+    });
+    expect(authorizationUrl).toBe("http://keycloak.test/auth");
+
+    const result = await service.completeLogin(
+      new URL(`http://localhost:3001/api/v1/auth/callback?code=one-time-code&state=${state}`),
+      state,
+      "browser-binding",
+    );
+    expect(result).toEqual({
+      issuer: "http://localhost:8080/realms/distributed-business-platform",
+      subject: "external-subject",
+    });
+    expect(oidcMocks.authorizationCodeGrant).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(URL),
+      {
+        pkceCodeVerifier: "a-long-pkce-code-verifier-value",
+        expectedState: state,
+        expectedNonce: "nonce_value_012345678901234567890",
+      },
+    );
+  });
+
+  it("consumes OIDC transactions once and rejects a different browser binding", async () => {
+    const redis = new MemoryRedis();
+    const service = createOidcService({
+      redis: redis as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    const { state } = await service.startLogin("browser-one");
+
+    await expect(service.completeLogin(new URL(`https://api.example.test/callback?state=${state}`), state, "browser-two"))
+      .rejects.toThrow("OIDC transaction browser mismatch");
+    await expect(service.completeLogin(new URL(`https://api.example.test/callback?state=${state}`), state, "browser-one"))
+      .rejects.toThrow("Expired OIDC transaction");
+    expect(oidcMocks.authorizationCodeGrant).not.toHaveBeenCalled();
+  });
+
+  it("rejects authorization responses when the OIDC library rejects token validation", async () => {
+    const redis = new MemoryRedis();
+    const service = createOidcService({
+      redis: redis as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://api.example.test/api/v1/auth/logout/callback",
+    });
+    const { state } = await service.startLogin("browser-binding");
+    oidcMocks.authorizationCodeGrant.mockRejectedValueOnce(new Error("invalid ID token signature"));
+
+    await expect(service.completeLogin(
+      new URL(`https://api.example.test/api/v1/auth/callback?code=code&state=${state}`),
+      state,
+      "browser-binding",
+    )).rejects.toThrow("invalid ID token signature");
+  });
+
+  it("builds a Keycloak RP-initiated logout URL from discovery metadata", async () => {
+    const service = createOidcService({
+      redis: new MemoryRedis() as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+
+    const state = await service.createLogoutState();
+    const logoutUrl = new URL(await service.buildLogoutUrl(state));
+    expect(logoutUrl.origin).toBe("http://localhost:8080");
+    expect(logoutUrl.searchParams.get("client_id")).toBe("dbp-web");
+    expect(logoutUrl.searchParams.get("post_logout_redirect_uri")).toBe("https://app.example.test/");
+    expect(logoutUrl.searchParams.get("state")).toBe(state);
+    expect(await service.consumeLogoutState(state)).toBe(true);
+    expect(await service.consumeLogoutState(state)).toBe(false);
+  });
+});
