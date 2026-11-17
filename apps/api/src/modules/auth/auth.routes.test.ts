@@ -9,7 +9,10 @@ import type { OidcService } from "./oidc.service.js";
 import type { PlatformSession, SessionStore } from "./session.store.js";
 
 const testState = "state_value_012345678901234567890";
+const identityLinkState = "il_state_value_012345678901234567890";
 const testSessionId = "s".repeat(43);
+const confirmationId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+const confirmationCookie = `dbp_identity_link_${confirmationId}`;
 
 function createHarness(identity: { id: string; displayName: string } | null = {
   id: "platform-user-1",
@@ -17,6 +20,7 @@ function createHarness(identity: { id: string; displayName: string } | null = {
 }) {
   let loginBinding = "";
   let session: PlatformSession | null = null;
+  let identityLinkConfirmationConsumed = false;
   const oidc: OidcService = {
     startLogin: vi.fn(async (browserBinding) => {
       loginBinding = browserBinding;
@@ -30,6 +34,35 @@ function createHarness(identity: { id: string; displayName: string } | null = {
       return {
         issuer: "http://localhost:8080/realms/distributed-business-platform",
         subject: "sub-1",
+      };
+    }),
+    startIdentityLink: vi.fn(async () => ({ authorizationUrl: "http://localhost:8080/link" })),
+    completeIdentityLink: vi.fn(async () => ({
+      challengeId: "00000000-0000-4000-8000-000000000001",
+      identity: { issuer: "https://issuer.example.test", subject: "linked-subject" },
+      verifiedAt: new Date("2026-11-17T12:00:00Z"),
+    })),
+    createIdentityLinkConfirmation: vi.fn(async () => ({
+      confirmationId,
+      browserBinding: "identity-link-browser-binding",
+    })),
+    getIdentityLinkConfirmation: vi.fn(async (id, browserBinding) => id === confirmationId && browserBinding === "identity-link-browser-binding"
+      ? {
+        challengeId: "00000000-0000-4000-8000-000000000001",
+        platformUserId: "platform-user-1",
+        issuer: "https://issuer.example.test",
+        csrfToken: "identity-link-csrf",
+      }
+      : null),
+    consumeIdentityLinkConfirmation: vi.fn(async (id, csrfToken, browserBinding) => {
+      if (identityLinkConfirmationConsumed || id !== confirmationId || csrfToken !== "identity-link-csrf" ||
+          browserBinding !== "identity-link-browser-binding") return null;
+      identityLinkConfirmationConsumed = true;
+      return {
+        challengeId: "00000000-0000-4000-8000-000000000001",
+        platformUserId: "platform-user-1",
+        identity: { issuer: "https://issuer.example.test", subject: "linked-subject" },
+        verifiedAt: new Date("2026-11-17T12:00:00Z"),
       };
     }),
     createLogoutState: vi.fn(async () => "logout-state-value-0123456789"),
@@ -60,6 +93,11 @@ function createHarness(identity: { id: string; displayName: string } | null = {
     resolveActiveIdentity: vi.fn(async () => identity),
     getActiveUser: vi.fn(async (userId: string) => userId === identity?.id ? identity : null),
   } as unknown as IdentityService;
+  const identityLinks = {
+    getPendingTarget: vi.fn(async () => ({ platformUserId: "platform-user-1" })),
+    complete: vi.fn(async () => "LINKED"),
+    reject: vi.fn(async () => undefined),
+  };
 
   const app = Fastify({ logger: false });
   app.register(cookie);
@@ -71,9 +109,10 @@ function createHarness(identity: { id: string; displayName: string } | null = {
     webOrigin: "http://localhost:5174",
     redirectUri: "http://localhost:3001/api/v1/auth/callback",
     postLogoutRedirectUri: "http://localhost:5174/",
+    identityLinks,
   }));
 
-  return { app, oidc, sessions, identities };
+  return { app, oidc, sessions, identities, identityLinks };
 }
 
 function cookiePair(setCookie: string | string[] | undefined, prefix: string): string {
@@ -97,6 +136,118 @@ async function completeLogin(app: ReturnType<typeof createHarness>["app"]): Prom
 
 describe("BFF authentication routes", () => {
   beforeEach(() => vi.clearAllMocks());
+
+  it("requires first-party confirmation for the original PlatformUser before linking and never creates a login session", async () => {
+    const { app, oidc, sessions, identityLinks } = createHarness();
+    const callback = await app.inject({
+      method: "GET",
+      url: `/api/v1/auth/callback?code=opaque-code&state=${identityLinkState}&platformUserId=attacker-selected&issuer=https://attacker.example`,
+    });
+
+    expect(callback.statusCode).toBe(302);
+    expect(callback.headers.location).toBe(`http://localhost:5174/#identity-link-confirmation/${confirmationId}`);
+    expect(oidc.completeIdentityLink).toHaveBeenCalledOnce();
+    expect(oidc.createIdentityLinkConfirmation).toHaveBeenCalledWith(expect.objectContaining({
+      challengeId: "00000000-0000-4000-8000-000000000001",
+    }), "platform-user-1");
+    expect(identityLinks.getPendingTarget).toHaveBeenCalledWith("00000000-0000-4000-8000-000000000001");
+    expect(identityLinks.complete).not.toHaveBeenCalled();
+    expect(sessions.create).not.toHaveBeenCalled();
+
+    const confirmationCookiePair = cookiePair(callback.headers["set-cookie"], confirmationCookie);
+    const consent = await app.inject({
+      method: "GET",
+      url: `/api/v1/auth/identity-link/confirmation/${confirmationId}`,
+      headers: { origin: "http://localhost:5174", cookie: confirmationCookiePair },
+    });
+    expect(consent.statusCode).toBe(200);
+    expect(consent.json()).toMatchObject({ platformUserId: "platform-user-1", issuer: "https://issuer.example.test" });
+    expect(consent.json()).not.toHaveProperty("subject");
+
+    const confirmation = await app.inject({
+      method: "POST",
+      url: "/api/v1/auth/identity-link/confirmation",
+      headers: { origin: "http://localhost:5174", cookie: confirmationCookiePair },
+      payload: { confirmationId, csrfToken: "identity-link-csrf", decision: "confirm" },
+    });
+    expect(confirmation.statusCode).toBe(200);
+    expect(confirmation.json()).toEqual({ outcome: "linked" });
+    expect(identityLinks.complete).toHaveBeenCalledWith({
+      challengeId: "00000000-0000-4000-8000-000000000001",
+      platformUserId: "platform-user-1",
+      issuer: "https://issuer.example.test",
+      subject: "linked-subject",
+      verifiedAt: new Date("2026-11-17T12:00:00Z"),
+    });
+    const replay = await app.inject({
+      method: "POST",
+      url: "/api/v1/auth/identity-link/confirmation",
+      headers: { origin: "http://localhost:5174", cookie: confirmationCookiePair },
+      payload: { confirmationId, csrfToken: "identity-link-csrf", decision: "confirm" },
+    });
+    expect(replay.statusCode).toBe(400);
+    expect(identityLinks.complete).toHaveBeenCalledOnce();
+    expect(sessions.create).not.toHaveBeenCalled();
+    await app.close();
+  });
+
+  it("allows explicit holder cancellation and rejects cross-origin or altered confirmation requests", async () => {
+    const { app, oidc, identityLinks } = createHarness();
+    const callback = await app.inject({ method: "GET", url: `/api/v1/auth/callback?code=opaque&state=${identityLinkState}` });
+    const cookie = cookiePair(callback.headers["set-cookie"], confirmationCookie);
+    const deniedOrigin = await app.inject({
+      method: "POST", url: "/api/v1/auth/identity-link/confirmation",
+      headers: { origin: "https://attacker.example", cookie },
+      payload: { confirmationId, csrfToken: "identity-link-csrf", decision: "confirm" },
+    });
+    expect(deniedOrigin.statusCode).toBe(403);
+    expect(oidc.consumeIdentityLinkConfirmation).not.toHaveBeenCalled();
+    const substitutedTarget = await app.inject({
+      method: "POST", url: "/api/v1/auth/identity-link/confirmation",
+      headers: { origin: "http://localhost:5174", cookie },
+      payload: { confirmationId, csrfToken: "identity-link-csrf", decision: "confirm", platformUserId: "attacker-selected" },
+    });
+    expect(substitutedTarget.statusCode).toBe(400);
+    expect(oidc.consumeIdentityLinkConfirmation).not.toHaveBeenCalled();
+    const substitutedChallenge = await app.inject({
+      method: "POST", url: "/api/v1/auth/identity-link/confirmation",
+      headers: { origin: "http://localhost:5174", cookie },
+      payload: { confirmationId: `B${confirmationId.slice(1)}`, csrfToken: "identity-link-csrf", decision: "confirm" },
+    });
+    expect(substitutedChallenge.statusCode).toBe(400);
+    expect(identityLinks.complete).not.toHaveBeenCalled();
+    const cancelled = await app.inject({
+      method: "POST", url: "/api/v1/auth/identity-link/confirmation",
+      headers: { origin: "http://localhost:5174", cookie },
+      payload: { confirmationId, csrfToken: "identity-link-csrf", decision: "cancel" },
+    });
+    expect(cancelled.statusCode).toBe(200);
+    expect(cancelled.json()).toEqual({ outcome: "cancelled" });
+    expect(identityLinks.reject).toHaveBeenCalledWith("00000000-0000-4000-8000-000000000001", "holder_cancelled");
+    expect(identityLinks.complete).not.toHaveBeenCalled();
+    await app.close();
+  });
+
+  it("denies expired identity-link confirmation without creating a mapping", async () => {
+    const { app, oidc, identityLinks } = createHarness();
+    vi.mocked(oidc.getIdentityLinkConfirmation).mockResolvedValueOnce(null);
+    const callback = await app.inject({ method: "GET", url: `/api/v1/auth/callback?code=opaque&state=${identityLinkState}` });
+    const cookie = cookiePair(callback.headers["set-cookie"], confirmationCookie);
+    const expired = await app.inject({
+      method: "GET", url: `/api/v1/auth/identity-link/confirmation/${confirmationId}`,
+      headers: { origin: "http://localhost:5174", cookie },
+    });
+    expect(expired.statusCode).toBe(404);
+    vi.mocked(oidc.consumeIdentityLinkConfirmation).mockResolvedValueOnce(null);
+    const expiredPost = await app.inject({
+      method: "POST", url: "/api/v1/auth/identity-link/confirmation",
+      headers: { origin: "http://localhost:5174", cookie },
+      payload: { confirmationId, csrfToken: "identity-link-csrf", decision: "confirm" },
+    });
+    expect(expiredPost.statusCode).toBe(400);
+    expect(identityLinks.complete).not.toHaveBeenCalled();
+    await app.close();
+  });
 
   it("starts login and establishes a session for an existing active identity", async () => {
     const { app, oidc, identities, sessions } = createHarness();

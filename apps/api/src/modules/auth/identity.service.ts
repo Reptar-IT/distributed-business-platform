@@ -10,10 +10,10 @@ export function createIdentityService(prisma: PrismaClient) {
     async resolveActiveIdentity(issuer: string, subject: string): Promise<PlatformIdentity | null> {
       const identity = await prisma.userIdentity.findUnique({
         where: { issuer_subject: { issuer, subject } },
-        include: { user: true },
+        include: { user: true, verification: true },
       });
 
-      if (!identity || identity.user.status !== "ACTIVE") {
+      if (!identity || !identity.verification || identity.user.status !== "ACTIVE") {
         return null;
       }
 

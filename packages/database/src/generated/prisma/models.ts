@@ -10,6 +10,11 @@
  */
 export type * from './models/PlatformUser.js'
 export type * from './models/UserIdentity.js'
+export type * from './models/IdentityLinkChallenge.js'
+export type * from './models/UserIdentityVerification.js'
+export type * from './models/PlatformInitialization.js'
+export type * from './models/OwnerBootstrapCredential.js'
+export type * from './models/PlatformOwnerDesignation.js'
 export type * from './models/Venture.js'
 export type * from './models/VentureMembership.js'
 export type * from './models/OrganizationalRole.js'

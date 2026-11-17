@@ -53,6 +53,11 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   PlatformUser: 'PlatformUser',
   UserIdentity: 'UserIdentity',
+  IdentityLinkChallenge: 'IdentityLinkChallenge',
+  UserIdentityVerification: 'UserIdentityVerification',
+  PlatformInitialization: 'PlatformInitialization',
+  OwnerBootstrapCredential: 'OwnerBootstrapCredential',
+  PlatformOwnerDesignation: 'PlatformOwnerDesignation',
   Venture: 'Venture',
   VentureMembership: 'VentureMembership',
   OrganizationalRole: 'OrganizationalRole',
@@ -109,6 +114,76 @@ export const UserIdentityScalarFieldEnum = {
 } as const
 
 export type UserIdentityScalarFieldEnum = (typeof UserIdentityScalarFieldEnum)[keyof typeof UserIdentityScalarFieldEnum]
+
+
+export const IdentityLinkChallengeScalarFieldEnum = {
+  id: 'id',
+  platformUserId: 'platformUserId',
+  expectedIssuer: 'expectedIssuer',
+  initiatedBy: 'initiatedBy',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  outcomeCode: 'outcomeCode',
+  createdAt: 'createdAt'
+} as const
+
+export type IdentityLinkChallengeScalarFieldEnum = (typeof IdentityLinkChallengeScalarFieldEnum)[keyof typeof IdentityLinkChallengeScalarFieldEnum]
+
+
+export const UserIdentityVerificationScalarFieldEnum = {
+  id: 'id',
+  userIdentityId: 'userIdentityId',
+  platformUserId: 'platformUserId',
+  issuer: 'issuer',
+  subject: 'subject',
+  challengeId: 'challengeId',
+  initiatingOperator: 'initiatingOperator',
+  proofMethod: 'proofMethod',
+  verifiedAt: 'verifiedAt'
+} as const
+
+export type UserIdentityVerificationScalarFieldEnum = (typeof UserIdentityVerificationScalarFieldEnum)[keyof typeof UserIdentityVerificationScalarFieldEnum]
+
+
+export const PlatformInitializationScalarFieldEnum = {
+  id: 'id',
+  state: 'state',
+  activeDesignationId: 'activeDesignationId',
+  initializedAt: 'initializedAt'
+} as const
+
+export type PlatformInitializationScalarFieldEnum = (typeof PlatformInitializationScalarFieldEnum)[keyof typeof PlatformInitializationScalarFieldEnum]
+
+
+export const OwnerBootstrapCredentialScalarFieldEnum = {
+  id: 'id',
+  platformUserId: 'platformUserId',
+  userIdentityId: 'userIdentityId',
+  verifierKeyId: 'verifierKeyId',
+  verifier: 'verifier',
+  status: 'status',
+  issuedBy: 'issuedBy',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  operationId: 'operationId',
+  createdAt: 'createdAt'
+} as const
+
+export type OwnerBootstrapCredentialScalarFieldEnum = (typeof OwnerBootstrapCredentialScalarFieldEnum)[keyof typeof OwnerBootstrapCredentialScalarFieldEnum]
+
+
+export const PlatformOwnerDesignationScalarFieldEnum = {
+  id: 'id',
+  platformUserId: 'platformUserId',
+  userIdentityId: 'userIdentityId',
+  criticalOperationId: 'criticalOperationId',
+  status: 'status',
+  preparedAt: 'preparedAt',
+  activatedAt: 'activatedAt'
+} as const
+
+export type PlatformOwnerDesignationScalarFieldEnum = (typeof PlatformOwnerDesignationScalarFieldEnum)[keyof typeof PlatformOwnerDesignationScalarFieldEnum]
 
 
 export const VentureScalarFieldEnum = {

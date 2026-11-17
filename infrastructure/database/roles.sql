@@ -33,4 +33,19 @@ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_critical_operation_reconciler') THEN
     CREATE ROLE dbp_critical_operation_reconciler NOLOGIN;
   END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_identity_link_owner') THEN
+    CREATE ROLE dbp_identity_link_owner NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_identity_link_operator') THEN
+    CREATE ROLE dbp_identity_link_operator NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_identity_link_callback') THEN
+    CREATE ROLE dbp_identity_link_callback NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_platform_owner_owner') THEN
+    CREATE ROLE dbp_platform_owner_owner NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_platform_owner_operator') THEN
+    CREATE ROLE dbp_platform_owner_operator NOLOGIN;
+  END IF;
 END $$;

@@ -137,3 +137,40 @@ export const CriticalOperationStatus = {
 } as const
 
 export type CriticalOperationStatus = (typeof CriticalOperationStatus)[keyof typeof CriticalOperationStatus]
+
+
+export const IdentityLinkChallengeStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type IdentityLinkChallengeStatus = (typeof IdentityLinkChallengeStatus)[keyof typeof IdentityLinkChallengeStatus]
+
+
+export const PlatformOwnerDesignationStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  FAILED: 'FAILED'
+} as const
+
+export type PlatformOwnerDesignationStatus = (typeof PlatformOwnerDesignationStatus)[keyof typeof PlatformOwnerDesignationStatus]
+
+
+export const PlatformInitializationState = {
+  UNINITIALIZED: 'UNINITIALIZED',
+  INITIALIZED: 'INITIALIZED'
+} as const
+
+export type PlatformInitializationState = (typeof PlatformInitializationState)[keyof typeof PlatformInitializationState]
+
+
+export const OwnerBootstrapCredentialStatus = {
+  ACTIVE: 'ACTIVE',
+  CONSUMED: 'CONSUMED',
+  EXPIRED: 'EXPIRED',
+  REVOKED: 'REVOKED'
+} as const
+
+export type OwnerBootstrapCredentialStatus = (typeof OwnerBootstrapCredentialStatus)[keyof typeof OwnerBootstrapCredentialStatus]

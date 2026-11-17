@@ -966,14 +966,6 @@ export type EnumAuthorizationAuditDecisionFieldUpdateOperationsInput = {
   set?: $Enums.AuthorizationAuditDecision
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type AuthorizationAuditEventCreateNestedOneWithoutCriticalIntentOperationsInput = {
   create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalIntentOperationsInput>
   connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutCriticalIntentOperationsInput

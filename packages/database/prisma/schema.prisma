@@ -98,6 +98,31 @@ enum CriticalOperationStatus {
   RECONCILIATION_REQUIRED
 }
 
+enum IdentityLinkChallengeStatus {
+  PENDING
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+enum PlatformOwnerDesignationStatus {
+  PENDING
+  ACTIVE
+  FAILED
+}
+
+enum PlatformInitializationState {
+  UNINITIALIZED
+  INITIALIZED
+}
+
+enum OwnerBootstrapCredentialStatus {
+  ACTIVE
+  CONSUMED
+  EXPIRED
+  REVOKED
+}
+
 model PlatformUser {
   id          String     @id @default(uuid()) @db.Uuid
   displayName String
@@ -105,6 +130,10 @@ model PlatformUser {
 
   identities  UserIdentity[]
   memberships VentureMembership[]
+  identityLinkChallenges IdentityLinkChallenge[]
+  identityVerifications UserIdentityVerification[]
+  ownerDesignations PlatformOwnerDesignation[]
+  ownerBootstrapCredentials OwnerBootstrapCredential[]
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -121,13 +150,99 @@ model UserIdentity {
   emailVerified Boolean  @default(false)
 
   user          PlatformUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verification  UserIdentityVerification?
+  bootstrapCredentials OwnerBootstrapCredential[]
+  ownerDesignations PlatformOwnerDesignation[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   @@unique([issuer, subject])
+  @@unique([id, userId], map: "user_identities_id_user_key")
+  @@unique([id, userId, issuer, subject], map: "user_identities_provenance_binding_key")
   @@index([userId])
   @@map("user_identities")
+}
+
+model IdentityLinkChallenge {
+  id                  String                      @id @db.Uuid
+  platformUserId      String                      @db.Uuid
+  expectedIssuer      String
+  initiatedBy         String                      @db.VarChar(200)
+  status              IdentityLinkChallengeStatus @default(PENDING)
+  expiresAt           DateTime                    @db.Timestamptz(6)
+  completedAt         DateTime?                   @db.Timestamptz(6)
+  outcomeCode         String?                     @db.VarChar(100)
+  user                PlatformUser                @relation(fields: [platformUserId], references: [id], onDelete: Restrict)
+  verification        UserIdentityVerification?
+  createdAt           DateTime                    @default(now()) @db.Timestamptz(6)
+
+  @@index([status, expiresAt])
+  @@map("identity_link_challenges")
+}
+
+model UserIdentityVerification {
+  id                String              @id @db.Uuid
+  userIdentityId    String              @unique @db.Uuid
+  platformUserId    String              @db.Uuid
+  issuer            String
+  subject           String
+  challengeId       String              @unique @db.Uuid
+  initiatingOperator String             @db.VarChar(200)
+  proofMethod       String              @db.VarChar(100)
+  verifiedAt        DateTime            @db.Timestamptz(6)
+  identity          UserIdentity        @relation(fields: [userIdentityId], references: [id], onDelete: Restrict)
+  user              PlatformUser        @relation(fields: [platformUserId], references: [id], onDelete: Restrict)
+  challenge         IdentityLinkChallenge @relation(fields: [challengeId], references: [id], onDelete: Restrict)
+
+  @@map("user_identity_verifications")
+}
+
+model PlatformInitialization {
+  id                   Int                         @id @default(1)
+  state                PlatformInitializationState @default(UNINITIALIZED)
+  activeDesignationId  String?                     @unique @db.Uuid
+  initializedAt        DateTime?                   @db.Timestamptz(6)
+  activeDesignation    PlatformOwnerDesignation?   @relation(fields: [activeDesignationId], references: [id], onDelete: Restrict)
+
+  @@map("platform_initialization")
+}
+
+model OwnerBootstrapCredential {
+  id                 String                        @id @db.Uuid
+  platformUserId     String                        @db.Uuid
+  userIdentityId     String                        @db.Uuid
+  verifierKeyId      String                        @db.VarChar(100)
+  verifier           Bytes
+  status             OwnerBootstrapCredentialStatus @default(ACTIVE)
+  issuedBy           String                        @db.VarChar(200)
+  expiresAt          DateTime                      @db.Timestamptz(6)
+  consumedAt         DateTime?                     @db.Timestamptz(6)
+  operationId        String?                       @unique @db.Uuid
+  user               PlatformUser                  @relation(fields: [platformUserId], references: [id], onDelete: Restrict)
+  identity           UserIdentity                  @relation(fields: [userIdentityId, platformUserId], references: [id, userId], onDelete: Restrict)
+  criticalOperation  CriticalOperation?             @relation("OwnerBootstrapCredentialOperation", fields: [operationId], references: [id], onDelete: Restrict)
+  createdAt          DateTime                      @default(now()) @db.Timestamptz(6)
+
+  @@index([platformUserId, status])
+  @@map("owner_bootstrap_credentials")
+}
+
+model PlatformOwnerDesignation {
+  id                    String                          @id @db.Uuid
+  platformUserId        String                          @db.Uuid
+  userIdentityId        String                          @db.Uuid
+  criticalOperationId   String                          @unique @db.Uuid
+  status                PlatformOwnerDesignationStatus @default(PENDING)
+  preparedAt            DateTime                        @db.Timestamptz(6)
+  activatedAt           DateTime?                       @db.Timestamptz(6)
+  user                  PlatformUser                    @relation(fields: [platformUserId], references: [id], onDelete: Restrict)
+  identity              UserIdentity                    @relation(fields: [userIdentityId, platformUserId], references: [id, userId], onDelete: Restrict)
+  criticalOperation     CriticalOperation               @relation("OwnerBootstrapOperation", fields: [criticalOperationId], references: [id], onDelete: Restrict)
+  initializationRecord PlatformInitialization?
+
+  @@index([platformUserId, status])
+  @@map("platform_owner_designations")
 }
 
 model Venture {
@@ -441,6 +556,8 @@ model CriticalOperation {
   completionEvent            AuthorizationAuditEvent? @relation("CriticalCompletionEvent", fields: [completionEventId], references: [id], onDelete: Restrict)
   qualifyingReceipt          AuditArchiveReceipt?    @relation(fields: [qualifyingReceiptId], references: [id], onDelete: Restrict)
   gate                       CriticalOperationGate?
+  ownerDesignation           PlatformOwnerDesignation? @relation("OwnerBootstrapOperation")
+  bootstrapCredential        OwnerBootstrapCredential? @relation("OwnerBootstrapCredentialOperation")
   createdAt                  DateTime                @default(now()) @db.Timestamptz(6)
   updatedAt                  DateTime                @default(now()) @updatedAt @db.Timestamptz(6)
   completedAt                DateTime?               @db.Timestamptz(6)

@@ -374,10 +374,6 @@ export type BigIntFieldUpdateOperationsInput = {
   divide?: bigint | number
 }
 
-export type BytesFieldUpdateOperationsInput = {
-  set?: runtime.Bytes
-}
-
 export type AuthorizationAuditHeadCreateWithoutStreamInput = {
   lastSequence?: bigint | number
   lastEventHash: runtime.Bytes

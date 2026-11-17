@@ -15,15 +15,36 @@ export interface OidcIdentity {
   subject: string;
 }
 
+export interface VerifiedIdentityLinkProof {
+  challengeId: string;
+  identity: OidcIdentity;
+  verifiedAt: Date;
+}
+
+export interface IdentityLinkConfirmation {
+  challengeId: string;
+  platformUserId: string;
+  issuer: string;
+  csrfToken: string;
+}
+
 export interface OidcService {
   startLogin(browserBinding: string): Promise<{ state: string; authorizationUrl: string }>;
   completeLogin(callbackUrl: URL, state: string, browserBinding: string): Promise<OidcIdentity>;
+  startIdentityLink(challengeId: string): Promise<{ authorizationUrl: string }>;
+  completeIdentityLink(callbackUrl: URL, state: string): Promise<VerifiedIdentityLinkProof>;
+  createIdentityLinkConfirmation(proof: VerifiedIdentityLinkProof, platformUserId: string): Promise<{ confirmationId: string; browserBinding: string }>;
+  getIdentityLinkConfirmation(confirmationId: string, browserBinding: string): Promise<IdentityLinkConfirmation | null>;
+  consumeIdentityLinkConfirmation(confirmationId: string, csrfToken: string, browserBinding: string): Promise<(VerifiedIdentityLinkProof & { platformUserId: string }) | null>;
   createLogoutState(): Promise<string>;
   consumeLogoutState(state: string): Promise<boolean>;
   buildLogoutUrl(state: string): Promise<string>;
 }
 
 const OIDC_TRANSACTION_TTL_SECONDS = 5 * 60;
+const IDENTITY_LINK_TTL_SECONDS = 5 * 60;
+const IDENTITY_LINK_CONFIRMATION_TTL_SECONDS = 5 * 60;
+const MAX_IDENTITY_LINK_AUTH_AGE_SECONDS = 5 * 60;
 const OIDC_LOGOUT_STATE_TTL_SECONDS = 5 * 60;
 
 function safeEqual(left: string, right: string): boolean {
@@ -108,11 +129,124 @@ export function createOidcService(
         expectedNonce: transaction.nonce,
       });
       const claims = tokens.claims();
-      if (!claims || claims.iss !== options.issuer || typeof claims.sub !== "string" || claims.sub.length === 0) {
+      if (!claims || claims.iss !== options.issuer || typeof claims.sub !== "string" || claims.sub.length === 0 ||
+          (claims.azp !== undefined && claims.azp !== options.clientId)) {
         throw new Error("OIDC identity claims are invalid");
       }
 
       return { issuer: claims.iss, subject: claims.sub };
+    },
+
+    async startIdentityLink(challengeId) {
+      if (!/^[0-9a-f-]{36}$/i.test(challengeId)) throw new Error("Invalid identity-link challenge");
+      const config = await getConfig();
+      const state = `il_${oidc.randomState()}`;
+      const nonce = oidc.randomNonce();
+      const codeVerifier = oidc.randomPKCECodeVerifier();
+      const codeChallenge = await oidc.calculatePKCECodeChallenge(codeVerifier);
+      const stored = await options.redis.set(
+        `dbp:oidc:identity-link:${state}`,
+        JSON.stringify({ challengeId, nonce, codeVerifier }),
+        "EX",
+        IDENTITY_LINK_TTL_SECONDS,
+        "NX",
+      );
+      if (stored !== "OK") throw new Error("Could not store identity-link transaction");
+
+      const authorizationUrl = oidc.buildAuthorizationUrl(config, {
+        client_id: options.clientId,
+        redirect_uri: options.redirectUri,
+        response_type: "code",
+        scope: "openid",
+        state,
+        nonce,
+        code_challenge: codeChallenge,
+        code_challenge_method: "S256",
+        prompt: "login",
+        max_age: "0",
+      });
+      return { authorizationUrl: authorizationUrl.href };
+    },
+
+    async completeIdentityLink(callbackUrl, state) {
+      if (!/^il_[A-Za-z0-9_-]{20,}$/.test(state)) throw new Error("Invalid identity-link state");
+      const serialized = await options.redis.getdel(`dbp:oidc:identity-link:${state}`);
+      if (!serialized) throw new Error("Expired identity-link transaction");
+      let transaction: { challengeId: string; nonce: string; codeVerifier: string };
+      try {
+        transaction = JSON.parse(serialized) as typeof transaction;
+      } catch {
+        throw new Error("Invalid identity-link transaction");
+      }
+
+      try {
+        const config = await getConfig();
+        const tokens = await oidc.authorizationCodeGrant(config, callbackUrl, {
+          pkceCodeVerifier: transaction.codeVerifier,
+          expectedState: state,
+          expectedNonce: transaction.nonce,
+        });
+        const claims = tokens.claims();
+        const nowSeconds = Math.floor(Date.now() / 1000);
+        const authTime = claims?.auth_time;
+        if (
+          !claims || claims.iss !== options.issuer || typeof claims.sub !== "string" || claims.sub.length === 0 ||
+          (claims.azp !== undefined && claims.azp !== options.clientId) ||
+          typeof authTime !== "number" || !Number.isInteger(authTime) ||
+          authTime > nowSeconds + 60 || nowSeconds - authTime > MAX_IDENTITY_LINK_AUTH_AGE_SECONDS
+        ) {
+          throw new Error("OIDC proof is not fresh or does not identify the configured issuer");
+        }
+        return {
+          challengeId: transaction.challengeId,
+          identity: { issuer: claims.iss, subject: claims.sub },
+          verifiedAt: new Date(authTime * 1000),
+        };
+      } catch {
+        throw new IdentityLinkVerificationError(transaction.challengeId, "oidc_proof_rejected");
+      }
+    },
+
+    async createIdentityLinkConfirmation(proof, platformUserId) {
+      const confirmationId = randomBytes(32).toString("base64url");
+      const browserBinding = randomBytes(32).toString("base64url");
+      const csrfToken = randomBytes(32).toString("base64url");
+      const stored = await options.redis.set(
+        `dbp:oidc:identity-link-confirmation:${confirmationId}`,
+        JSON.stringify({ ...proof, platformUserId, csrfToken, browserBinding }),
+        "EX",
+        IDENTITY_LINK_CONFIRMATION_TTL_SECONDS,
+        "NX",
+      );
+      if (stored !== "OK") throw new Error("Could not store identity-link confirmation");
+      return { confirmationId, browserBinding };
+    },
+
+    async getIdentityLinkConfirmation(confirmationId, browserBinding) {
+      if (!/^[A-Za-z0-9_-]{43}$/.test(confirmationId) || !browserBinding) return null;
+      const serialized = await options.redis.get(`dbp:oidc:identity-link-confirmation:${confirmationId}`);
+      const confirmation = readIdentityLinkConfirmation(serialized);
+      if (!confirmation || !safeEqual(confirmation.browserBinding, browserBinding)) return null;
+      return {
+        challengeId: confirmation.challengeId,
+        platformUserId: confirmation.platformUserId,
+        issuer: confirmation.identity.issuer,
+        csrfToken: confirmation.csrfToken,
+      };
+    },
+
+    async consumeIdentityLinkConfirmation(confirmationId, csrfToken, browserBinding) {
+      if (!/^[A-Za-z0-9_-]{43}$/.test(confirmationId) || !csrfToken || !browserBinding) return null;
+      const serialized = await options.redis.getdel(`dbp:oidc:identity-link-confirmation:${confirmationId}`);
+      const confirmation = readIdentityLinkConfirmation(serialized);
+      if (!confirmation || !safeEqual(confirmation.csrfToken, csrfToken) ||
+          !safeEqual(confirmation.browserBinding, browserBinding)) return null;
+      return {
+        challengeId: confirmation.challengeId,
+        identity: confirmation.identity,
+        verifiedAt: confirmation.verifiedAt,
+        platformUserId: confirmation.platformUserId,
+      };
     },
 
     async buildLogoutUrl(state) {
@@ -144,6 +278,35 @@ export function createOidcService(
       return (await options.redis.getdel(`dbp:oidc:logout:${state}`)) === "1";
     },
   };
+}
+
+interface StoredIdentityLinkConfirmation extends VerifiedIdentityLinkProof {
+  platformUserId: string;
+  csrfToken: string;
+  browserBinding: string;
+}
+
+function readIdentityLinkConfirmation(serialized: string | null): StoredIdentityLinkConfirmation | null {
+  if (!serialized) return null;
+  try {
+    const value = JSON.parse(serialized) as Partial<StoredIdentityLinkConfirmation>;
+    if (typeof value.challengeId !== "string" || typeof value.platformUserId !== "string" ||
+        typeof value.csrfToken !== "string" || typeof value.browserBinding !== "string" ||
+        typeof value.identity?.issuer !== "string" || typeof value.identity?.subject !== "string" ||
+        typeof value.verifiedAt !== "string") return null;
+    const verifiedAt = new Date(value.verifiedAt);
+    if (Number.isNaN(verifiedAt.getTime())) return null;
+    return { ...(value as StoredIdentityLinkConfirmation), verifiedAt };
+  } catch {
+    return null;
+  }
+}
+
+export class IdentityLinkVerificationError extends Error {
+  constructor(readonly challengeId: string, readonly outcomeCode: string) {
+    super("Identity-link proof could not be verified");
+    this.name = "IdentityLinkVerificationError";
+  }
 }
 
 export function createBrowserBinding(): string {
