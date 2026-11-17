@@ -188,6 +188,9 @@ export type PlatformUserWhereInput = {
   identityVerifications?: Prisma.UserIdentityVerificationListRelationFilter
   ownerDesignations?: Prisma.PlatformOwnerDesignationListRelationFilter
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialListRelationFilter
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitListRelationFilter
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationListRelationFilter
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationListRelationFilter
 }
 
 export type PlatformUserOrderByWithRelationInput = {
@@ -202,6 +205,9 @@ export type PlatformUserOrderByWithRelationInput = {
   identityVerifications?: Prisma.UserIdentityVerificationOrderByRelationAggregateInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationOrderByRelationAggregateInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialOrderByRelationAggregateInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitOrderByRelationAggregateInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationOrderByRelationAggregateInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationOrderByRelationAggregateInput
 }
 
 export type PlatformUserWhereUniqueInput = Prisma.AtLeast<{
@@ -219,6 +225,9 @@ export type PlatformUserWhereUniqueInput = Prisma.AtLeast<{
   identityVerifications?: Prisma.UserIdentityVerificationListRelationFilter
   ownerDesignations?: Prisma.PlatformOwnerDesignationListRelationFilter
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialListRelationFilter
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitListRelationFilter
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationListRelationFilter
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationListRelationFilter
 }, "id">
 
 export type PlatformUserOrderByWithAggregationInput = {
@@ -255,6 +264,9 @@ export type PlatformUserCreateInput = {
   identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateInput = {
@@ -269,6 +281,9 @@ export type PlatformUserUncheckedCreateInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUpdateInput = {
@@ -283,6 +298,9 @@ export type PlatformUserUpdateInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateInput = {
@@ -297,6 +315,9 @@ export type PlatformUserUncheckedUpdateInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserCreateManyInput = {
@@ -420,6 +441,48 @@ export type PlatformUserUpdateOneRequiredWithoutOwnerBootstrapCredentialsNestedI
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUserUpdateToOneWithWhereWithoutOwnerBootstrapCredentialsInput, Prisma.PlatformUserUpdateWithoutOwnerBootstrapCredentialsInput>, Prisma.PlatformUserUncheckedUpdateWithoutOwnerBootstrapCredentialsInput>
 }
 
+export type PlatformUserCreateNestedOneWithoutOwnerRecoveryKitsInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryKitsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryKitsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutOwnerRecoveryKitsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+}
+
+export type PlatformUserUpdateOneRequiredWithoutOwnerRecoveryKitsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryKitsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryKitsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutOwnerRecoveryKitsInput
+  upsert?: Prisma.PlatformUserUpsertWithoutOwnerRecoveryKitsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUserUpdateToOneWithWhereWithoutOwnerRecoveryKitsInput, Prisma.PlatformUserUpdateWithoutOwnerRecoveryKitsInput>, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryKitsInput>
+}
+
+export type PlatformUserCreateNestedOneWithoutOwnerRecoveryOperationsInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryOperationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryOperationsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutOwnerRecoveryOperationsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+}
+
+export type PlatformUserUpdateOneRequiredWithoutOwnerRecoveryOperationsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryOperationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryOperationsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutOwnerRecoveryOperationsInput
+  upsert?: Prisma.PlatformUserUpsertWithoutOwnerRecoveryOperationsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUserUpdateToOneWithWhereWithoutOwnerRecoveryOperationsInput, Prisma.PlatformUserUpdateWithoutOwnerRecoveryOperationsInput>, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryOperationsInput>
+}
+
+export type PlatformUserCreateNestedOneWithoutOwnerRecoveryVerificationsInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryVerificationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryVerificationsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutOwnerRecoveryVerificationsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+}
+
+export type PlatformUserUpdateOneRequiredWithoutOwnerRecoveryVerificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryVerificationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryVerificationsInput>
+  connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutOwnerRecoveryVerificationsInput
+  upsert?: Prisma.PlatformUserUpsertWithoutOwnerRecoveryVerificationsInput
+  connect?: Prisma.PlatformUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUserUpdateToOneWithWhereWithoutOwnerRecoveryVerificationsInput, Prisma.PlatformUserUpdateWithoutOwnerRecoveryVerificationsInput>, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryVerificationsInput>
+}
+
 export type PlatformUserCreateNestedOneWithoutOwnerDesignationsInput = {
   create?: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerDesignationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerDesignationsInput>
   connectOrCreate?: Prisma.PlatformUserCreateOrConnectWithoutOwnerDesignationsInput
@@ -459,6 +522,9 @@ export type PlatformUserCreateWithoutIdentitiesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateWithoutIdentitiesInput = {
@@ -472,6 +538,9 @@ export type PlatformUserUncheckedCreateWithoutIdentitiesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserCreateOrConnectWithoutIdentitiesInput = {
@@ -501,6 +570,9 @@ export type PlatformUserUpdateWithoutIdentitiesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateWithoutIdentitiesInput = {
@@ -514,6 +586,9 @@ export type PlatformUserUncheckedUpdateWithoutIdentitiesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserCreateWithoutIdentityLinkChallengesInput = {
@@ -527,6 +602,9 @@ export type PlatformUserCreateWithoutIdentityLinkChallengesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateWithoutIdentityLinkChallengesInput = {
@@ -540,6 +618,9 @@ export type PlatformUserUncheckedCreateWithoutIdentityLinkChallengesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserCreateOrConnectWithoutIdentityLinkChallengesInput = {
@@ -569,6 +650,9 @@ export type PlatformUserUpdateWithoutIdentityLinkChallengesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateWithoutIdentityLinkChallengesInput = {
@@ -582,6 +666,9 @@ export type PlatformUserUncheckedUpdateWithoutIdentityLinkChallengesInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserCreateWithoutIdentityVerificationsInput = {
@@ -595,6 +682,9 @@ export type PlatformUserCreateWithoutIdentityVerificationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateWithoutIdentityVerificationsInput = {
@@ -608,6 +698,9 @@ export type PlatformUserUncheckedCreateWithoutIdentityVerificationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserCreateOrConnectWithoutIdentityVerificationsInput = {
@@ -637,6 +730,9 @@ export type PlatformUserUpdateWithoutIdentityVerificationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateWithoutIdentityVerificationsInput = {
@@ -650,6 +746,9 @@ export type PlatformUserUncheckedUpdateWithoutIdentityVerificationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserCreateWithoutOwnerBootstrapCredentialsInput = {
@@ -663,6 +762,9 @@ export type PlatformUserCreateWithoutOwnerBootstrapCredentialsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeCreateNestedManyWithoutUserInput
   identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateWithoutOwnerBootstrapCredentialsInput = {
@@ -676,6 +778,9 @@ export type PlatformUserUncheckedCreateWithoutOwnerBootstrapCredentialsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedCreateNestedManyWithoutUserInput
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserCreateOrConnectWithoutOwnerBootstrapCredentialsInput = {
@@ -705,6 +810,9 @@ export type PlatformUserUpdateWithoutOwnerBootstrapCredentialsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUpdateManyWithoutUserNestedInput
   identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateWithoutOwnerBootstrapCredentialsInput = {
@@ -718,6 +826,249 @@ export type PlatformUserUncheckedUpdateWithoutOwnerBootstrapCredentialsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedUpdateManyWithoutUserNestedInput
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserCreateWithoutOwnerRecoveryKitsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutUserInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeCreateNestedManyWithoutUserInput
+  identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserUncheckedCreateWithoutOwnerRecoveryKitsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutUserInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedCreateNestedManyWithoutUserInput
+  identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserCreateOrConnectWithoutOwnerRecoveryKitsInput = {
+  where: Prisma.PlatformUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryKitsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryKitsInput>
+}
+
+export type PlatformUserUpsertWithoutOwnerRecoveryKitsInput = {
+  update: Prisma.XOR<Prisma.PlatformUserUpdateWithoutOwnerRecoveryKitsInput, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryKitsInput>
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryKitsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryKitsInput>
+  where?: Prisma.PlatformUserWhereInput
+}
+
+export type PlatformUserUpdateToOneWithWhereWithoutOwnerRecoveryKitsInput = {
+  where?: Prisma.PlatformUserWhereInput
+  data: Prisma.XOR<Prisma.PlatformUserUpdateWithoutOwnerRecoveryKitsInput, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryKitsInput>
+}
+
+export type PlatformUserUpdateWithoutOwnerRecoveryKitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutUserNestedInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUpdateManyWithoutUserNestedInput
+  identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserUncheckedUpdateWithoutOwnerRecoveryKitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutUserNestedInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedUpdateManyWithoutUserNestedInput
+  identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserCreateWithoutOwnerRecoveryOperationsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutUserInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeCreateNestedManyWithoutUserInput
+  identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserUncheckedCreateWithoutOwnerRecoveryOperationsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutUserInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedCreateNestedManyWithoutUserInput
+  identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserCreateOrConnectWithoutOwnerRecoveryOperationsInput = {
+  where: Prisma.PlatformUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryOperationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryOperationsInput>
+}
+
+export type PlatformUserUpsertWithoutOwnerRecoveryOperationsInput = {
+  update: Prisma.XOR<Prisma.PlatformUserUpdateWithoutOwnerRecoveryOperationsInput, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryOperationsInput>
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryOperationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryOperationsInput>
+  where?: Prisma.PlatformUserWhereInput
+}
+
+export type PlatformUserUpdateToOneWithWhereWithoutOwnerRecoveryOperationsInput = {
+  where?: Prisma.PlatformUserWhereInput
+  data: Prisma.XOR<Prisma.PlatformUserUpdateWithoutOwnerRecoveryOperationsInput, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryOperationsInput>
+}
+
+export type PlatformUserUpdateWithoutOwnerRecoveryOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutUserNestedInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUpdateManyWithoutUserNestedInput
+  identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserUncheckedUpdateWithoutOwnerRecoveryOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutUserNestedInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedUpdateManyWithoutUserNestedInput
+  identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserCreateWithoutOwnerRecoveryVerificationsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipCreateNestedManyWithoutUserInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeCreateNestedManyWithoutUserInput
+  identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserUncheckedCreateWithoutOwnerRecoveryVerificationsInput = {
+  id?: string
+  displayName: string
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  identities?: Prisma.UserIdentityUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.VentureMembershipUncheckedCreateNestedManyWithoutUserInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedCreateNestedManyWithoutUserInput
+  identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type PlatformUserCreateOrConnectWithoutOwnerRecoveryVerificationsInput = {
+  where: Prisma.PlatformUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryVerificationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryVerificationsInput>
+}
+
+export type PlatformUserUpsertWithoutOwnerRecoveryVerificationsInput = {
+  update: Prisma.XOR<Prisma.PlatformUserUpdateWithoutOwnerRecoveryVerificationsInput, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryVerificationsInput>
+  create: Prisma.XOR<Prisma.PlatformUserCreateWithoutOwnerRecoveryVerificationsInput, Prisma.PlatformUserUncheckedCreateWithoutOwnerRecoveryVerificationsInput>
+  where?: Prisma.PlatformUserWhereInput
+}
+
+export type PlatformUserUpdateToOneWithWhereWithoutOwnerRecoveryVerificationsInput = {
+  where?: Prisma.PlatformUserWhereInput
+  data: Prisma.XOR<Prisma.PlatformUserUpdateWithoutOwnerRecoveryVerificationsInput, Prisma.PlatformUserUncheckedUpdateWithoutOwnerRecoveryVerificationsInput>
+}
+
+export type PlatformUserUpdateWithoutOwnerRecoveryVerificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUpdateManyWithoutUserNestedInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUpdateManyWithoutUserNestedInput
+  identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+}
+
+export type PlatformUserUncheckedUpdateWithoutOwnerRecoveryVerificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  identities?: Prisma.UserIdentityUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.VentureMembershipUncheckedUpdateManyWithoutUserNestedInput
+  identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedUpdateManyWithoutUserNestedInput
+  identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
+  ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserCreateWithoutOwnerDesignationsInput = {
@@ -731,6 +1082,9 @@ export type PlatformUserCreateWithoutOwnerDesignationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeCreateNestedManyWithoutUserInput
   identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateWithoutOwnerDesignationsInput = {
@@ -744,6 +1098,9 @@ export type PlatformUserUncheckedCreateWithoutOwnerDesignationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedCreateNestedManyWithoutUserInput
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserCreateOrConnectWithoutOwnerDesignationsInput = {
@@ -773,6 +1130,9 @@ export type PlatformUserUpdateWithoutOwnerDesignationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUpdateManyWithoutUserNestedInput
   identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateWithoutOwnerDesignationsInput = {
@@ -786,6 +1146,9 @@ export type PlatformUserUncheckedUpdateWithoutOwnerDesignationsInput = {
   identityLinkChallenges?: Prisma.IdentityLinkChallengeUncheckedUpdateManyWithoutUserNestedInput
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserCreateWithoutMembershipsInput = {
@@ -799,6 +1162,9 @@ export type PlatformUserCreateWithoutMembershipsInput = {
   identityVerifications?: Prisma.UserIdentityVerificationCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserUncheckedCreateWithoutMembershipsInput = {
@@ -812,6 +1178,9 @@ export type PlatformUserUncheckedCreateWithoutMembershipsInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedCreateNestedManyWithoutUserInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutUserInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutUserInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type PlatformUserCreateOrConnectWithoutMembershipsInput = {
@@ -841,6 +1210,9 @@ export type PlatformUserUpdateWithoutMembershipsInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUpdateManyWithoutUserNestedInput
 }
 
 export type PlatformUserUncheckedUpdateWithoutMembershipsInput = {
@@ -854,6 +1226,9 @@ export type PlatformUserUncheckedUpdateWithoutMembershipsInput = {
   identityVerifications?: Prisma.UserIdentityVerificationUncheckedUpdateManyWithoutUserNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutUserNestedInput
   ownerBootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutUserNestedInput
+  ownerRecoveryVerifications?: Prisma.OwnerRecoveryVerificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -868,6 +1243,9 @@ export type PlatformUserCountOutputType = {
   identityVerifications: number
   ownerDesignations: number
   ownerBootstrapCredentials: number
+  ownerRecoveryKits: number
+  ownerRecoveryOperations: number
+  ownerRecoveryVerifications: number
 }
 
 export type PlatformUserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -877,6 +1255,9 @@ export type PlatformUserCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   identityVerifications?: boolean | PlatformUserCountOutputTypeCountIdentityVerificationsArgs
   ownerDesignations?: boolean | PlatformUserCountOutputTypeCountOwnerDesignationsArgs
   ownerBootstrapCredentials?: boolean | PlatformUserCountOutputTypeCountOwnerBootstrapCredentialsArgs
+  ownerRecoveryKits?: boolean | PlatformUserCountOutputTypeCountOwnerRecoveryKitsArgs
+  ownerRecoveryOperations?: boolean | PlatformUserCountOutputTypeCountOwnerRecoveryOperationsArgs
+  ownerRecoveryVerifications?: boolean | PlatformUserCountOutputTypeCountOwnerRecoveryVerificationsArgs
 }
 
 /**
@@ -931,6 +1312,27 @@ export type PlatformUserCountOutputTypeCountOwnerBootstrapCredentialsArgs<ExtArg
   where?: Prisma.OwnerBootstrapCredentialWhereInput
 }
 
+/**
+ * PlatformUserCountOutputType without action
+ */
+export type PlatformUserCountOutputTypeCountOwnerRecoveryKitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OwnerRecoveryKitWhereInput
+}
+
+/**
+ * PlatformUserCountOutputType without action
+ */
+export type PlatformUserCountOutputTypeCountOwnerRecoveryOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OwnerRecoveryOperationWhereInput
+}
+
+/**
+ * PlatformUserCountOutputType without action
+ */
+export type PlatformUserCountOutputTypeCountOwnerRecoveryVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OwnerRecoveryVerificationWhereInput
+}
+
 
 export type PlatformUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -944,6 +1346,9 @@ export type PlatformUserSelect<ExtArgs extends runtime.Types.Extensions.Internal
   identityVerifications?: boolean | Prisma.PlatformUser$identityVerificationsArgs<ExtArgs>
   ownerDesignations?: boolean | Prisma.PlatformUser$ownerDesignationsArgs<ExtArgs>
   ownerBootstrapCredentials?: boolean | Prisma.PlatformUser$ownerBootstrapCredentialsArgs<ExtArgs>
+  ownerRecoveryKits?: boolean | Prisma.PlatformUser$ownerRecoveryKitsArgs<ExtArgs>
+  ownerRecoveryOperations?: boolean | Prisma.PlatformUser$ownerRecoveryOperationsArgs<ExtArgs>
+  ownerRecoveryVerifications?: boolean | Prisma.PlatformUser$ownerRecoveryVerificationsArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformUserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platformUser"]>
 
@@ -979,6 +1384,9 @@ export type PlatformUserInclude<ExtArgs extends runtime.Types.Extensions.Interna
   identityVerifications?: boolean | Prisma.PlatformUser$identityVerificationsArgs<ExtArgs>
   ownerDesignations?: boolean | Prisma.PlatformUser$ownerDesignationsArgs<ExtArgs>
   ownerBootstrapCredentials?: boolean | Prisma.PlatformUser$ownerBootstrapCredentialsArgs<ExtArgs>
+  ownerRecoveryKits?: boolean | Prisma.PlatformUser$ownerRecoveryKitsArgs<ExtArgs>
+  ownerRecoveryOperations?: boolean | Prisma.PlatformUser$ownerRecoveryOperationsArgs<ExtArgs>
+  ownerRecoveryVerifications?: boolean | Prisma.PlatformUser$ownerRecoveryVerificationsArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformUserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlatformUserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -993,6 +1401,9 @@ export type $PlatformUserPayload<ExtArgs extends runtime.Types.Extensions.Intern
     identityVerifications: Prisma.$UserIdentityVerificationPayload<ExtArgs>[]
     ownerDesignations: Prisma.$PlatformOwnerDesignationPayload<ExtArgs>[]
     ownerBootstrapCredentials: Prisma.$OwnerBootstrapCredentialPayload<ExtArgs>[]
+    ownerRecoveryKits: Prisma.$OwnerRecoveryKitPayload<ExtArgs>[]
+    ownerRecoveryOperations: Prisma.$OwnerRecoveryOperationPayload<ExtArgs>[]
+    ownerRecoveryVerifications: Prisma.$OwnerRecoveryVerificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1400,6 +1811,9 @@ export interface Prisma__PlatformUserClient<T, Null = never, ExtArgs extends run
   identityVerifications<T extends Prisma.PlatformUser$identityVerificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$identityVerificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserIdentityVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ownerDesignations<T extends Prisma.PlatformUser$ownerDesignationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$ownerDesignationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformOwnerDesignationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ownerBootstrapCredentials<T extends Prisma.PlatformUser$ownerBootstrapCredentialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$ownerBootstrapCredentialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerBootstrapCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownerRecoveryKits<T extends Prisma.PlatformUser$ownerRecoveryKitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$ownerRecoveryKitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryKitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownerRecoveryOperations<T extends Prisma.PlatformUser$ownerRecoveryOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$ownerRecoveryOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownerRecoveryVerifications<T extends Prisma.PlatformUser$ownerRecoveryVerificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformUser$ownerRecoveryVerificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1968,6 +2382,78 @@ export type PlatformUser$ownerBootstrapCredentialsArgs<ExtArgs extends runtime.T
   take?: number
   skip?: number
   distinct?: Prisma.OwnerBootstrapCredentialScalarFieldEnum | Prisma.OwnerBootstrapCredentialScalarFieldEnum[]
+}
+
+/**
+ * PlatformUser.ownerRecoveryKits
+ */
+export type PlatformUser$ownerRecoveryKitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryKit
+   */
+  select?: Prisma.OwnerRecoveryKitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryKit
+   */
+  omit?: Prisma.OwnerRecoveryKitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryKitInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryKitWhereInput
+  orderBy?: Prisma.OwnerRecoveryKitOrderByWithRelationInput | Prisma.OwnerRecoveryKitOrderByWithRelationInput[]
+  cursor?: Prisma.OwnerRecoveryKitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnerRecoveryKitScalarFieldEnum | Prisma.OwnerRecoveryKitScalarFieldEnum[]
+}
+
+/**
+ * PlatformUser.ownerRecoveryOperations
+ */
+export type PlatformUser$ownerRecoveryOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryOperation
+   */
+  select?: Prisma.OwnerRecoveryOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryOperation
+   */
+  omit?: Prisma.OwnerRecoveryOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryOperationInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryOperationWhereInput
+  orderBy?: Prisma.OwnerRecoveryOperationOrderByWithRelationInput | Prisma.OwnerRecoveryOperationOrderByWithRelationInput[]
+  cursor?: Prisma.OwnerRecoveryOperationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnerRecoveryOperationScalarFieldEnum | Prisma.OwnerRecoveryOperationScalarFieldEnum[]
+}
+
+/**
+ * PlatformUser.ownerRecoveryVerifications
+ */
+export type PlatformUser$ownerRecoveryVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryVerification
+   */
+  select?: Prisma.OwnerRecoveryVerificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryVerification
+   */
+  omit?: Prisma.OwnerRecoveryVerificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryVerificationInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryVerificationWhereInput
+  orderBy?: Prisma.OwnerRecoveryVerificationOrderByWithRelationInput | Prisma.OwnerRecoveryVerificationOrderByWithRelationInput[]
+  cursor?: Prisma.OwnerRecoveryVerificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnerRecoveryVerificationScalarFieldEnum | Prisma.OwnerRecoveryVerificationScalarFieldEnum[]
 }
 
 /**

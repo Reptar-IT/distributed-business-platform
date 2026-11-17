@@ -74,6 +74,7 @@ export function createCriticalOperationWorker(databaseUrl: string, intervalMs = 
     if (running) return;
     running = true;
     try {
+      await pool.query("SELECT public.expire_platform_owner_recoveries($1)", [100]);
       await pool.query("SELECT public.advance_critical_operations($1)", [100]);
     } finally {
       running = false;

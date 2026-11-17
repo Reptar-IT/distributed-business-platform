@@ -403,6 +403,10 @@ export const ModelName = {
   UserIdentityVerification: 'UserIdentityVerification',
   PlatformInitialization: 'PlatformInitialization',
   OwnerBootstrapCredential: 'OwnerBootstrapCredential',
+  OwnerRecoveryKit: 'OwnerRecoveryKit',
+  OwnerRecoveryCode: 'OwnerRecoveryCode',
+  OwnerRecoveryOperation: 'OwnerRecoveryOperation',
+  OwnerRecoveryVerification: 'OwnerRecoveryVerification',
   PlatformOwnerDesignation: 'PlatformOwnerDesignation',
   Venture: 'Venture',
   VentureMembership: 'VentureMembership',
@@ -434,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "platformUser" | "userIdentity" | "identityLinkChallenge" | "userIdentityVerification" | "platformInitialization" | "ownerBootstrapCredential" | "platformOwnerDesignation" | "venture" | "ventureMembership" | "organizationalRole" | "roleAssignment" | "roleVacancy" | "authorizationAuditStream" | "authorizationAuditHead" | "authorizationAuditEvent" | "auditDestination" | "auditExportCheckpoint" | "auditExportBatch" | "auditExportDelivery" | "auditArchiveReceipt" | "criticalOperation" | "criticalOperationGate"
+    modelProps: "platformUser" | "userIdentity" | "identityLinkChallenge" | "userIdentityVerification" | "platformInitialization" | "ownerBootstrapCredential" | "ownerRecoveryKit" | "ownerRecoveryCode" | "ownerRecoveryOperation" | "ownerRecoveryVerification" | "platformOwnerDesignation" | "venture" | "ventureMembership" | "organizationalRole" | "roleAssignment" | "roleVacancy" | "authorizationAuditStream" | "authorizationAuditHead" | "authorizationAuditEvent" | "auditDestination" | "auditExportCheckpoint" | "auditExportBatch" | "auditExportDelivery" | "auditArchiveReceipt" | "criticalOperation" | "criticalOperationGate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -879,6 +883,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OwnerBootstrapCredentialCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OwnerBootstrapCredentialCountAggregateOutputType> | number
+        }
+      }
+    }
+    OwnerRecoveryKit: {
+      payload: Prisma.$OwnerRecoveryKitPayload<ExtArgs>
+      fields: Prisma.OwnerRecoveryKitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OwnerRecoveryKitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OwnerRecoveryKitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>
+        }
+        findFirst: {
+          args: Prisma.OwnerRecoveryKitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OwnerRecoveryKitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>
+        }
+        findMany: {
+          args: Prisma.OwnerRecoveryKitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>[]
+        }
+        create: {
+          args: Prisma.OwnerRecoveryKitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>
+        }
+        createMany: {
+          args: Prisma.OwnerRecoveryKitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OwnerRecoveryKitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>[]
+        }
+        delete: {
+          args: Prisma.OwnerRecoveryKitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>
+        }
+        update: {
+          args: Prisma.OwnerRecoveryKitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>
+        }
+        deleteMany: {
+          args: Prisma.OwnerRecoveryKitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OwnerRecoveryKitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OwnerRecoveryKitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>[]
+        }
+        upsert: {
+          args: Prisma.OwnerRecoveryKitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryKitPayload>
+        }
+        aggregate: {
+          args: Prisma.OwnerRecoveryKitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOwnerRecoveryKit>
+        }
+        groupBy: {
+          args: Prisma.OwnerRecoveryKitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryKitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OwnerRecoveryKitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryKitCountAggregateOutputType> | number
+        }
+      }
+    }
+    OwnerRecoveryCode: {
+      payload: Prisma.$OwnerRecoveryCodePayload<ExtArgs>
+      fields: Prisma.OwnerRecoveryCodeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OwnerRecoveryCodeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OwnerRecoveryCodeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>
+        }
+        findFirst: {
+          args: Prisma.OwnerRecoveryCodeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OwnerRecoveryCodeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>
+        }
+        findMany: {
+          args: Prisma.OwnerRecoveryCodeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>[]
+        }
+        create: {
+          args: Prisma.OwnerRecoveryCodeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>
+        }
+        createMany: {
+          args: Prisma.OwnerRecoveryCodeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OwnerRecoveryCodeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>[]
+        }
+        delete: {
+          args: Prisma.OwnerRecoveryCodeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>
+        }
+        update: {
+          args: Prisma.OwnerRecoveryCodeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>
+        }
+        deleteMany: {
+          args: Prisma.OwnerRecoveryCodeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OwnerRecoveryCodeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OwnerRecoveryCodeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>[]
+        }
+        upsert: {
+          args: Prisma.OwnerRecoveryCodeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryCodePayload>
+        }
+        aggregate: {
+          args: Prisma.OwnerRecoveryCodeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOwnerRecoveryCode>
+        }
+        groupBy: {
+          args: Prisma.OwnerRecoveryCodeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryCodeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OwnerRecoveryCodeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryCodeCountAggregateOutputType> | number
+        }
+      }
+    }
+    OwnerRecoveryOperation: {
+      payload: Prisma.$OwnerRecoveryOperationPayload<ExtArgs>
+      fields: Prisma.OwnerRecoveryOperationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OwnerRecoveryOperationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OwnerRecoveryOperationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>
+        }
+        findFirst: {
+          args: Prisma.OwnerRecoveryOperationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OwnerRecoveryOperationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>
+        }
+        findMany: {
+          args: Prisma.OwnerRecoveryOperationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>[]
+        }
+        create: {
+          args: Prisma.OwnerRecoveryOperationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>
+        }
+        createMany: {
+          args: Prisma.OwnerRecoveryOperationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OwnerRecoveryOperationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>[]
+        }
+        delete: {
+          args: Prisma.OwnerRecoveryOperationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>
+        }
+        update: {
+          args: Prisma.OwnerRecoveryOperationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>
+        }
+        deleteMany: {
+          args: Prisma.OwnerRecoveryOperationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OwnerRecoveryOperationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OwnerRecoveryOperationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>[]
+        }
+        upsert: {
+          args: Prisma.OwnerRecoveryOperationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryOperationPayload>
+        }
+        aggregate: {
+          args: Prisma.OwnerRecoveryOperationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOwnerRecoveryOperation>
+        }
+        groupBy: {
+          args: Prisma.OwnerRecoveryOperationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryOperationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OwnerRecoveryOperationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryOperationCountAggregateOutputType> | number
+        }
+      }
+    }
+    OwnerRecoveryVerification: {
+      payload: Prisma.$OwnerRecoveryVerificationPayload<ExtArgs>
+      fields: Prisma.OwnerRecoveryVerificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OwnerRecoveryVerificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OwnerRecoveryVerificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>
+        }
+        findFirst: {
+          args: Prisma.OwnerRecoveryVerificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OwnerRecoveryVerificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>
+        }
+        findMany: {
+          args: Prisma.OwnerRecoveryVerificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>[]
+        }
+        create: {
+          args: Prisma.OwnerRecoveryVerificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>
+        }
+        createMany: {
+          args: Prisma.OwnerRecoveryVerificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OwnerRecoveryVerificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>[]
+        }
+        delete: {
+          args: Prisma.OwnerRecoveryVerificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>
+        }
+        update: {
+          args: Prisma.OwnerRecoveryVerificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.OwnerRecoveryVerificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OwnerRecoveryVerificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OwnerRecoveryVerificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.OwnerRecoveryVerificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnerRecoveryVerificationPayload>
+        }
+        aggregate: {
+          args: Prisma.OwnerRecoveryVerificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOwnerRecoveryVerification>
+        }
+        groupBy: {
+          args: Prisma.OwnerRecoveryVerificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryVerificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OwnerRecoveryVerificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnerRecoveryVerificationCountAggregateOutputType> | number
         }
       }
     }
@@ -2123,6 +2423,8 @@ export const UserIdentityScalarFieldEnum = {
   subject: 'subject',
   email: 'email',
   emailVerified: 'emailVerified',
+  status: 'status',
+  ownerRecoveryOperationId: 'ownerRecoveryOperationId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2185,6 +2487,73 @@ export const OwnerBootstrapCredentialScalarFieldEnum = {
 } as const
 
 export type OwnerBootstrapCredentialScalarFieldEnum = (typeof OwnerBootstrapCredentialScalarFieldEnum)[keyof typeof OwnerBootstrapCredentialScalarFieldEnum]
+
+
+export const OwnerRecoveryKitScalarFieldEnum = {
+  id: 'id',
+  designationId: 'designationId',
+  platformUserId: 'platformUserId',
+  authenticatedIdentityId: 'authenticatedIdentityId',
+  authenticatedIssuer: 'authenticatedIssuer',
+  authenticatedSubject: 'authenticatedSubject',
+  generation: 'generation',
+  status: 'status',
+  issuedAt: 'issuedAt',
+  replacedAt: 'replacedAt'
+} as const
+
+export type OwnerRecoveryKitScalarFieldEnum = (typeof OwnerRecoveryKitScalarFieldEnum)[keyof typeof OwnerRecoveryKitScalarFieldEnum]
+
+
+export const OwnerRecoveryCodeScalarFieldEnum = {
+  id: 'id',
+  kitId: 'kitId',
+  verifierKeyId: 'verifierKeyId',
+  verifier: 'verifier',
+  status: 'status',
+  consumedAt: 'consumedAt',
+  usedByRecoveryOperationId: 'usedByRecoveryOperationId',
+  createdAt: 'createdAt'
+} as const
+
+export type OwnerRecoveryCodeScalarFieldEnum = (typeof OwnerRecoveryCodeScalarFieldEnum)[keyof typeof OwnerRecoveryCodeScalarFieldEnum]
+
+
+export const OwnerRecoveryOperationScalarFieldEnum = {
+  id: 'id',
+  designationId: 'designationId',
+  platformUserId: 'platformUserId',
+  recoveryCodeId: 'recoveryCodeId',
+  expectedIssuer: 'expectedIssuer',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  initiatedAt: 'initiatedAt',
+  challengePreparedAt: 'challengePreparedAt',
+  proofVerifiedAt: 'proofVerifiedAt',
+  preparedAt: 'preparedAt',
+  archiveQualifiedAt: 'archiveQualifiedAt',
+  finalizedAt: 'finalizedAt',
+  failedAt: 'failedAt',
+  outcomeCode: 'outcomeCode',
+  criticalOperationId: 'criticalOperationId'
+} as const
+
+export type OwnerRecoveryOperationScalarFieldEnum = (typeof OwnerRecoveryOperationScalarFieldEnum)[keyof typeof OwnerRecoveryOperationScalarFieldEnum]
+
+
+export const OwnerRecoveryVerificationScalarFieldEnum = {
+  id: 'id',
+  recoveryOperationId: 'recoveryOperationId',
+  userIdentityId: 'userIdentityId',
+  platformUserId: 'platformUserId',
+  issuer: 'issuer',
+  subject: 'subject',
+  proofMethod: 'proofMethod',
+  verifiedAt: 'verifiedAt',
+  activatedAt: 'activatedAt'
+} as const
+
+export type OwnerRecoveryVerificationScalarFieldEnum = (typeof OwnerRecoveryVerificationScalarFieldEnum)[keyof typeof OwnerRecoveryVerificationScalarFieldEnum]
 
 
 export const PlatformOwnerDesignationScalarFieldEnum = {
@@ -2541,6 +2910,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'UserIdentityStatus'
+ */
+export type EnumUserIdentityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserIdentityStatus'>
+
+
+
+/**
+ * Reference to a field of type 'UserIdentityStatus[]'
+ */
+export type ListEnumUserIdentityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserIdentityStatus[]'>
+
+
+
+/**
  * Reference to a field of type 'IdentityLinkChallengeStatus'
  */
 export type EnumIdentityLinkChallengeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdentityLinkChallengeStatus'>
@@ -2607,6 +2990,48 @@ export type EnumOwnerBootstrapCredentialStatusFieldRefInput<$PrismaModel> = Fiel
  * Reference to a field of type 'OwnerBootstrapCredentialStatus[]'
  */
 export type ListEnumOwnerBootstrapCredentialStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerBootstrapCredentialStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerRecoveryKitStatus'
+ */
+export type EnumOwnerRecoveryKitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerRecoveryKitStatus'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerRecoveryKitStatus[]'
+ */
+export type ListEnumOwnerRecoveryKitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerRecoveryKitStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerRecoveryCodeStatus'
+ */
+export type EnumOwnerRecoveryCodeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerRecoveryCodeStatus'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerRecoveryCodeStatus[]'
+ */
+export type ListEnumOwnerRecoveryCodeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerRecoveryCodeStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerRecoveryStatus'
+ */
+export type EnumOwnerRecoveryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerRecoveryStatus'>
+
+
+
+/**
+ * Reference to a field of type 'OwnerRecoveryStatus[]'
+ */
+export type ListEnumOwnerRecoveryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OwnerRecoveryStatus[]'>
 
 
 
@@ -2990,6 +3415,10 @@ export type GlobalOmitConfig = {
   userIdentityVerification?: Prisma.UserIdentityVerificationOmit
   platformInitialization?: Prisma.PlatformInitializationOmit
   ownerBootstrapCredential?: Prisma.OwnerBootstrapCredentialOmit
+  ownerRecoveryKit?: Prisma.OwnerRecoveryKitOmit
+  ownerRecoveryCode?: Prisma.OwnerRecoveryCodeOmit
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationOmit
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationOmit
   platformOwnerDesignation?: Prisma.PlatformOwnerDesignationOmit
   venture?: Prisma.VentureOmit
   ventureMembership?: Prisma.VentureMembershipOmit

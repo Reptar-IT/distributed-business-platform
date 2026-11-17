@@ -202,6 +202,8 @@ export type PlatformOwnerDesignationWhereInput = {
   identity?: Prisma.XOR<Prisma.UserIdentityScalarRelationFilter, Prisma.UserIdentityWhereInput>
   criticalOperation?: Prisma.XOR<Prisma.CriticalOperationScalarRelationFilter, Prisma.CriticalOperationWhereInput>
   initializationRecord?: Prisma.XOR<Prisma.PlatformInitializationNullableScalarRelationFilter, Prisma.PlatformInitializationWhereInput> | null
+  recoveryKits?: Prisma.OwnerRecoveryKitListRelationFilter
+  recoveryOperations?: Prisma.OwnerRecoveryOperationListRelationFilter
 }
 
 export type PlatformOwnerDesignationOrderByWithRelationInput = {
@@ -216,6 +218,8 @@ export type PlatformOwnerDesignationOrderByWithRelationInput = {
   identity?: Prisma.UserIdentityOrderByWithRelationInput
   criticalOperation?: Prisma.CriticalOperationOrderByWithRelationInput
   initializationRecord?: Prisma.PlatformInitializationOrderByWithRelationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitOrderByRelationAggregateInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationOrderByRelationAggregateInput
 }
 
 export type PlatformOwnerDesignationWhereUniqueInput = Prisma.AtLeast<{
@@ -233,6 +237,8 @@ export type PlatformOwnerDesignationWhereUniqueInput = Prisma.AtLeast<{
   identity?: Prisma.XOR<Prisma.UserIdentityScalarRelationFilter, Prisma.UserIdentityWhereInput>
   criticalOperation?: Prisma.XOR<Prisma.CriticalOperationScalarRelationFilter, Prisma.CriticalOperationWhereInput>
   initializationRecord?: Prisma.XOR<Prisma.PlatformInitializationNullableScalarRelationFilter, Prisma.PlatformInitializationWhereInput> | null
+  recoveryKits?: Prisma.OwnerRecoveryKitListRelationFilter
+  recoveryOperations?: Prisma.OwnerRecoveryOperationListRelationFilter
 }, "id" | "criticalOperationId">
 
 export type PlatformOwnerDesignationOrderByWithAggregationInput = {
@@ -270,6 +276,8 @@ export type PlatformOwnerDesignationCreateInput = {
   identity: Prisma.UserIdentityCreateNestedOneWithoutOwnerDesignationsInput
   criticalOperation: Prisma.CriticalOperationCreateNestedOneWithoutOwnerDesignationInput
   initializationRecord?: Prisma.PlatformInitializationCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationUncheckedCreateInput = {
@@ -281,6 +289,8 @@ export type PlatformOwnerDesignationUncheckedCreateInput = {
   preparedAt: Date | string
   activatedAt?: Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationUpdateInput = {
@@ -292,6 +302,8 @@ export type PlatformOwnerDesignationUpdateInput = {
   identity?: Prisma.UserIdentityUpdateOneRequiredWithoutOwnerDesignationsNestedInput
   criticalOperation?: Prisma.CriticalOperationUpdateOneRequiredWithoutOwnerDesignationNestedInput
   initializationRecord?: Prisma.PlatformInitializationUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationUncheckedUpdateInput = {
@@ -303,6 +315,8 @@ export type PlatformOwnerDesignationUncheckedUpdateInput = {
   preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationCreateManyInput = {
@@ -345,6 +359,11 @@ export type PlatformOwnerDesignationOrderByRelationAggregateInput = {
 export type PlatformOwnerDesignationNullableScalarRelationFilter = {
   is?: Prisma.PlatformOwnerDesignationWhereInput | null
   isNot?: Prisma.PlatformOwnerDesignationWhereInput | null
+}
+
+export type PlatformOwnerDesignationScalarRelationFilter = {
+  is?: Prisma.PlatformOwnerDesignationWhereInput
+  isNot?: Prisma.PlatformOwnerDesignationWhereInput
 }
 
 export type PlatformOwnerDesignationCountOrderByAggregateInput = {
@@ -477,6 +496,34 @@ export type PlatformOwnerDesignationUpdateOneWithoutInitializationRecordNestedIn
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformOwnerDesignationUpdateToOneWithWhereWithoutInitializationRecordInput, Prisma.PlatformOwnerDesignationUpdateWithoutInitializationRecordInput>, Prisma.PlatformOwnerDesignationUncheckedUpdateWithoutInitializationRecordInput>
 }
 
+export type PlatformOwnerDesignationCreateNestedOneWithoutRecoveryKitsInput = {
+  create?: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryKitsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryKitsInput>
+  connectOrCreate?: Prisma.PlatformOwnerDesignationCreateOrConnectWithoutRecoveryKitsInput
+  connect?: Prisma.PlatformOwnerDesignationWhereUniqueInput
+}
+
+export type PlatformOwnerDesignationUpdateOneRequiredWithoutRecoveryKitsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryKitsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryKitsInput>
+  connectOrCreate?: Prisma.PlatformOwnerDesignationCreateOrConnectWithoutRecoveryKitsInput
+  upsert?: Prisma.PlatformOwnerDesignationUpsertWithoutRecoveryKitsInput
+  connect?: Prisma.PlatformOwnerDesignationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformOwnerDesignationUpdateToOneWithWhereWithoutRecoveryKitsInput, Prisma.PlatformOwnerDesignationUpdateWithoutRecoveryKitsInput>, Prisma.PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryKitsInput>
+}
+
+export type PlatformOwnerDesignationCreateNestedOneWithoutRecoveryOperationsInput = {
+  create?: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryOperationsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryOperationsInput>
+  connectOrCreate?: Prisma.PlatformOwnerDesignationCreateOrConnectWithoutRecoveryOperationsInput
+  connect?: Prisma.PlatformOwnerDesignationWhereUniqueInput
+}
+
+export type PlatformOwnerDesignationUpdateOneRequiredWithoutRecoveryOperationsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryOperationsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryOperationsInput>
+  connectOrCreate?: Prisma.PlatformOwnerDesignationCreateOrConnectWithoutRecoveryOperationsInput
+  upsert?: Prisma.PlatformOwnerDesignationUpsertWithoutRecoveryOperationsInput
+  connect?: Prisma.PlatformOwnerDesignationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformOwnerDesignationUpdateToOneWithWhereWithoutRecoveryOperationsInput, Prisma.PlatformOwnerDesignationUpdateWithoutRecoveryOperationsInput>, Prisma.PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryOperationsInput>
+}
+
 export type EnumPlatformOwnerDesignationStatusFieldUpdateOperationsInput = {
   set?: $Enums.PlatformOwnerDesignationStatus
 }
@@ -521,6 +568,8 @@ export type PlatformOwnerDesignationCreateWithoutUserInput = {
   identity: Prisma.UserIdentityCreateNestedOneWithoutOwnerDesignationsInput
   criticalOperation: Prisma.CriticalOperationCreateNestedOneWithoutOwnerDesignationInput
   initializationRecord?: Prisma.PlatformInitializationCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationUncheckedCreateWithoutUserInput = {
@@ -531,6 +580,8 @@ export type PlatformOwnerDesignationUncheckedCreateWithoutUserInput = {
   preparedAt: Date | string
   activatedAt?: Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationCreateOrConnectWithoutUserInput = {
@@ -580,6 +631,8 @@ export type PlatformOwnerDesignationCreateWithoutIdentityInput = {
   user: Prisma.PlatformUserCreateNestedOneWithoutOwnerDesignationsInput
   criticalOperation: Prisma.CriticalOperationCreateNestedOneWithoutOwnerDesignationInput
   initializationRecord?: Prisma.PlatformInitializationCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationUncheckedCreateWithoutIdentityInput = {
@@ -589,6 +642,8 @@ export type PlatformOwnerDesignationUncheckedCreateWithoutIdentityInput = {
   preparedAt: Date | string
   activatedAt?: Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationCreateOrConnectWithoutIdentityInput = {
@@ -625,6 +680,8 @@ export type PlatformOwnerDesignationCreateWithoutInitializationRecordInput = {
   user: Prisma.PlatformUserCreateNestedOneWithoutOwnerDesignationsInput
   identity: Prisma.UserIdentityCreateNestedOneWithoutOwnerDesignationsInput
   criticalOperation: Prisma.CriticalOperationCreateNestedOneWithoutOwnerDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationUncheckedCreateWithoutInitializationRecordInput = {
@@ -635,6 +692,8 @@ export type PlatformOwnerDesignationUncheckedCreateWithoutInitializationRecordIn
   status?: $Enums.PlatformOwnerDesignationStatus
   preparedAt: Date | string
   activatedAt?: Date | string | null
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationCreateOrConnectWithoutInitializationRecordInput = {
@@ -661,6 +720,8 @@ export type PlatformOwnerDesignationUpdateWithoutInitializationRecordInput = {
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutOwnerDesignationsNestedInput
   identity?: Prisma.UserIdentityUpdateOneRequiredWithoutOwnerDesignationsNestedInput
   criticalOperation?: Prisma.CriticalOperationUpdateOneRequiredWithoutOwnerDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationUncheckedUpdateWithoutInitializationRecordInput = {
@@ -671,6 +732,136 @@ export type PlatformOwnerDesignationUncheckedUpdateWithoutInitializationRecordIn
   status?: Prisma.EnumPlatformOwnerDesignationStatusFieldUpdateOperationsInput | $Enums.PlatformOwnerDesignationStatus
   preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutDesignationNestedInput
+}
+
+export type PlatformOwnerDesignationCreateWithoutRecoveryKitsInput = {
+  id: string
+  status?: $Enums.PlatformOwnerDesignationStatus
+  preparedAt: Date | string
+  activatedAt?: Date | string | null
+  user: Prisma.PlatformUserCreateNestedOneWithoutOwnerDesignationsInput
+  identity: Prisma.UserIdentityCreateNestedOneWithoutOwnerDesignationsInput
+  criticalOperation: Prisma.CriticalOperationCreateNestedOneWithoutOwnerDesignationInput
+  initializationRecord?: Prisma.PlatformInitializationCreateNestedOneWithoutActiveDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutDesignationInput
+}
+
+export type PlatformOwnerDesignationUncheckedCreateWithoutRecoveryKitsInput = {
+  id: string
+  platformUserId: string
+  userIdentityId: string
+  criticalOperationId: string
+  status?: $Enums.PlatformOwnerDesignationStatus
+  preparedAt: Date | string
+  activatedAt?: Date | string | null
+  initializationRecord?: Prisma.PlatformInitializationUncheckedCreateNestedOneWithoutActiveDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutDesignationInput
+}
+
+export type PlatformOwnerDesignationCreateOrConnectWithoutRecoveryKitsInput = {
+  where: Prisma.PlatformOwnerDesignationWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryKitsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryKitsInput>
+}
+
+export type PlatformOwnerDesignationUpsertWithoutRecoveryKitsInput = {
+  update: Prisma.XOR<Prisma.PlatformOwnerDesignationUpdateWithoutRecoveryKitsInput, Prisma.PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryKitsInput>
+  create: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryKitsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryKitsInput>
+  where?: Prisma.PlatformOwnerDesignationWhereInput
+}
+
+export type PlatformOwnerDesignationUpdateToOneWithWhereWithoutRecoveryKitsInput = {
+  where?: Prisma.PlatformOwnerDesignationWhereInput
+  data: Prisma.XOR<Prisma.PlatformOwnerDesignationUpdateWithoutRecoveryKitsInput, Prisma.PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryKitsInput>
+}
+
+export type PlatformOwnerDesignationUpdateWithoutRecoveryKitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlatformOwnerDesignationStatusFieldUpdateOperationsInput | $Enums.PlatformOwnerDesignationStatus
+  preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  user?: Prisma.PlatformUserUpdateOneRequiredWithoutOwnerDesignationsNestedInput
+  identity?: Prisma.UserIdentityUpdateOneRequiredWithoutOwnerDesignationsNestedInput
+  criticalOperation?: Prisma.CriticalOperationUpdateOneRequiredWithoutOwnerDesignationNestedInput
+  initializationRecord?: Prisma.PlatformInitializationUpdateOneWithoutActiveDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutDesignationNestedInput
+}
+
+export type PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryKitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  platformUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  userIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  criticalOperationId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlatformOwnerDesignationStatusFieldUpdateOperationsInput | $Enums.PlatformOwnerDesignationStatus
+  preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  initializationRecord?: Prisma.PlatformInitializationUncheckedUpdateOneWithoutActiveDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutDesignationNestedInput
+}
+
+export type PlatformOwnerDesignationCreateWithoutRecoveryOperationsInput = {
+  id: string
+  status?: $Enums.PlatformOwnerDesignationStatus
+  preparedAt: Date | string
+  activatedAt?: Date | string | null
+  user: Prisma.PlatformUserCreateNestedOneWithoutOwnerDesignationsInput
+  identity: Prisma.UserIdentityCreateNestedOneWithoutOwnerDesignationsInput
+  criticalOperation: Prisma.CriticalOperationCreateNestedOneWithoutOwnerDesignationInput
+  initializationRecord?: Prisma.PlatformInitializationCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutDesignationInput
+}
+
+export type PlatformOwnerDesignationUncheckedCreateWithoutRecoveryOperationsInput = {
+  id: string
+  platformUserId: string
+  userIdentityId: string
+  criticalOperationId: string
+  status?: $Enums.PlatformOwnerDesignationStatus
+  preparedAt: Date | string
+  activatedAt?: Date | string | null
+  initializationRecord?: Prisma.PlatformInitializationUncheckedCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutDesignationInput
+}
+
+export type PlatformOwnerDesignationCreateOrConnectWithoutRecoveryOperationsInput = {
+  where: Prisma.PlatformOwnerDesignationWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryOperationsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryOperationsInput>
+}
+
+export type PlatformOwnerDesignationUpsertWithoutRecoveryOperationsInput = {
+  update: Prisma.XOR<Prisma.PlatformOwnerDesignationUpdateWithoutRecoveryOperationsInput, Prisma.PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryOperationsInput>
+  create: Prisma.XOR<Prisma.PlatformOwnerDesignationCreateWithoutRecoveryOperationsInput, Prisma.PlatformOwnerDesignationUncheckedCreateWithoutRecoveryOperationsInput>
+  where?: Prisma.PlatformOwnerDesignationWhereInput
+}
+
+export type PlatformOwnerDesignationUpdateToOneWithWhereWithoutRecoveryOperationsInput = {
+  where?: Prisma.PlatformOwnerDesignationWhereInput
+  data: Prisma.XOR<Prisma.PlatformOwnerDesignationUpdateWithoutRecoveryOperationsInput, Prisma.PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryOperationsInput>
+}
+
+export type PlatformOwnerDesignationUpdateWithoutRecoveryOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlatformOwnerDesignationStatusFieldUpdateOperationsInput | $Enums.PlatformOwnerDesignationStatus
+  preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  user?: Prisma.PlatformUserUpdateOneRequiredWithoutOwnerDesignationsNestedInput
+  identity?: Prisma.UserIdentityUpdateOneRequiredWithoutOwnerDesignationsNestedInput
+  criticalOperation?: Prisma.CriticalOperationUpdateOneRequiredWithoutOwnerDesignationNestedInput
+  initializationRecord?: Prisma.PlatformInitializationUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutDesignationNestedInput
+}
+
+export type PlatformOwnerDesignationUncheckedUpdateWithoutRecoveryOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  platformUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  userIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  criticalOperationId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPlatformOwnerDesignationStatusFieldUpdateOperationsInput | $Enums.PlatformOwnerDesignationStatus
+  preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  initializationRecord?: Prisma.PlatformInitializationUncheckedUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationCreateWithoutCriticalOperationInput = {
@@ -681,6 +872,8 @@ export type PlatformOwnerDesignationCreateWithoutCriticalOperationInput = {
   user: Prisma.PlatformUserCreateNestedOneWithoutOwnerDesignationsInput
   identity: Prisma.UserIdentityCreateNestedOneWithoutOwnerDesignationsInput
   initializationRecord?: Prisma.PlatformInitializationCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationUncheckedCreateWithoutCriticalOperationInput = {
@@ -691,6 +884,8 @@ export type PlatformOwnerDesignationUncheckedCreateWithoutCriticalOperationInput
   preparedAt: Date | string
   activatedAt?: Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedCreateNestedOneWithoutActiveDesignationInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutDesignationInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedManyWithoutDesignationInput
 }
 
 export type PlatformOwnerDesignationCreateOrConnectWithoutCriticalOperationInput = {
@@ -717,6 +912,8 @@ export type PlatformOwnerDesignationUpdateWithoutCriticalOperationInput = {
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutOwnerDesignationsNestedInput
   identity?: Prisma.UserIdentityUpdateOneRequiredWithoutOwnerDesignationsNestedInput
   initializationRecord?: Prisma.PlatformInitializationUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationUncheckedUpdateWithoutCriticalOperationInput = {
@@ -727,6 +924,8 @@ export type PlatformOwnerDesignationUncheckedUpdateWithoutCriticalOperationInput
   preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationCreateManyUserInput = {
@@ -746,6 +945,8 @@ export type PlatformOwnerDesignationUpdateWithoutUserInput = {
   identity?: Prisma.UserIdentityUpdateOneRequiredWithoutOwnerDesignationsNestedInput
   criticalOperation?: Prisma.CriticalOperationUpdateOneRequiredWithoutOwnerDesignationNestedInput
   initializationRecord?: Prisma.PlatformInitializationUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationUncheckedUpdateWithoutUserInput = {
@@ -756,6 +957,8 @@ export type PlatformOwnerDesignationUncheckedUpdateWithoutUserInput = {
   preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationUncheckedUpdateManyWithoutUserInput = {
@@ -783,6 +986,8 @@ export type PlatformOwnerDesignationUpdateWithoutIdentityInput = {
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutOwnerDesignationsNestedInput
   criticalOperation?: Prisma.CriticalOperationUpdateOneRequiredWithoutOwnerDesignationNestedInput
   initializationRecord?: Prisma.PlatformInitializationUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationUncheckedUpdateWithoutIdentityInput = {
@@ -792,6 +997,8 @@ export type PlatformOwnerDesignationUncheckedUpdateWithoutIdentityInput = {
   preparedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   initializationRecord?: Prisma.PlatformInitializationUncheckedUpdateOneWithoutActiveDesignationNestedInput
+  recoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutDesignationNestedInput
+  recoveryOperations?: Prisma.OwnerRecoveryOperationUncheckedUpdateManyWithoutDesignationNestedInput
 }
 
 export type PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityInput = {
@@ -802,6 +1009,44 @@ export type PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityInput = {
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
+
+/**
+ * Count Type PlatformOwnerDesignationCountOutputType
+ */
+
+export type PlatformOwnerDesignationCountOutputType = {
+  recoveryKits: number
+  recoveryOperations: number
+}
+
+export type PlatformOwnerDesignationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  recoveryKits?: boolean | PlatformOwnerDesignationCountOutputTypeCountRecoveryKitsArgs
+  recoveryOperations?: boolean | PlatformOwnerDesignationCountOutputTypeCountRecoveryOperationsArgs
+}
+
+/**
+ * PlatformOwnerDesignationCountOutputType without action
+ */
+export type PlatformOwnerDesignationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlatformOwnerDesignationCountOutputType
+   */
+  select?: Prisma.PlatformOwnerDesignationCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PlatformOwnerDesignationCountOutputType without action
+ */
+export type PlatformOwnerDesignationCountOutputTypeCountRecoveryKitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OwnerRecoveryKitWhereInput
+}
+
+/**
+ * PlatformOwnerDesignationCountOutputType without action
+ */
+export type PlatformOwnerDesignationCountOutputTypeCountRecoveryOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OwnerRecoveryOperationWhereInput
+}
 
 
 export type PlatformOwnerDesignationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -816,6 +1061,9 @@ export type PlatformOwnerDesignationSelect<ExtArgs extends runtime.Types.Extensi
   identity?: boolean | Prisma.UserIdentityDefaultArgs<ExtArgs>
   criticalOperation?: boolean | Prisma.CriticalOperationDefaultArgs<ExtArgs>
   initializationRecord?: boolean | Prisma.PlatformOwnerDesignation$initializationRecordArgs<ExtArgs>
+  recoveryKits?: boolean | Prisma.PlatformOwnerDesignation$recoveryKitsArgs<ExtArgs>
+  recoveryOperations?: boolean | Prisma.PlatformOwnerDesignation$recoveryOperationsArgs<ExtArgs>
+  _count?: boolean | Prisma.PlatformOwnerDesignationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platformOwnerDesignation"]>
 
 export type PlatformOwnerDesignationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -860,6 +1108,9 @@ export type PlatformOwnerDesignationInclude<ExtArgs extends runtime.Types.Extens
   identity?: boolean | Prisma.UserIdentityDefaultArgs<ExtArgs>
   criticalOperation?: boolean | Prisma.CriticalOperationDefaultArgs<ExtArgs>
   initializationRecord?: boolean | Prisma.PlatformOwnerDesignation$initializationRecordArgs<ExtArgs>
+  recoveryKits?: boolean | Prisma.PlatformOwnerDesignation$recoveryKitsArgs<ExtArgs>
+  recoveryOperations?: boolean | Prisma.PlatformOwnerDesignation$recoveryOperationsArgs<ExtArgs>
+  _count?: boolean | Prisma.PlatformOwnerDesignationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlatformOwnerDesignationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
@@ -879,6 +1130,8 @@ export type $PlatformOwnerDesignationPayload<ExtArgs extends runtime.Types.Exten
     identity: Prisma.$UserIdentityPayload<ExtArgs>
     criticalOperation: Prisma.$CriticalOperationPayload<ExtArgs>
     initializationRecord: Prisma.$PlatformInitializationPayload<ExtArgs> | null
+    recoveryKits: Prisma.$OwnerRecoveryKitPayload<ExtArgs>[]
+    recoveryOperations: Prisma.$OwnerRecoveryOperationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1286,6 +1539,8 @@ export interface Prisma__PlatformOwnerDesignationClient<T, Null = never, ExtArgs
   identity<T extends Prisma.UserIdentityDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserIdentityDefaultArgs<ExtArgs>>): Prisma.Prisma__UserIdentityClient<runtime.Types.Result.GetResult<Prisma.$UserIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   criticalOperation<T extends Prisma.CriticalOperationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CriticalOperationDefaultArgs<ExtArgs>>): Prisma.Prisma__CriticalOperationClient<runtime.Types.Result.GetResult<Prisma.$CriticalOperationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   initializationRecord<T extends Prisma.PlatformOwnerDesignation$initializationRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformOwnerDesignation$initializationRecordArgs<ExtArgs>>): Prisma.Prisma__PlatformInitializationClient<runtime.Types.Result.GetResult<Prisma.$PlatformInitializationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  recoveryKits<T extends Prisma.PlatformOwnerDesignation$recoveryKitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformOwnerDesignation$recoveryKitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryKitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  recoveryOperations<T extends Prisma.PlatformOwnerDesignation$recoveryOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformOwnerDesignation$recoveryOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1739,6 +1994,54 @@ export type PlatformOwnerDesignation$initializationRecordArgs<ExtArgs extends ru
    */
   include?: Prisma.PlatformInitializationInclude<ExtArgs> | null
   where?: Prisma.PlatformInitializationWhereInput
+}
+
+/**
+ * PlatformOwnerDesignation.recoveryKits
+ */
+export type PlatformOwnerDesignation$recoveryKitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryKit
+   */
+  select?: Prisma.OwnerRecoveryKitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryKit
+   */
+  omit?: Prisma.OwnerRecoveryKitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryKitInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryKitWhereInput
+  orderBy?: Prisma.OwnerRecoveryKitOrderByWithRelationInput | Prisma.OwnerRecoveryKitOrderByWithRelationInput[]
+  cursor?: Prisma.OwnerRecoveryKitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnerRecoveryKitScalarFieldEnum | Prisma.OwnerRecoveryKitScalarFieldEnum[]
+}
+
+/**
+ * PlatformOwnerDesignation.recoveryOperations
+ */
+export type PlatformOwnerDesignation$recoveryOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryOperation
+   */
+  select?: Prisma.OwnerRecoveryOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryOperation
+   */
+  omit?: Prisma.OwnerRecoveryOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryOperationInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryOperationWhereInput
+  orderBy?: Prisma.OwnerRecoveryOperationOrderByWithRelationInput | Prisma.OwnerRecoveryOperationOrderByWithRelationInput[]
+  cursor?: Prisma.OwnerRecoveryOperationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnerRecoveryOperationScalarFieldEnum | Prisma.OwnerRecoveryOperationScalarFieldEnum[]
 }
 
 /**

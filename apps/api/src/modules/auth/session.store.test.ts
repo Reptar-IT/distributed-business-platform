@@ -37,7 +37,7 @@ describe("Redis platform sessions", () => {
     let now = 1_000_000;
     const redis = new MemoryRedis();
     const sessions = createSessionStore(redis as unknown as Redis, () => now);
-    const { sessionId, session } = await sessions.create("user-1");
+    const { sessionId, session } = await sessions.create("user-1", { issuer: "https://issuer.test", subject: "subject-1" });
 
     expect(redis.lastSetTtl).toBe(SESSION_IDLE_TIMEOUT_MS);
     expect(session.absoluteExpiresAt - session.createdAt).toBe(SESSION_ABSOLUTE_LIFETIME_MS);
@@ -55,7 +55,7 @@ describe("Redis platform sessions", () => {
   it("immediately invalidates a session on destroy", async () => {
     const redis = new MemoryRedis();
     const sessions = createSessionStore(redis as unknown as Redis);
-    const { sessionId } = await sessions.create("user-2");
+    const { sessionId } = await sessions.create("user-2", { issuer: "https://issuer.test", subject: "subject-2" });
 
     await sessions.destroy(sessionId);
     expect(await sessions.get(sessionId)).toBeNull();

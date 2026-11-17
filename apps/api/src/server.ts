@@ -12,6 +12,8 @@ import { prisma } from "@platform/database";
 import { Queue } from "bullmq";
 import { Redis } from "ioredis";
 import { createIdentityLinkCallbackService } from "./modules/identity-link/identity-link.service.js";
+import { createOwnerRecoveryCallbackService, createOwnerRecoveryKitService } from "./modules/owner/owner-recovery.service.js";
+import { parseRecoveryVerifierKeyring } from "./modules/owner/recovery-codes.js";
 import { createAuthRoutes } from "./modules/auth/auth.routes.js";
 import { registerPlatformAuthentication } from "./modules/auth/auth.middleware.js";
 import { createIdentityService } from "./modules/auth/identity.service.js";
@@ -56,6 +58,18 @@ const authSessionStore = createSessionStore(redis);
 const identityLinkCallbackService = process.env.IDENTITY_LINK_CALLBACK_DATABASE_URL
   ? createIdentityLinkCallbackService(process.env.IDENTITY_LINK_CALLBACK_DATABASE_URL)
   : undefined;
+const ownerRecoveryCallbackService = process.env.OWNER_RECOVERY_CALLBACK_DATABASE_URL
+  ? createOwnerRecoveryCallbackService(process.env.OWNER_RECOVERY_CALLBACK_DATABASE_URL)
+  : undefined;
+const recoveryVerifierKeys = process.env.OWNER_RECOVERY_VERIFIER_KEYS_JSON;
+const recoveryCurrentKeyId = process.env.OWNER_RECOVERY_CURRENT_VERIFIER_KEY_ID;
+if (Boolean(recoveryVerifierKeys) !== Boolean(recoveryCurrentKeyId)) {
+  throw new Error("Owner-recovery verifier key configuration is incomplete");
+}
+const recoveryKeyring = recoveryVerifierKeys && recoveryCurrentKeyId
+  ? parseRecoveryVerifierKeyring(recoveryVerifierKeys, recoveryCurrentKeyId)
+  : undefined;
+const ownerRecoveryKitService = recoveryKeyring ? createOwnerRecoveryKitService(prisma, recoveryKeyring) : undefined;
 const oidcService = createOidcService({
   redis,
   issuer,
@@ -103,6 +117,8 @@ await app.register(createAuthRoutes({
   redirectUri,
   postLogoutRedirectUri,
   ...(identityLinkCallbackService ? { identityLinks: identityLinkCallbackService } : {}),
+  ...(ownerRecoveryKitService ? { ownerRecoveryKits: ownerRecoveryKitService } : {}),
+  ...(ownerRecoveryCallbackService ? { ownerRecoveryCallback: ownerRecoveryCallbackService } : {}),
 }));
 
 app.get("/api/v1/health", async (_request, reply) => {
@@ -165,6 +181,8 @@ const shutdown = async () => {
   await jobQueue.close();
   await redis.quit();
   await identityLinkCallbackService?.close();
+  await ownerRecoveryCallbackService?.close();
+  recoveryKeyring?.keys.forEach((key) => key.fill(0));
   await prisma.$disconnect();
   process.exit(0);
 };

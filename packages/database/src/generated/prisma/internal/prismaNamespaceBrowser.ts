@@ -57,6 +57,10 @@ export const ModelName = {
   UserIdentityVerification: 'UserIdentityVerification',
   PlatformInitialization: 'PlatformInitialization',
   OwnerBootstrapCredential: 'OwnerBootstrapCredential',
+  OwnerRecoveryKit: 'OwnerRecoveryKit',
+  OwnerRecoveryCode: 'OwnerRecoveryCode',
+  OwnerRecoveryOperation: 'OwnerRecoveryOperation',
+  OwnerRecoveryVerification: 'OwnerRecoveryVerification',
   PlatformOwnerDesignation: 'PlatformOwnerDesignation',
   Venture: 'Venture',
   VentureMembership: 'VentureMembership',
@@ -109,6 +113,8 @@ export const UserIdentityScalarFieldEnum = {
   subject: 'subject',
   email: 'email',
   emailVerified: 'emailVerified',
+  status: 'status',
+  ownerRecoveryOperationId: 'ownerRecoveryOperationId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -171,6 +177,73 @@ export const OwnerBootstrapCredentialScalarFieldEnum = {
 } as const
 
 export type OwnerBootstrapCredentialScalarFieldEnum = (typeof OwnerBootstrapCredentialScalarFieldEnum)[keyof typeof OwnerBootstrapCredentialScalarFieldEnum]
+
+
+export const OwnerRecoveryKitScalarFieldEnum = {
+  id: 'id',
+  designationId: 'designationId',
+  platformUserId: 'platformUserId',
+  authenticatedIdentityId: 'authenticatedIdentityId',
+  authenticatedIssuer: 'authenticatedIssuer',
+  authenticatedSubject: 'authenticatedSubject',
+  generation: 'generation',
+  status: 'status',
+  issuedAt: 'issuedAt',
+  replacedAt: 'replacedAt'
+} as const
+
+export type OwnerRecoveryKitScalarFieldEnum = (typeof OwnerRecoveryKitScalarFieldEnum)[keyof typeof OwnerRecoveryKitScalarFieldEnum]
+
+
+export const OwnerRecoveryCodeScalarFieldEnum = {
+  id: 'id',
+  kitId: 'kitId',
+  verifierKeyId: 'verifierKeyId',
+  verifier: 'verifier',
+  status: 'status',
+  consumedAt: 'consumedAt',
+  usedByRecoveryOperationId: 'usedByRecoveryOperationId',
+  createdAt: 'createdAt'
+} as const
+
+export type OwnerRecoveryCodeScalarFieldEnum = (typeof OwnerRecoveryCodeScalarFieldEnum)[keyof typeof OwnerRecoveryCodeScalarFieldEnum]
+
+
+export const OwnerRecoveryOperationScalarFieldEnum = {
+  id: 'id',
+  designationId: 'designationId',
+  platformUserId: 'platformUserId',
+  recoveryCodeId: 'recoveryCodeId',
+  expectedIssuer: 'expectedIssuer',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  initiatedAt: 'initiatedAt',
+  challengePreparedAt: 'challengePreparedAt',
+  proofVerifiedAt: 'proofVerifiedAt',
+  preparedAt: 'preparedAt',
+  archiveQualifiedAt: 'archiveQualifiedAt',
+  finalizedAt: 'finalizedAt',
+  failedAt: 'failedAt',
+  outcomeCode: 'outcomeCode',
+  criticalOperationId: 'criticalOperationId'
+} as const
+
+export type OwnerRecoveryOperationScalarFieldEnum = (typeof OwnerRecoveryOperationScalarFieldEnum)[keyof typeof OwnerRecoveryOperationScalarFieldEnum]
+
+
+export const OwnerRecoveryVerificationScalarFieldEnum = {
+  id: 'id',
+  recoveryOperationId: 'recoveryOperationId',
+  userIdentityId: 'userIdentityId',
+  platformUserId: 'platformUserId',
+  issuer: 'issuer',
+  subject: 'subject',
+  proofMethod: 'proofMethod',
+  verifiedAt: 'verifiedAt',
+  activatedAt: 'activatedAt'
+} as const
+
+export type OwnerRecoveryVerificationScalarFieldEnum = (typeof OwnerRecoveryVerificationScalarFieldEnum)[keyof typeof OwnerRecoveryVerificationScalarFieldEnum]
 
 
 export const PlatformOwnerDesignationScalarFieldEnum = {

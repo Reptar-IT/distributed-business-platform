@@ -72,6 +72,26 @@ export type PlatformInitialization = Prisma.PlatformInitializationModel
  */
 export type OwnerBootstrapCredential = Prisma.OwnerBootstrapCredentialModel
 /**
+ * Model OwnerRecoveryKit
+ *
+ */
+export type OwnerRecoveryKit = Prisma.OwnerRecoveryKitModel
+/**
+ * Model OwnerRecoveryCode
+ *
+ */
+export type OwnerRecoveryCode = Prisma.OwnerRecoveryCodeModel
+/**
+ * Model OwnerRecoveryOperation
+ *
+ */
+export type OwnerRecoveryOperation = Prisma.OwnerRecoveryOperationModel
+/**
+ * Model OwnerRecoveryVerification
+ *
+ */
+export type OwnerRecoveryVerification = Prisma.OwnerRecoveryVerificationModel
+/**
  * Model PlatformOwnerDesignation
  *
  */

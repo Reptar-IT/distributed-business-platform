@@ -1,7 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import type { IdentityService } from "./identity.service.js";
-import { createBrowserBinding, IdentityLinkVerificationError, type OidcService } from "./oidc.service.js";
+import { createBrowserBinding, IdentityLinkVerificationError, OwnerRecoveryVerificationError, type OidcService } from "./oidc.service.js";
 import { requireBrowserOrigin } from "./auth.middleware.js";
 import {
   clearPlatformSessionCookie,
@@ -22,6 +22,14 @@ interface AuthRouteOptions {
     getPendingTarget(challengeId: string): Promise<{ platformUserId: string } | null>;
     complete(input: { challengeId: string; platformUserId: string; issuer: string; subject: string; verifiedAt: Date }): Promise<string>;
     reject(challengeId: string, outcomeCode: string): Promise<void>;
+  };
+  ownerRecoveryKits?: {
+    isActiveOwner(platformUserId: string): Promise<boolean>;
+    issueOrReplace(input: { platformUserId: string; issuer: string; subject: string }): Promise<{ kit_id: string; generation: number; replaced: boolean; codes: string[] }>;
+  };
+  ownerRecoveryCallback?: {
+    complete(input: { operationId: string; issuer: string; subject: string; verifiedAt: Date }): Promise<string>;
+    reject(operationId: string, outcomeCode: string): Promise<void>;
   };
 }
 
@@ -93,6 +101,30 @@ export function createAuthRoutes(options: AuthRouteOptions): FastifyPluginAsync 
     app.get("/api/v1/auth/callback", async (request, reply) => {
       const query = request.query as Record<string, unknown>;
       const state = typeof query.state === "string" ? query.state : "";
+      if (state.startsWith("or_")) {
+        if (!options.ownerRecoveryCallback) return reply.code(503).send({ error: "Owner recovery is unavailable" });
+        const callbackUrl = new URL(options.redirectUri);
+        const requestUrl = new URL(request.raw.url ?? "/api/v1/auth/callback", callbackUrl);
+        if (requestUrl.origin !== callbackUrl.origin || requestUrl.pathname !== callbackUrl.pathname) {
+          return reply.code(400).send({ error: "Owner recovery could not be completed" });
+        }
+        callbackUrl.search = requestUrl.search;
+        try {
+          const proof = await options.oidc.completeOwnerRecovery(callbackUrl, state);
+          const outcome = await options.ownerRecoveryCallback.complete({
+            operationId: proof.operationId,
+            ...proof.identity,
+            verifiedAt: proof.verifiedAt,
+          });
+          const accepted = ["PREPARED", "AWAITING_ARCHIVE", "READY_TO_FINALIZE", "FINALIZED"].includes(outcome);
+          return reply.redirect(`${options.webOrigin}/?owner_recovery=${accepted ? "processing" : "failed"}`);
+        } catch (error) {
+          if (error instanceof OwnerRecoveryVerificationError) {
+            try { await options.ownerRecoveryCallback.reject(error.operationId, error.outcomeCode); } catch { /* Failure remains bounded and audited when the database is available. */ }
+          }
+          return reply.redirect(`${options.webOrigin}/?owner_recovery=failed`);
+        }
+      }
       if (state.startsWith("il_")) {
         if (!options.identityLinks) return reply.code(503).send({ error: "Identity linking is unavailable" });
         const callbackUrl = new URL(options.redirectUri);
@@ -161,7 +193,7 @@ export function createAuthRoutes(options: AuthRouteOptions): FastifyPluginAsync 
       }
 
       try {
-        const { sessionId, session } = await options.sessions.create(platformUser.id);
+        const { sessionId, session } = await options.sessions.create(platformUser.id, externalIdentity);
         reply.header("Cache-Control", "no-store");
         setPlatformSessionCookie(reply, sessionId, Math.min(
           SESSION_IDLE_TIMEOUT_MS,
@@ -249,7 +281,31 @@ export function createAuthRoutes(options: AuthRouteOptions): FastifyPluginAsync 
         user: platformUser,
         csrfToken: session.csrfToken,
         expiresAt: session.absoluteExpiresAt,
+        isPlatformOwner: options.ownerRecoveryKits ? await options.ownerRecoveryKits.isActiveOwner(platformUser.id) : false,
       });
+    });
+
+    app.post("/api/v1/auth/owner/recovery-kit", {
+      preHandler: app.authenticatePlatformUser,
+    }, async (request, reply) => {
+      const session = request.platformSession!;
+      const csrfToken = request.headers["x-csrf-token"];
+      if (!options.ownerRecoveryKits) return reply.code(503).send({ error: "Owner recovery-kit issuance is unavailable" });
+      if (!requireBrowserOrigin(request, options.webOrigin) || typeof csrfToken !== "string" || !safeEqual(csrfToken, session.csrfToken)) {
+        return reply.code(403).send({ error: "Request verification failed" });
+      }
+      try {
+        const kit = await options.ownerRecoveryKits.issueOrReplace({
+          platformUserId: session.userId,
+          issuer: session.identity.issuer,
+          subject: session.identity.subject,
+        });
+        reply.header("Cache-Control", "no-store");
+        reply.header("Pragma", "no-cache");
+        return reply.send({ generation: kit.generation, replaced: kit.replaced, codes: kit.codes });
+      } catch {
+        return reply.code(403).send({ error: "Recovery-kit issuance was rejected" });
+      }
     });
 
     app.post("/api/v1/auth/logout", async (request, reply) => {

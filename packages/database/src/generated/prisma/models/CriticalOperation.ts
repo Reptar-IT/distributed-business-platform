@@ -363,6 +363,7 @@ export type CriticalOperationWhereInput = {
   gate?: Prisma.XOR<Prisma.CriticalOperationGateNullableScalarRelationFilter, Prisma.CriticalOperationGateWhereInput> | null
   ownerDesignation?: Prisma.XOR<Prisma.PlatformOwnerDesignationNullableScalarRelationFilter, Prisma.PlatformOwnerDesignationWhereInput> | null
   bootstrapCredential?: Prisma.XOR<Prisma.OwnerBootstrapCredentialNullableScalarRelationFilter, Prisma.OwnerBootstrapCredentialWhereInput> | null
+  ownerRecoveryOperation?: Prisma.XOR<Prisma.OwnerRecoveryOperationNullableScalarRelationFilter, Prisma.OwnerRecoveryOperationWhereInput> | null
 }
 
 export type CriticalOperationOrderByWithRelationInput = {
@@ -395,6 +396,7 @@ export type CriticalOperationOrderByWithRelationInput = {
   gate?: Prisma.CriticalOperationGateOrderByWithRelationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationOrderByWithRelationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialOrderByWithRelationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationOrderByWithRelationInput
 }
 
 export type CriticalOperationWhereUniqueInput = Prisma.AtLeast<{
@@ -430,6 +432,7 @@ export type CriticalOperationWhereUniqueInput = Prisma.AtLeast<{
   gate?: Prisma.XOR<Prisma.CriticalOperationGateNullableScalarRelationFilter, Prisma.CriticalOperationGateWhereInput> | null
   ownerDesignation?: Prisma.XOR<Prisma.PlatformOwnerDesignationNullableScalarRelationFilter, Prisma.PlatformOwnerDesignationWhereInput> | null
   bootstrapCredential?: Prisma.XOR<Prisma.OwnerBootstrapCredentialNullableScalarRelationFilter, Prisma.OwnerBootstrapCredentialWhereInput> | null
+  ownerRecoveryOperation?: Prisma.XOR<Prisma.OwnerRecoveryOperationNullableScalarRelationFilter, Prisma.OwnerRecoveryOperationWhereInput> | null
 }, "id" | "idempotencyDigest">
 
 export type CriticalOperationOrderByWithAggregationInput = {
@@ -516,6 +519,7 @@ export type CriticalOperationCreateInput = {
   gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateInput = {
@@ -544,6 +548,7 @@ export type CriticalOperationUncheckedCreateInput = {
   gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUpdateInput = {
@@ -572,6 +577,7 @@ export type CriticalOperationUpdateInput = {
   gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateInput = {
@@ -600,6 +606,7 @@ export type CriticalOperationUncheckedUpdateInput = {
   gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationCreateManyInput = {
@@ -792,6 +799,22 @@ export type CriticalOperationUpdateOneWithoutBootstrapCredentialNestedInput = {
   delete?: Prisma.CriticalOperationWhereInput | boolean
   connect?: Prisma.CriticalOperationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CriticalOperationUpdateToOneWithWhereWithoutBootstrapCredentialInput, Prisma.CriticalOperationUpdateWithoutBootstrapCredentialInput>, Prisma.CriticalOperationUncheckedUpdateWithoutBootstrapCredentialInput>
+}
+
+export type CriticalOperationCreateNestedOneWithoutOwnerRecoveryOperationInput = {
+  create?: Prisma.XOR<Prisma.CriticalOperationCreateWithoutOwnerRecoveryOperationInput, Prisma.CriticalOperationUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  connectOrCreate?: Prisma.CriticalOperationCreateOrConnectWithoutOwnerRecoveryOperationInput
+  connect?: Prisma.CriticalOperationWhereUniqueInput
+}
+
+export type CriticalOperationUpdateOneWithoutOwnerRecoveryOperationNestedInput = {
+  create?: Prisma.XOR<Prisma.CriticalOperationCreateWithoutOwnerRecoveryOperationInput, Prisma.CriticalOperationUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  connectOrCreate?: Prisma.CriticalOperationCreateOrConnectWithoutOwnerRecoveryOperationInput
+  upsert?: Prisma.CriticalOperationUpsertWithoutOwnerRecoveryOperationInput
+  disconnect?: Prisma.CriticalOperationWhereInput | boolean
+  delete?: Prisma.CriticalOperationWhereInput | boolean
+  connect?: Prisma.CriticalOperationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CriticalOperationUpdateToOneWithWhereWithoutOwnerRecoveryOperationInput, Prisma.CriticalOperationUpdateWithoutOwnerRecoveryOperationInput>, Prisma.CriticalOperationUncheckedUpdateWithoutOwnerRecoveryOperationInput>
 }
 
 export type CriticalOperationCreateNestedOneWithoutOwnerDesignationInput = {
@@ -1027,6 +1050,7 @@ export type CriticalOperationCreateWithoutBootstrapCredentialInput = {
   qualifyingReceipt?: Prisma.AuditArchiveReceiptCreateNestedOneWithoutCriticalOperationsInput
   gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateWithoutBootstrapCredentialInput = {
@@ -1054,6 +1078,7 @@ export type CriticalOperationUncheckedCreateWithoutBootstrapCredentialInput = {
   completedAt?: Date | string | null
   gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationCreateOrConnectWithoutBootstrapCredentialInput = {
@@ -1097,6 +1122,7 @@ export type CriticalOperationUpdateWithoutBootstrapCredentialInput = {
   qualifyingReceipt?: Prisma.AuditArchiveReceiptUpdateOneWithoutCriticalOperationsNestedInput
   gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateWithoutBootstrapCredentialInput = {
@@ -1124,6 +1150,135 @@ export type CriticalOperationUncheckedUpdateWithoutBootstrapCredentialInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
+}
+
+export type CriticalOperationCreateWithoutOwnerRecoveryOperationInput = {
+  id?: string
+  operationType: string
+  targetType: string
+  targetId: string
+  idempotencyDigest: runtime.Bytes
+  requestFingerprint: runtime.Bytes
+  status?: $Enums.CriticalOperationStatus
+  streamId: string
+  intentSequence: bigint | number
+  readyOrRevocationSequence?: bigint | number | null
+  completionSequence?: bigint | number | null
+  qualifyingDestinationId?: string | null
+  qualifyingKeyId?: string | null
+  failureCategory?: string | null
+  reconciliationMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  completedAt?: Date | string | null
+  intentEvent: Prisma.AuthorizationAuditEventCreateNestedOneWithoutCriticalIntentOperationsInput
+  readyOrRevocationEvent?: Prisma.AuthorizationAuditEventCreateNestedOneWithoutCriticalBoundaryOperationsInput
+  completionEvent?: Prisma.AuthorizationAuditEventCreateNestedOneWithoutCriticalCompletionOperationsInput
+  qualifyingReceipt?: Prisma.AuditArchiveReceiptCreateNestedOneWithoutCriticalOperationsInput
+  gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
+  ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
+  bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+}
+
+export type CriticalOperationUncheckedCreateWithoutOwnerRecoveryOperationInput = {
+  id?: string
+  operationType: string
+  targetType: string
+  targetId: string
+  idempotencyDigest: runtime.Bytes
+  requestFingerprint: runtime.Bytes
+  status?: $Enums.CriticalOperationStatus
+  streamId: string
+  intentEventId: string
+  intentSequence: bigint | number
+  readyOrRevocationEventId?: string | null
+  readyOrRevocationSequence?: bigint | number | null
+  completionEventId?: string | null
+  completionSequence?: bigint | number | null
+  qualifyingReceiptId?: string | null
+  qualifyingDestinationId?: string | null
+  qualifyingKeyId?: string | null
+  failureCategory?: string | null
+  reconciliationMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  completedAt?: Date | string | null
+  gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
+  ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
+  bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+}
+
+export type CriticalOperationCreateOrConnectWithoutOwnerRecoveryOperationInput = {
+  where: Prisma.CriticalOperationWhereUniqueInput
+  create: Prisma.XOR<Prisma.CriticalOperationCreateWithoutOwnerRecoveryOperationInput, Prisma.CriticalOperationUncheckedCreateWithoutOwnerRecoveryOperationInput>
+}
+
+export type CriticalOperationUpsertWithoutOwnerRecoveryOperationInput = {
+  update: Prisma.XOR<Prisma.CriticalOperationUpdateWithoutOwnerRecoveryOperationInput, Prisma.CriticalOperationUncheckedUpdateWithoutOwnerRecoveryOperationInput>
+  create: Prisma.XOR<Prisma.CriticalOperationCreateWithoutOwnerRecoveryOperationInput, Prisma.CriticalOperationUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  where?: Prisma.CriticalOperationWhereInput
+}
+
+export type CriticalOperationUpdateToOneWithWhereWithoutOwnerRecoveryOperationInput = {
+  where?: Prisma.CriticalOperationWhereInput
+  data: Prisma.XOR<Prisma.CriticalOperationUpdateWithoutOwnerRecoveryOperationInput, Prisma.CriticalOperationUncheckedUpdateWithoutOwnerRecoveryOperationInput>
+}
+
+export type CriticalOperationUpdateWithoutOwnerRecoveryOperationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  operationType?: Prisma.StringFieldUpdateOperationsInput | string
+  targetType?: Prisma.StringFieldUpdateOperationsInput | string
+  targetId?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyDigest?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  requestFingerprint?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  status?: Prisma.EnumCriticalOperationStatusFieldUpdateOperationsInput | $Enums.CriticalOperationStatus
+  streamId?: Prisma.StringFieldUpdateOperationsInput | string
+  intentSequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  readyOrRevocationSequence?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  completionSequence?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  qualifyingDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualifyingKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reconciliationMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentEvent?: Prisma.AuthorizationAuditEventUpdateOneRequiredWithoutCriticalIntentOperationsNestedInput
+  readyOrRevocationEvent?: Prisma.AuthorizationAuditEventUpdateOneWithoutCriticalBoundaryOperationsNestedInput
+  completionEvent?: Prisma.AuthorizationAuditEventUpdateOneWithoutCriticalCompletionOperationsNestedInput
+  qualifyingReceipt?: Prisma.AuditArchiveReceiptUpdateOneWithoutCriticalOperationsNestedInput
+  gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
+  ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
+  bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+}
+
+export type CriticalOperationUncheckedUpdateWithoutOwnerRecoveryOperationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  operationType?: Prisma.StringFieldUpdateOperationsInput | string
+  targetType?: Prisma.StringFieldUpdateOperationsInput | string
+  targetId?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyDigest?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  requestFingerprint?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  status?: Prisma.EnumCriticalOperationStatusFieldUpdateOperationsInput | $Enums.CriticalOperationStatus
+  streamId?: Prisma.StringFieldUpdateOperationsInput | string
+  intentEventId?: Prisma.StringFieldUpdateOperationsInput | string
+  intentSequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  readyOrRevocationEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readyOrRevocationSequence?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  completionEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionSequence?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  qualifyingReceiptId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualifyingDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualifyingKeyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reconciliationMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
+  ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationCreateWithoutOwnerDesignationInput = {
@@ -1151,6 +1306,7 @@ export type CriticalOperationCreateWithoutOwnerDesignationInput = {
   qualifyingReceipt?: Prisma.AuditArchiveReceiptCreateNestedOneWithoutCriticalOperationsInput
   gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateWithoutOwnerDesignationInput = {
@@ -1178,6 +1334,7 @@ export type CriticalOperationUncheckedCreateWithoutOwnerDesignationInput = {
   completedAt?: Date | string | null
   gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationCreateOrConnectWithoutOwnerDesignationInput = {
@@ -1221,6 +1378,7 @@ export type CriticalOperationUpdateWithoutOwnerDesignationInput = {
   qualifyingReceipt?: Prisma.AuditArchiveReceiptUpdateOneWithoutCriticalOperationsNestedInput
   gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateWithoutOwnerDesignationInput = {
@@ -1248,6 +1406,7 @@ export type CriticalOperationUncheckedUpdateWithoutOwnerDesignationInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationCreateWithoutIntentEventInput = {
@@ -1275,6 +1434,7 @@ export type CriticalOperationCreateWithoutIntentEventInput = {
   gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateWithoutIntentEventInput = {
@@ -1302,6 +1462,7 @@ export type CriticalOperationUncheckedCreateWithoutIntentEventInput = {
   gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationCreateOrConnectWithoutIntentEventInput = {
@@ -1339,6 +1500,7 @@ export type CriticalOperationCreateWithoutReadyOrRevocationEventInput = {
   gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateWithoutReadyOrRevocationEventInput = {
@@ -1366,6 +1528,7 @@ export type CriticalOperationUncheckedCreateWithoutReadyOrRevocationEventInput =
   gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationCreateOrConnectWithoutReadyOrRevocationEventInput = {
@@ -1403,6 +1566,7 @@ export type CriticalOperationCreateWithoutCompletionEventInput = {
   gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateWithoutCompletionEventInput = {
@@ -1430,6 +1594,7 @@ export type CriticalOperationUncheckedCreateWithoutCompletionEventInput = {
   gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationCreateOrConnectWithoutCompletionEventInput = {
@@ -1543,6 +1708,7 @@ export type CriticalOperationCreateWithoutQualifyingReceiptInput = {
   gate?: Prisma.CriticalOperationGateCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateWithoutQualifyingReceiptInput = {
@@ -1570,6 +1736,7 @@ export type CriticalOperationUncheckedCreateWithoutQualifyingReceiptInput = {
   gate?: Prisma.CriticalOperationGateUncheckedCreateNestedOneWithoutOperationInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationCreateOrConnectWithoutQualifyingReceiptInput = {
@@ -1623,6 +1790,7 @@ export type CriticalOperationCreateWithoutGateInput = {
   qualifyingReceipt?: Prisma.AuditArchiveReceiptCreateNestedOneWithoutCriticalOperationsInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationUncheckedCreateWithoutGateInput = {
@@ -1650,6 +1818,7 @@ export type CriticalOperationUncheckedCreateWithoutGateInput = {
   completedAt?: Date | string | null
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedOneWithoutCriticalOperationInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedOneWithoutCriticalOperationInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedCreateNestedOneWithoutCriticalOperationInput
 }
 
 export type CriticalOperationCreateOrConnectWithoutGateInput = {
@@ -1693,6 +1862,7 @@ export type CriticalOperationUpdateWithoutGateInput = {
   qualifyingReceipt?: Prisma.AuditArchiveReceiptUpdateOneWithoutCriticalOperationsNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateWithoutGateInput = {
@@ -1720,6 +1890,7 @@ export type CriticalOperationUncheckedUpdateWithoutGateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationCreateManyIntentEventInput = {
@@ -1819,6 +1990,7 @@ export type CriticalOperationUpdateWithoutIntentEventInput = {
   gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateWithoutIntentEventInput = {
@@ -1846,6 +2018,7 @@ export type CriticalOperationUncheckedUpdateWithoutIntentEventInput = {
   gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateManyWithoutIntentEventInput = {
@@ -1897,6 +2070,7 @@ export type CriticalOperationUpdateWithoutReadyOrRevocationEventInput = {
   gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateWithoutReadyOrRevocationEventInput = {
@@ -1924,6 +2098,7 @@ export type CriticalOperationUncheckedUpdateWithoutReadyOrRevocationEventInput =
   gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateManyWithoutReadyOrRevocationEventInput = {
@@ -1975,6 +2150,7 @@ export type CriticalOperationUpdateWithoutCompletionEventInput = {
   gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateWithoutCompletionEventInput = {
@@ -2002,6 +2178,7 @@ export type CriticalOperationUncheckedUpdateWithoutCompletionEventInput = {
   gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateManyWithoutCompletionEventInput = {
@@ -2077,6 +2254,7 @@ export type CriticalOperationUpdateWithoutQualifyingReceiptInput = {
   gate?: Prisma.CriticalOperationGateUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateWithoutQualifyingReceiptInput = {
@@ -2104,6 +2282,7 @@ export type CriticalOperationUncheckedUpdateWithoutQualifyingReceiptInput = {
   gate?: Prisma.CriticalOperationGateUncheckedUpdateOneWithoutOperationNestedInput
   ownerDesignation?: Prisma.PlatformOwnerDesignationUncheckedUpdateOneWithoutCriticalOperationNestedInput
   bootstrapCredential?: Prisma.OwnerBootstrapCredentialUncheckedUpdateOneWithoutCriticalOperationNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUncheckedUpdateOneWithoutCriticalOperationNestedInput
 }
 
 export type CriticalOperationUncheckedUpdateManyWithoutQualifyingReceiptInput = {
@@ -2162,6 +2341,7 @@ export type CriticalOperationSelect<ExtArgs extends runtime.Types.Extensions.Int
   gate?: boolean | Prisma.CriticalOperation$gateArgs<ExtArgs>
   ownerDesignation?: boolean | Prisma.CriticalOperation$ownerDesignationArgs<ExtArgs>
   bootstrapCredential?: boolean | Prisma.CriticalOperation$bootstrapCredentialArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.CriticalOperation$ownerRecoveryOperationArgs<ExtArgs>
 }, ExtArgs["result"]["criticalOperation"]>
 
 export type CriticalOperationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2256,6 +2436,7 @@ export type CriticalOperationInclude<ExtArgs extends runtime.Types.Extensions.In
   gate?: boolean | Prisma.CriticalOperation$gateArgs<ExtArgs>
   ownerDesignation?: boolean | Prisma.CriticalOperation$ownerDesignationArgs<ExtArgs>
   bootstrapCredential?: boolean | Prisma.CriticalOperation$bootstrapCredentialArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.CriticalOperation$ownerRecoveryOperationArgs<ExtArgs>
 }
 export type CriticalOperationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   intentEvent?: boolean | Prisma.AuthorizationAuditEventDefaultArgs<ExtArgs>
@@ -2280,6 +2461,7 @@ export type $CriticalOperationPayload<ExtArgs extends runtime.Types.Extensions.I
     gate: Prisma.$CriticalOperationGatePayload<ExtArgs> | null
     ownerDesignation: Prisma.$PlatformOwnerDesignationPayload<ExtArgs> | null
     bootstrapCredential: Prisma.$OwnerBootstrapCredentialPayload<ExtArgs> | null
+    ownerRecoveryOperation: Prisma.$OwnerRecoveryOperationPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2705,6 +2887,7 @@ export interface Prisma__CriticalOperationClient<T, Null = never, ExtArgs extend
   gate<T extends Prisma.CriticalOperation$gateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CriticalOperation$gateArgs<ExtArgs>>): Prisma.Prisma__CriticalOperationGateClient<runtime.Types.Result.GetResult<Prisma.$CriticalOperationGatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ownerDesignation<T extends Prisma.CriticalOperation$ownerDesignationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CriticalOperation$ownerDesignationArgs<ExtArgs>>): Prisma.Prisma__PlatformOwnerDesignationClient<runtime.Types.Result.GetResult<Prisma.$PlatformOwnerDesignationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bootstrapCredential<T extends Prisma.CriticalOperation$bootstrapCredentialArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CriticalOperation$bootstrapCredentialArgs<ExtArgs>>): Prisma.Prisma__OwnerBootstrapCredentialClient<runtime.Types.Result.GetResult<Prisma.$OwnerBootstrapCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ownerRecoveryOperation<T extends Prisma.CriticalOperation$ownerRecoveryOperationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CriticalOperation$ownerRecoveryOperationArgs<ExtArgs>>): Prisma.Prisma__OwnerRecoveryOperationClient<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryOperationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3268,6 +3451,25 @@ export type CriticalOperation$bootstrapCredentialArgs<ExtArgs extends runtime.Ty
    */
   include?: Prisma.OwnerBootstrapCredentialInclude<ExtArgs> | null
   where?: Prisma.OwnerBootstrapCredentialWhereInput
+}
+
+/**
+ * CriticalOperation.ownerRecoveryOperation
+ */
+export type CriticalOperation$ownerRecoveryOperationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryOperation
+   */
+  select?: Prisma.OwnerRecoveryOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryOperation
+   */
+  omit?: Prisma.OwnerRecoveryOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryOperationInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryOperationWhereInput
 }
 
 /**

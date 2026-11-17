@@ -48,4 +48,13 @@ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_platform_owner_operator') THEN
     CREATE ROLE dbp_platform_owner_operator NOLOGIN;
   END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_owner_recovery_owner') THEN
+    CREATE ROLE dbp_owner_recovery_owner NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_owner_recovery_operator') THEN
+    CREATE ROLE dbp_owner_recovery_operator NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_owner_recovery_callback') THEN
+    CREATE ROLE dbp_owner_recovery_callback NOLOGIN;
+  END IF;
 END $$;

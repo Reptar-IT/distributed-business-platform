@@ -7,6 +7,7 @@ export const SESSION_ABSOLUTE_LIFETIME_MS = 12 * 60 * 60 * 1000;
 
 export interface PlatformSession {
   userId: string;
+  identity: { issuer: string; subject: string };
   csrfToken: string;
   createdAt: number;
   absoluteExpiresAt: number;
@@ -49,10 +50,11 @@ export function createSessionStore(redis: Redis, now: () => number = Date.now) {
   }
 
   return {
-    async create(userId: string): Promise<{ sessionId: string; session: PlatformSession }> {
+    async create(userId: string, identity: { issuer: string; subject: string }): Promise<{ sessionId: string; session: PlatformSession }> {
       const currentTime = now();
       const session: PlatformSession = {
         userId,
+        identity,
         csrfToken: randomBytes(32).toString("base64url"),
         createdAt: currentTime,
         absoluteExpiresAt: currentTime + SESSION_ABSOLUTE_LIFETIME_MS,
@@ -80,6 +82,7 @@ export function createSessionStore(redis: Redis, now: () => number = Date.now) {
 
       if (
         typeof session.userId !== "string" ||
+        !session.identity || typeof session.identity.issuer !== "string" || typeof session.identity.subject !== "string" ||
         typeof session.csrfToken !== "string" ||
         !Number.isFinite(session.createdAt) ||
         !Number.isFinite(session.absoluteExpiresAt)
