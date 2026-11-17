@@ -411,7 +411,9 @@ export const ModelName = {
   AuditExportCheckpoint: 'AuditExportCheckpoint',
   AuditExportBatch: 'AuditExportBatch',
   AuditExportDelivery: 'AuditExportDelivery',
-  AuditArchiveReceipt: 'AuditArchiveReceipt'
+  AuditArchiveReceipt: 'AuditArchiveReceipt',
+  CriticalOperation: 'CriticalOperation',
+  CriticalOperationGate: 'CriticalOperationGate'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -427,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "platformUser" | "userIdentity" | "venture" | "ventureMembership" | "organizationalRole" | "roleAssignment" | "roleVacancy" | "authorizationAuditStream" | "authorizationAuditHead" | "authorizationAuditEvent" | "auditDestination" | "auditExportCheckpoint" | "auditExportBatch" | "auditExportDelivery" | "auditArchiveReceipt"
+    modelProps: "platformUser" | "userIdentity" | "venture" | "ventureMembership" | "organizationalRole" | "roleAssignment" | "roleVacancy" | "authorizationAuditStream" | "authorizationAuditHead" | "authorizationAuditEvent" | "auditDestination" | "auditExportCheckpoint" | "auditExportBatch" | "auditExportDelivery" | "auditArchiveReceipt" | "criticalOperation" | "criticalOperationGate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1541,6 +1543,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CriticalOperation: {
+      payload: Prisma.$CriticalOperationPayload<ExtArgs>
+      fields: Prisma.CriticalOperationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CriticalOperationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CriticalOperationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>
+        }
+        findFirst: {
+          args: Prisma.CriticalOperationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CriticalOperationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>
+        }
+        findMany: {
+          args: Prisma.CriticalOperationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>[]
+        }
+        create: {
+          args: Prisma.CriticalOperationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>
+        }
+        createMany: {
+          args: Prisma.CriticalOperationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CriticalOperationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>[]
+        }
+        delete: {
+          args: Prisma.CriticalOperationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>
+        }
+        update: {
+          args: Prisma.CriticalOperationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>
+        }
+        deleteMany: {
+          args: Prisma.CriticalOperationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CriticalOperationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CriticalOperationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>[]
+        }
+        upsert: {
+          args: Prisma.CriticalOperationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationPayload>
+        }
+        aggregate: {
+          args: Prisma.CriticalOperationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCriticalOperation>
+        }
+        groupBy: {
+          args: Prisma.CriticalOperationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CriticalOperationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CriticalOperationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CriticalOperationCountAggregateOutputType> | number
+        }
+      }
+    }
+    CriticalOperationGate: {
+      payload: Prisma.$CriticalOperationGatePayload<ExtArgs>
+      fields: Prisma.CriticalOperationGateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CriticalOperationGateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CriticalOperationGateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>
+        }
+        findFirst: {
+          args: Prisma.CriticalOperationGateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CriticalOperationGateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>
+        }
+        findMany: {
+          args: Prisma.CriticalOperationGateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>[]
+        }
+        create: {
+          args: Prisma.CriticalOperationGateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>
+        }
+        createMany: {
+          args: Prisma.CriticalOperationGateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CriticalOperationGateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>[]
+        }
+        delete: {
+          args: Prisma.CriticalOperationGateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>
+        }
+        update: {
+          args: Prisma.CriticalOperationGateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>
+        }
+        deleteMany: {
+          args: Prisma.CriticalOperationGateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CriticalOperationGateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CriticalOperationGateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>[]
+        }
+        upsert: {
+          args: Prisma.CriticalOperationGateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CriticalOperationGatePayload>
+        }
+        aggregate: {
+          args: Prisma.CriticalOperationGateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCriticalOperationGate>
+        }
+        groupBy: {
+          args: Prisma.CriticalOperationGateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CriticalOperationGateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CriticalOperationGateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CriticalOperationGateCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1808,6 +1958,45 @@ export const AuditArchiveReceiptScalarFieldEnum = {
 } as const
 
 export type AuditArchiveReceiptScalarFieldEnum = (typeof AuditArchiveReceiptScalarFieldEnum)[keyof typeof AuditArchiveReceiptScalarFieldEnum]
+
+
+export const CriticalOperationScalarFieldEnum = {
+  id: 'id',
+  operationType: 'operationType',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  idempotencyDigest: 'idempotencyDigest',
+  requestFingerprint: 'requestFingerprint',
+  status: 'status',
+  streamId: 'streamId',
+  intentEventId: 'intentEventId',
+  intentSequence: 'intentSequence',
+  readyOrRevocationEventId: 'readyOrRevocationEventId',
+  readyOrRevocationSequence: 'readyOrRevocationSequence',
+  completionEventId: 'completionEventId',
+  completionSequence: 'completionSequence',
+  qualifyingReceiptId: 'qualifyingReceiptId',
+  qualifyingDestinationId: 'qualifyingDestinationId',
+  qualifyingKeyId: 'qualifyingKeyId',
+  failureCategory: 'failureCategory',
+  reconciliationMetadata: 'reconciliationMetadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type CriticalOperationScalarFieldEnum = (typeof CriticalOperationScalarFieldEnum)[keyof typeof CriticalOperationScalarFieldEnum]
+
+
+export const CriticalOperationGateScalarFieldEnum = {
+  targetType: 'targetType',
+  targetId: 'targetId',
+  state: 'state',
+  operationId: 'operationId',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CriticalOperationGateScalarFieldEnum = (typeof CriticalOperationGateScalarFieldEnum)[keyof typeof CriticalOperationGateScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2117,6 +2306,20 @@ export type ListEnumAuditExportStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
+ * Reference to a field of type 'CriticalOperationStatus'
+ */
+export type EnumCriticalOperationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CriticalOperationStatus'>
+
+
+
+/**
+ * Reference to a field of type 'CriticalOperationStatus[]'
+ */
+export type ListEnumCriticalOperationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CriticalOperationStatus[]'>
+
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -2295,6 +2498,8 @@ export type GlobalOmitConfig = {
   auditExportBatch?: Prisma.AuditExportBatchOmit
   auditExportDelivery?: Prisma.AuditExportDeliveryOmit
   auditArchiveReceipt?: Prisma.AuditArchiveReceiptOmit
+  criticalOperation?: Prisma.CriticalOperationOmit
+  criticalOperationGate?: Prisma.CriticalOperationGateOmit
 }
 
 /* Types for Logging */

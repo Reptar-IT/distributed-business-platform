@@ -3,6 +3,7 @@ import {Redis} from "ioredis";
 
 import { prisma } from "@platform/database";
 import { createAuditExporter } from "./modules/audit-exporter.js";
+import { createCriticalOperationWorker } from "./modules/critical-operations.js";
 
 const redisUrl = process.env.REDIS_URL ?? "redis://localhost:6380";
 
@@ -13,6 +14,18 @@ const connection = new Redis(redisUrl, {
 const auditExporterDatabaseUrl = process.env.AUDIT_EXPORTER_DATABASE_URL;
 const auditReceiptVerifierUrl = process.env.AUDIT_RECEIPT_VERIFIER_URL;
 const auditReceiptVerifierServiceToken = process.env.AUDIT_RECEIPT_VERIFIER_SERVICE_TOKEN;
+const criticalOperationDatabaseUrl = process.env.CRITICAL_OPERATION_DATABASE_URL;
+const criticalOperationEnabled = process.env.CRITICAL_OPERATION_ENGINE_ENABLED === "true";
+if (criticalOperationEnabled && !["development", "test"].includes(process.env.NODE_ENV ?? "")) {
+  throw new Error("Critical-operation enforcement is restricted to development/test until independent production archive deployments and failure domains are verified");
+}
+if (criticalOperationEnabled && !criticalOperationDatabaseUrl) {
+  throw new Error("CRITICAL_OPERATION_DATABASE_URL is required when the critical-operation engine is enabled");
+}
+const criticalOperationWorker = criticalOperationEnabled && criticalOperationDatabaseUrl
+  ? createCriticalOperationWorker(criticalOperationDatabaseUrl)
+  : undefined;
+if (criticalOperationWorker) criticalOperationWorker.start();
 let auditExporter: ReturnType<typeof createAuditExporter> | undefined;
 let auditExportTimer: NodeJS.Timeout | undefined;
 const lastAuditHealthReport = new Map<string, { state: string; at: number }>();
@@ -133,6 +146,7 @@ const shutdown = async () => {
 
   if (auditExportTimer) clearInterval(auditExportTimer);
   await auditExporter?.close();
+  await criticalOperationWorker?.close();
 
   await worker.close();
   await connection.quit();

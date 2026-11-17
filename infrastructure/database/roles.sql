@@ -1,5 +1,5 @@
--- Run as a database administrator before applying the audit migration.
--- This file defines NOLOGIN function-owner roles only. Provision login identities
+-- Run as a database administrator before applying the audit and critical-operation migrations.
+-- This file defines NOLOGIN roles only. Provision login identities
 -- separately through the deployment secret manager or database IAM; never add passwords here.
 DO $$
 BEGIN
@@ -23,5 +23,14 @@ BEGIN
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_audit_receipt_owner') THEN
     CREATE ROLE dbp_audit_receipt_owner NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_critical_operation_owner') THEN
+    CREATE ROLE dbp_critical_operation_owner NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_critical_operation_service') THEN
+    CREATE ROLE dbp_critical_operation_service NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dbp_critical_operation_reconciler') THEN
+    CREATE ROLE dbp_critical_operation_reconciler NOLOGIN;
   END IF;
 END $$;

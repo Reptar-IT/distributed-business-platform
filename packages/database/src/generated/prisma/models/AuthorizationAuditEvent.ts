@@ -409,6 +409,9 @@ export type AuthorizationAuditEventWhereInput = {
   previousHash?: Prisma.BytesFilter<"AuthorizationAuditEvent"> | runtime.Bytes
   eventHash?: Prisma.BytesFilter<"AuthorizationAuditEvent"> | runtime.Bytes
   stream?: Prisma.XOR<Prisma.AuthorizationAuditStreamScalarRelationFilter, Prisma.AuthorizationAuditStreamWhereInput>
+  criticalIntentOperations?: Prisma.CriticalOperationListRelationFilter
+  criticalBoundaryOperations?: Prisma.CriticalOperationListRelationFilter
+  criticalCompletionOperations?: Prisma.CriticalOperationListRelationFilter
 }
 
 export type AuthorizationAuditEventOrderByWithRelationInput = {
@@ -441,6 +444,9 @@ export type AuthorizationAuditEventOrderByWithRelationInput = {
   previousHash?: Prisma.SortOrder
   eventHash?: Prisma.SortOrder
   stream?: Prisma.AuthorizationAuditStreamOrderByWithRelationInput
+  criticalIntentOperations?: Prisma.CriticalOperationOrderByRelationAggregateInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationOrderByRelationAggregateInput
+  criticalCompletionOperations?: Prisma.CriticalOperationOrderByRelationAggregateInput
 }
 
 export type AuthorizationAuditEventWhereUniqueInput = Prisma.AtLeast<{
@@ -477,6 +483,9 @@ export type AuthorizationAuditEventWhereUniqueInput = Prisma.AtLeast<{
   previousHash?: Prisma.BytesFilter<"AuthorizationAuditEvent"> | runtime.Bytes
   eventHash?: Prisma.BytesFilter<"AuthorizationAuditEvent"> | runtime.Bytes
   stream?: Prisma.XOR<Prisma.AuthorizationAuditStreamScalarRelationFilter, Prisma.AuthorizationAuditStreamWhereInput>
+  criticalIntentOperations?: Prisma.CriticalOperationListRelationFilter
+  criticalBoundaryOperations?: Prisma.CriticalOperationListRelationFilter
+  criticalCompletionOperations?: Prisma.CriticalOperationListRelationFilter
 }, "id" | "streamId_sequence">
 
 export type AuthorizationAuditEventOrderByWithAggregationInput = {
@@ -578,6 +587,9 @@ export type AuthorizationAuditEventCreateInput = {
   previousHash: runtime.Bytes
   eventHash: runtime.Bytes
   stream: Prisma.AuthorizationAuditStreamCreateNestedOneWithoutEventsInput
+  criticalIntentOperations?: Prisma.CriticalOperationCreateNestedManyWithoutIntentEventInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationCreateNestedManyWithoutReadyOrRevocationEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationCreateNestedManyWithoutCompletionEventInput
 }
 
 export type AuthorizationAuditEventUncheckedCreateInput = {
@@ -609,6 +621,9 @@ export type AuthorizationAuditEventUncheckedCreateInput = {
   canonicalPayload: string
   previousHash: runtime.Bytes
   eventHash: runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutIntentEventInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutReadyOrRevocationEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutCompletionEventInput
 }
 
 export type AuthorizationAuditEventUpdateInput = {
@@ -640,6 +655,9 @@ export type AuthorizationAuditEventUpdateInput = {
   previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   stream?: Prisma.AuthorizationAuditStreamUpdateOneRequiredWithoutEventsNestedInput
+  criticalIntentOperations?: Prisma.CriticalOperationUpdateManyWithoutIntentEventNestedInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUpdateManyWithoutReadyOrRevocationEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUpdateManyWithoutCompletionEventNestedInput
 }
 
 export type AuthorizationAuditEventUncheckedUpdateInput = {
@@ -671,6 +689,9 @@ export type AuthorizationAuditEventUncheckedUpdateInput = {
   canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
   previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutIntentEventNestedInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutReadyOrRevocationEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutCompletionEventNestedInput
 }
 
 export type AuthorizationAuditEventCreateManyInput = {
@@ -885,6 +906,16 @@ export type AuthorizationAuditEventSumOrderByAggregateInput = {
   hashVersion?: Prisma.SortOrder
 }
 
+export type AuthorizationAuditEventScalarRelationFilter = {
+  is?: Prisma.AuthorizationAuditEventWhereInput
+  isNot?: Prisma.AuthorizationAuditEventWhereInput
+}
+
+export type AuthorizationAuditEventNullableScalarRelationFilter = {
+  is?: Prisma.AuthorizationAuditEventWhereInput | null
+  isNot?: Prisma.AuthorizationAuditEventWhereInput | null
+}
+
 export type AuthorizationAuditEventCreateNestedManyWithoutStreamInput = {
   create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutStreamInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutStreamInput> | Prisma.AuthorizationAuditEventCreateWithoutStreamInput[] | Prisma.AuthorizationAuditEventUncheckedCreateWithoutStreamInput[]
   connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutStreamInput | Prisma.AuthorizationAuditEventCreateOrConnectWithoutStreamInput[]
@@ -943,6 +974,52 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type AuthorizationAuditEventCreateNestedOneWithoutCriticalIntentOperationsInput = {
+  create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalIntentOperationsInput>
+  connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutCriticalIntentOperationsInput
+  connect?: Prisma.AuthorizationAuditEventWhereUniqueInput
+}
+
+export type AuthorizationAuditEventCreateNestedOneWithoutCriticalBoundaryOperationsInput = {
+  create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalBoundaryOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalBoundaryOperationsInput>
+  connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutCriticalBoundaryOperationsInput
+  connect?: Prisma.AuthorizationAuditEventWhereUniqueInput
+}
+
+export type AuthorizationAuditEventCreateNestedOneWithoutCriticalCompletionOperationsInput = {
+  create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalCompletionOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalCompletionOperationsInput>
+  connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutCriticalCompletionOperationsInput
+  connect?: Prisma.AuthorizationAuditEventWhereUniqueInput
+}
+
+export type AuthorizationAuditEventUpdateOneRequiredWithoutCriticalIntentOperationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalIntentOperationsInput>
+  connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutCriticalIntentOperationsInput
+  upsert?: Prisma.AuthorizationAuditEventUpsertWithoutCriticalIntentOperationsInput
+  connect?: Prisma.AuthorizationAuditEventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthorizationAuditEventUpdateToOneWithWhereWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUpdateWithoutCriticalIntentOperationsInput>, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalIntentOperationsInput>
+}
+
+export type AuthorizationAuditEventUpdateOneWithoutCriticalBoundaryOperationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalBoundaryOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalBoundaryOperationsInput>
+  connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutCriticalBoundaryOperationsInput
+  upsert?: Prisma.AuthorizationAuditEventUpsertWithoutCriticalBoundaryOperationsInput
+  disconnect?: Prisma.AuthorizationAuditEventWhereInput | boolean
+  delete?: Prisma.AuthorizationAuditEventWhereInput | boolean
+  connect?: Prisma.AuthorizationAuditEventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthorizationAuditEventUpdateToOneWithWhereWithoutCriticalBoundaryOperationsInput, Prisma.AuthorizationAuditEventUpdateWithoutCriticalBoundaryOperationsInput>, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalBoundaryOperationsInput>
+}
+
+export type AuthorizationAuditEventUpdateOneWithoutCriticalCompletionOperationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalCompletionOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalCompletionOperationsInput>
+  connectOrCreate?: Prisma.AuthorizationAuditEventCreateOrConnectWithoutCriticalCompletionOperationsInput
+  upsert?: Prisma.AuthorizationAuditEventUpsertWithoutCriticalCompletionOperationsInput
+  disconnect?: Prisma.AuthorizationAuditEventWhereInput | boolean
+  delete?: Prisma.AuthorizationAuditEventWhereInput | boolean
+  connect?: Prisma.AuthorizationAuditEventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthorizationAuditEventUpdateToOneWithWhereWithoutCriticalCompletionOperationsInput, Prisma.AuthorizationAuditEventUpdateWithoutCriticalCompletionOperationsInput>, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalCompletionOperationsInput>
+}
+
 export type AuthorizationAuditEventCreateWithoutStreamInput = {
   id?: string
   sequence: bigint | number
@@ -971,6 +1048,9 @@ export type AuthorizationAuditEventCreateWithoutStreamInput = {
   canonicalPayload: string
   previousHash: runtime.Bytes
   eventHash: runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationCreateNestedManyWithoutIntentEventInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationCreateNestedManyWithoutReadyOrRevocationEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationCreateNestedManyWithoutCompletionEventInput
 }
 
 export type AuthorizationAuditEventUncheckedCreateWithoutStreamInput = {
@@ -1001,6 +1081,9 @@ export type AuthorizationAuditEventUncheckedCreateWithoutStreamInput = {
   canonicalPayload: string
   previousHash: runtime.Bytes
   eventHash: runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutIntentEventInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutReadyOrRevocationEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutCompletionEventInput
 }
 
 export type AuthorizationAuditEventCreateOrConnectWithoutStreamInput = {
@@ -1063,6 +1146,450 @@ export type AuthorizationAuditEventScalarWhereInput = {
   eventHash?: Prisma.BytesFilter<"AuthorizationAuditEvent"> | runtime.Bytes
 }
 
+export type AuthorizationAuditEventCreateWithoutCriticalIntentOperationsInput = {
+  id?: string
+  sequence: bigint | number
+  eventType: string
+  actorType: $Enums.AuthorizationAuditActorType
+  actorId: string
+  delegatingHumanId?: string | null
+  callingClientId?: string | null
+  permissionCode?: string | null
+  decision?: $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: string | null
+  targetType?: string | null
+  targetId?: string | null
+  ventureId?: string | null
+  delegationId?: string | null
+  approvalId?: string | null
+  policyVersion?: string | null
+  operation: string
+  outcome: string
+  requestId?: string | null
+  jobId?: string | null
+  correlationId?: string | null
+  occurredAt: Date | string
+  serializationVersion?: number
+  hashVersion?: number
+  canonicalPayload: string
+  previousHash: runtime.Bytes
+  eventHash: runtime.Bytes
+  stream: Prisma.AuthorizationAuditStreamCreateNestedOneWithoutEventsInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationCreateNestedManyWithoutReadyOrRevocationEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationCreateNestedManyWithoutCompletionEventInput
+}
+
+export type AuthorizationAuditEventUncheckedCreateWithoutCriticalIntentOperationsInput = {
+  id?: string
+  streamId: string
+  sequence: bigint | number
+  eventType: string
+  actorType: $Enums.AuthorizationAuditActorType
+  actorId: string
+  delegatingHumanId?: string | null
+  callingClientId?: string | null
+  permissionCode?: string | null
+  decision?: $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: string | null
+  targetType?: string | null
+  targetId?: string | null
+  ventureId?: string | null
+  delegationId?: string | null
+  approvalId?: string | null
+  policyVersion?: string | null
+  operation: string
+  outcome: string
+  requestId?: string | null
+  jobId?: string | null
+  correlationId?: string | null
+  occurredAt: Date | string
+  serializationVersion?: number
+  hashVersion?: number
+  canonicalPayload: string
+  previousHash: runtime.Bytes
+  eventHash: runtime.Bytes
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutReadyOrRevocationEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutCompletionEventInput
+}
+
+export type AuthorizationAuditEventCreateOrConnectWithoutCriticalIntentOperationsInput = {
+  where: Prisma.AuthorizationAuditEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalIntentOperationsInput>
+}
+
+export type AuthorizationAuditEventCreateWithoutCriticalBoundaryOperationsInput = {
+  id?: string
+  sequence: bigint | number
+  eventType: string
+  actorType: $Enums.AuthorizationAuditActorType
+  actorId: string
+  delegatingHumanId?: string | null
+  callingClientId?: string | null
+  permissionCode?: string | null
+  decision?: $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: string | null
+  targetType?: string | null
+  targetId?: string | null
+  ventureId?: string | null
+  delegationId?: string | null
+  approvalId?: string | null
+  policyVersion?: string | null
+  operation: string
+  outcome: string
+  requestId?: string | null
+  jobId?: string | null
+  correlationId?: string | null
+  occurredAt: Date | string
+  serializationVersion?: number
+  hashVersion?: number
+  canonicalPayload: string
+  previousHash: runtime.Bytes
+  eventHash: runtime.Bytes
+  stream: Prisma.AuthorizationAuditStreamCreateNestedOneWithoutEventsInput
+  criticalIntentOperations?: Prisma.CriticalOperationCreateNestedManyWithoutIntentEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationCreateNestedManyWithoutCompletionEventInput
+}
+
+export type AuthorizationAuditEventUncheckedCreateWithoutCriticalBoundaryOperationsInput = {
+  id?: string
+  streamId: string
+  sequence: bigint | number
+  eventType: string
+  actorType: $Enums.AuthorizationAuditActorType
+  actorId: string
+  delegatingHumanId?: string | null
+  callingClientId?: string | null
+  permissionCode?: string | null
+  decision?: $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: string | null
+  targetType?: string | null
+  targetId?: string | null
+  ventureId?: string | null
+  delegationId?: string | null
+  approvalId?: string | null
+  policyVersion?: string | null
+  operation: string
+  outcome: string
+  requestId?: string | null
+  jobId?: string | null
+  correlationId?: string | null
+  occurredAt: Date | string
+  serializationVersion?: number
+  hashVersion?: number
+  canonicalPayload: string
+  previousHash: runtime.Bytes
+  eventHash: runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutIntentEventInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutCompletionEventInput
+}
+
+export type AuthorizationAuditEventCreateOrConnectWithoutCriticalBoundaryOperationsInput = {
+  where: Prisma.AuthorizationAuditEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalBoundaryOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalBoundaryOperationsInput>
+}
+
+export type AuthorizationAuditEventCreateWithoutCriticalCompletionOperationsInput = {
+  id?: string
+  sequence: bigint | number
+  eventType: string
+  actorType: $Enums.AuthorizationAuditActorType
+  actorId: string
+  delegatingHumanId?: string | null
+  callingClientId?: string | null
+  permissionCode?: string | null
+  decision?: $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: string | null
+  targetType?: string | null
+  targetId?: string | null
+  ventureId?: string | null
+  delegationId?: string | null
+  approvalId?: string | null
+  policyVersion?: string | null
+  operation: string
+  outcome: string
+  requestId?: string | null
+  jobId?: string | null
+  correlationId?: string | null
+  occurredAt: Date | string
+  serializationVersion?: number
+  hashVersion?: number
+  canonicalPayload: string
+  previousHash: runtime.Bytes
+  eventHash: runtime.Bytes
+  stream: Prisma.AuthorizationAuditStreamCreateNestedOneWithoutEventsInput
+  criticalIntentOperations?: Prisma.CriticalOperationCreateNestedManyWithoutIntentEventInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationCreateNestedManyWithoutReadyOrRevocationEventInput
+}
+
+export type AuthorizationAuditEventUncheckedCreateWithoutCriticalCompletionOperationsInput = {
+  id?: string
+  streamId: string
+  sequence: bigint | number
+  eventType: string
+  actorType: $Enums.AuthorizationAuditActorType
+  actorId: string
+  delegatingHumanId?: string | null
+  callingClientId?: string | null
+  permissionCode?: string | null
+  decision?: $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: string | null
+  targetType?: string | null
+  targetId?: string | null
+  ventureId?: string | null
+  delegationId?: string | null
+  approvalId?: string | null
+  policyVersion?: string | null
+  operation: string
+  outcome: string
+  requestId?: string | null
+  jobId?: string | null
+  correlationId?: string | null
+  occurredAt: Date | string
+  serializationVersion?: number
+  hashVersion?: number
+  canonicalPayload: string
+  previousHash: runtime.Bytes
+  eventHash: runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutIntentEventInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutReadyOrRevocationEventInput
+}
+
+export type AuthorizationAuditEventCreateOrConnectWithoutCriticalCompletionOperationsInput = {
+  where: Prisma.AuthorizationAuditEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalCompletionOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalCompletionOperationsInput>
+}
+
+export type AuthorizationAuditEventUpsertWithoutCriticalIntentOperationsInput = {
+  update: Prisma.XOR<Prisma.AuthorizationAuditEventUpdateWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalIntentOperationsInput>
+  create: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalIntentOperationsInput>
+  where?: Prisma.AuthorizationAuditEventWhereInput
+}
+
+export type AuthorizationAuditEventUpdateToOneWithWhereWithoutCriticalIntentOperationsInput = {
+  where?: Prisma.AuthorizationAuditEventWhereInput
+  data: Prisma.XOR<Prisma.AuthorizationAuditEventUpdateWithoutCriticalIntentOperationsInput, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalIntentOperationsInput>
+}
+
+export type AuthorizationAuditEventUpdateWithoutCriticalIntentOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  eventType?: Prisma.StringFieldUpdateOperationsInput | string
+  actorType?: Prisma.EnumAuthorizationAuditActorTypeFieldUpdateOperationsInput | $Enums.AuthorizationAuditActorType
+  actorId?: Prisma.StringFieldUpdateOperationsInput | string
+  delegatingHumanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  callingClientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissionCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  decision?: Prisma.EnumAuthorizationAuditDecisionFieldUpdateOperationsInput | $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ventureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operation?: Prisma.StringFieldUpdateOperationsInput | string
+  outcome?: Prisma.StringFieldUpdateOperationsInput | string
+  requestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serializationVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  hashVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  stream?: Prisma.AuthorizationAuditStreamUpdateOneRequiredWithoutEventsNestedInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUpdateManyWithoutReadyOrRevocationEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUpdateManyWithoutCompletionEventNestedInput
+}
+
+export type AuthorizationAuditEventUncheckedUpdateWithoutCriticalIntentOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  streamId?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  eventType?: Prisma.StringFieldUpdateOperationsInput | string
+  actorType?: Prisma.EnumAuthorizationAuditActorTypeFieldUpdateOperationsInput | $Enums.AuthorizationAuditActorType
+  actorId?: Prisma.StringFieldUpdateOperationsInput | string
+  delegatingHumanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  callingClientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissionCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  decision?: Prisma.EnumAuthorizationAuditDecisionFieldUpdateOperationsInput | $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ventureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operation?: Prisma.StringFieldUpdateOperationsInput | string
+  outcome?: Prisma.StringFieldUpdateOperationsInput | string
+  requestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serializationVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  hashVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutReadyOrRevocationEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutCompletionEventNestedInput
+}
+
+export type AuthorizationAuditEventUpsertWithoutCriticalBoundaryOperationsInput = {
+  update: Prisma.XOR<Prisma.AuthorizationAuditEventUpdateWithoutCriticalBoundaryOperationsInput, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalBoundaryOperationsInput>
+  create: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalBoundaryOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalBoundaryOperationsInput>
+  where?: Prisma.AuthorizationAuditEventWhereInput
+}
+
+export type AuthorizationAuditEventUpdateToOneWithWhereWithoutCriticalBoundaryOperationsInput = {
+  where?: Prisma.AuthorizationAuditEventWhereInput
+  data: Prisma.XOR<Prisma.AuthorizationAuditEventUpdateWithoutCriticalBoundaryOperationsInput, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalBoundaryOperationsInput>
+}
+
+export type AuthorizationAuditEventUpdateWithoutCriticalBoundaryOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  eventType?: Prisma.StringFieldUpdateOperationsInput | string
+  actorType?: Prisma.EnumAuthorizationAuditActorTypeFieldUpdateOperationsInput | $Enums.AuthorizationAuditActorType
+  actorId?: Prisma.StringFieldUpdateOperationsInput | string
+  delegatingHumanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  callingClientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissionCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  decision?: Prisma.EnumAuthorizationAuditDecisionFieldUpdateOperationsInput | $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ventureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operation?: Prisma.StringFieldUpdateOperationsInput | string
+  outcome?: Prisma.StringFieldUpdateOperationsInput | string
+  requestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serializationVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  hashVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  stream?: Prisma.AuthorizationAuditStreamUpdateOneRequiredWithoutEventsNestedInput
+  criticalIntentOperations?: Prisma.CriticalOperationUpdateManyWithoutIntentEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUpdateManyWithoutCompletionEventNestedInput
+}
+
+export type AuthorizationAuditEventUncheckedUpdateWithoutCriticalBoundaryOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  streamId?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  eventType?: Prisma.StringFieldUpdateOperationsInput | string
+  actorType?: Prisma.EnumAuthorizationAuditActorTypeFieldUpdateOperationsInput | $Enums.AuthorizationAuditActorType
+  actorId?: Prisma.StringFieldUpdateOperationsInput | string
+  delegatingHumanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  callingClientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissionCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  decision?: Prisma.EnumAuthorizationAuditDecisionFieldUpdateOperationsInput | $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ventureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operation?: Prisma.StringFieldUpdateOperationsInput | string
+  outcome?: Prisma.StringFieldUpdateOperationsInput | string
+  requestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serializationVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  hashVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutIntentEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutCompletionEventNestedInput
+}
+
+export type AuthorizationAuditEventUpsertWithoutCriticalCompletionOperationsInput = {
+  update: Prisma.XOR<Prisma.AuthorizationAuditEventUpdateWithoutCriticalCompletionOperationsInput, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalCompletionOperationsInput>
+  create: Prisma.XOR<Prisma.AuthorizationAuditEventCreateWithoutCriticalCompletionOperationsInput, Prisma.AuthorizationAuditEventUncheckedCreateWithoutCriticalCompletionOperationsInput>
+  where?: Prisma.AuthorizationAuditEventWhereInput
+}
+
+export type AuthorizationAuditEventUpdateToOneWithWhereWithoutCriticalCompletionOperationsInput = {
+  where?: Prisma.AuthorizationAuditEventWhereInput
+  data: Prisma.XOR<Prisma.AuthorizationAuditEventUpdateWithoutCriticalCompletionOperationsInput, Prisma.AuthorizationAuditEventUncheckedUpdateWithoutCriticalCompletionOperationsInput>
+}
+
+export type AuthorizationAuditEventUpdateWithoutCriticalCompletionOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  eventType?: Prisma.StringFieldUpdateOperationsInput | string
+  actorType?: Prisma.EnumAuthorizationAuditActorTypeFieldUpdateOperationsInput | $Enums.AuthorizationAuditActorType
+  actorId?: Prisma.StringFieldUpdateOperationsInput | string
+  delegatingHumanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  callingClientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissionCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  decision?: Prisma.EnumAuthorizationAuditDecisionFieldUpdateOperationsInput | $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ventureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operation?: Prisma.StringFieldUpdateOperationsInput | string
+  outcome?: Prisma.StringFieldUpdateOperationsInput | string
+  requestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serializationVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  hashVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  stream?: Prisma.AuthorizationAuditStreamUpdateOneRequiredWithoutEventsNestedInput
+  criticalIntentOperations?: Prisma.CriticalOperationUpdateManyWithoutIntentEventNestedInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUpdateManyWithoutReadyOrRevocationEventNestedInput
+}
+
+export type AuthorizationAuditEventUncheckedUpdateWithoutCriticalCompletionOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  streamId?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  eventType?: Prisma.StringFieldUpdateOperationsInput | string
+  actorType?: Prisma.EnumAuthorizationAuditActorTypeFieldUpdateOperationsInput | $Enums.AuthorizationAuditActorType
+  actorId?: Prisma.StringFieldUpdateOperationsInput | string
+  delegatingHumanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  callingClientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissionCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  decision?: Prisma.EnumAuthorizationAuditDecisionFieldUpdateOperationsInput | $Enums.AuthorizationAuditDecision
+  decisionReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ventureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  operation?: Prisma.StringFieldUpdateOperationsInput | string
+  outcome?: Prisma.StringFieldUpdateOperationsInput | string
+  requestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correlationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serializationVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  hashVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutIntentEventNestedInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutReadyOrRevocationEventNestedInput
+}
+
 export type AuthorizationAuditEventCreateManyStreamInput = {
   id?: string
   sequence: bigint | number
@@ -1121,6 +1648,9 @@ export type AuthorizationAuditEventUpdateWithoutStreamInput = {
   canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
   previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUpdateManyWithoutIntentEventNestedInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUpdateManyWithoutReadyOrRevocationEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUpdateManyWithoutCompletionEventNestedInput
 }
 
 export type AuthorizationAuditEventUncheckedUpdateWithoutStreamInput = {
@@ -1151,6 +1681,9 @@ export type AuthorizationAuditEventUncheckedUpdateWithoutStreamInput = {
   canonicalPayload?: Prisma.StringFieldUpdateOperationsInput | string
   previousHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   eventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  criticalIntentOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutIntentEventNestedInput
+  criticalBoundaryOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutReadyOrRevocationEventNestedInput
+  criticalCompletionOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutCompletionEventNestedInput
 }
 
 export type AuthorizationAuditEventUncheckedUpdateManyWithoutStreamInput = {
@@ -1184,6 +1717,53 @@ export type AuthorizationAuditEventUncheckedUpdateManyWithoutStreamInput = {
 }
 
 
+/**
+ * Count Type AuthorizationAuditEventCountOutputType
+ */
+
+export type AuthorizationAuditEventCountOutputType = {
+  criticalIntentOperations: number
+  criticalBoundaryOperations: number
+  criticalCompletionOperations: number
+}
+
+export type AuthorizationAuditEventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  criticalIntentOperations?: boolean | AuthorizationAuditEventCountOutputTypeCountCriticalIntentOperationsArgs
+  criticalBoundaryOperations?: boolean | AuthorizationAuditEventCountOutputTypeCountCriticalBoundaryOperationsArgs
+  criticalCompletionOperations?: boolean | AuthorizationAuditEventCountOutputTypeCountCriticalCompletionOperationsArgs
+}
+
+/**
+ * AuthorizationAuditEventCountOutputType without action
+ */
+export type AuthorizationAuditEventCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuthorizationAuditEventCountOutputType
+   */
+  select?: Prisma.AuthorizationAuditEventCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AuthorizationAuditEventCountOutputType without action
+ */
+export type AuthorizationAuditEventCountOutputTypeCountCriticalIntentOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CriticalOperationWhereInput
+}
+
+/**
+ * AuthorizationAuditEventCountOutputType without action
+ */
+export type AuthorizationAuditEventCountOutputTypeCountCriticalBoundaryOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CriticalOperationWhereInput
+}
+
+/**
+ * AuthorizationAuditEventCountOutputType without action
+ */
+export type AuthorizationAuditEventCountOutputTypeCountCriticalCompletionOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CriticalOperationWhereInput
+}
+
 
 export type AuthorizationAuditEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1215,6 +1795,10 @@ export type AuthorizationAuditEventSelect<ExtArgs extends runtime.Types.Extensio
   previousHash?: boolean
   eventHash?: boolean
   stream?: boolean | Prisma.AuthorizationAuditStreamDefaultArgs<ExtArgs>
+  criticalIntentOperations?: boolean | Prisma.AuthorizationAuditEvent$criticalIntentOperationsArgs<ExtArgs>
+  criticalBoundaryOperations?: boolean | Prisma.AuthorizationAuditEvent$criticalBoundaryOperationsArgs<ExtArgs>
+  criticalCompletionOperations?: boolean | Prisma.AuthorizationAuditEvent$criticalCompletionOperationsArgs<ExtArgs>
+  _count?: boolean | Prisma.AuthorizationAuditEventCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["authorizationAuditEvent"]>
 
 export type AuthorizationAuditEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1315,6 +1899,10 @@ export type AuthorizationAuditEventSelectScalar = {
 export type AuthorizationAuditEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "streamId" | "sequence" | "eventType" | "actorType" | "actorId" | "delegatingHumanId" | "callingClientId" | "permissionCode" | "decision" | "decisionReasonCode" | "targetType" | "targetId" | "ventureId" | "delegationId" | "approvalId" | "policyVersion" | "operation" | "outcome" | "requestId" | "jobId" | "correlationId" | "occurredAt" | "serializationVersion" | "hashVersion" | "canonicalPayload" | "previousHash" | "eventHash", ExtArgs["result"]["authorizationAuditEvent"]>
 export type AuthorizationAuditEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   stream?: boolean | Prisma.AuthorizationAuditStreamDefaultArgs<ExtArgs>
+  criticalIntentOperations?: boolean | Prisma.AuthorizationAuditEvent$criticalIntentOperationsArgs<ExtArgs>
+  criticalBoundaryOperations?: boolean | Prisma.AuthorizationAuditEvent$criticalBoundaryOperationsArgs<ExtArgs>
+  criticalCompletionOperations?: boolean | Prisma.AuthorizationAuditEvent$criticalCompletionOperationsArgs<ExtArgs>
+  _count?: boolean | Prisma.AuthorizationAuditEventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AuthorizationAuditEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   stream?: boolean | Prisma.AuthorizationAuditStreamDefaultArgs<ExtArgs>
@@ -1327,6 +1915,9 @@ export type $AuthorizationAuditEventPayload<ExtArgs extends runtime.Types.Extens
   name: "AuthorizationAuditEvent"
   objects: {
     stream: Prisma.$AuthorizationAuditStreamPayload<ExtArgs>
+    criticalIntentOperations: Prisma.$CriticalOperationPayload<ExtArgs>[]
+    criticalBoundaryOperations: Prisma.$CriticalOperationPayload<ExtArgs>[]
+    criticalCompletionOperations: Prisma.$CriticalOperationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1752,6 +2343,9 @@ readonly fields: AuthorizationAuditEventFieldRefs;
 export interface Prisma__AuthorizationAuditEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   stream<T extends Prisma.AuthorizationAuditStreamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuthorizationAuditStreamDefaultArgs<ExtArgs>>): Prisma.Prisma__AuthorizationAuditStreamClient<runtime.Types.Result.GetResult<Prisma.$AuthorizationAuditStreamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  criticalIntentOperations<T extends Prisma.AuthorizationAuditEvent$criticalIntentOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuthorizationAuditEvent$criticalIntentOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CriticalOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  criticalBoundaryOperations<T extends Prisma.AuthorizationAuditEvent$criticalBoundaryOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuthorizationAuditEvent$criticalBoundaryOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CriticalOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  criticalCompletionOperations<T extends Prisma.AuthorizationAuditEvent$criticalCompletionOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuthorizationAuditEvent$criticalCompletionOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CriticalOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2207,6 +2801,78 @@ export type AuthorizationAuditEventDeleteManyArgs<ExtArgs extends runtime.Types.
    * Limit how many AuthorizationAuditEvents to delete.
    */
   limit?: number
+}
+
+/**
+ * AuthorizationAuditEvent.criticalIntentOperations
+ */
+export type AuthorizationAuditEvent$criticalIntentOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CriticalOperation
+   */
+  select?: Prisma.CriticalOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CriticalOperation
+   */
+  omit?: Prisma.CriticalOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CriticalOperationInclude<ExtArgs> | null
+  where?: Prisma.CriticalOperationWhereInput
+  orderBy?: Prisma.CriticalOperationOrderByWithRelationInput | Prisma.CriticalOperationOrderByWithRelationInput[]
+  cursor?: Prisma.CriticalOperationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CriticalOperationScalarFieldEnum | Prisma.CriticalOperationScalarFieldEnum[]
+}
+
+/**
+ * AuthorizationAuditEvent.criticalBoundaryOperations
+ */
+export type AuthorizationAuditEvent$criticalBoundaryOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CriticalOperation
+   */
+  select?: Prisma.CriticalOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CriticalOperation
+   */
+  omit?: Prisma.CriticalOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CriticalOperationInclude<ExtArgs> | null
+  where?: Prisma.CriticalOperationWhereInput
+  orderBy?: Prisma.CriticalOperationOrderByWithRelationInput | Prisma.CriticalOperationOrderByWithRelationInput[]
+  cursor?: Prisma.CriticalOperationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CriticalOperationScalarFieldEnum | Prisma.CriticalOperationScalarFieldEnum[]
+}
+
+/**
+ * AuthorizationAuditEvent.criticalCompletionOperations
+ */
+export type AuthorizationAuditEvent$criticalCompletionOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CriticalOperation
+   */
+  select?: Prisma.CriticalOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CriticalOperation
+   */
+  omit?: Prisma.CriticalOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CriticalOperationInclude<ExtArgs> | null
+  where?: Prisma.CriticalOperationWhereInput
+  orderBy?: Prisma.CriticalOperationOrderByWithRelationInput | Prisma.CriticalOperationOrderByWithRelationInput[]
+  cursor?: Prisma.CriticalOperationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CriticalOperationScalarFieldEnum | Prisma.CriticalOperationScalarFieldEnum[]
 }
 
 /**

@@ -277,6 +277,7 @@ export type AuditArchiveReceiptWhereInput = {
   signature?: Prisma.BytesFilter<"AuditArchiveReceipt"> | runtime.Bytes
   verifiedAt?: Prisma.DateTimeFilter<"AuditArchiveReceipt"> | Date | string
   delivery?: Prisma.XOR<Prisma.AuditExportDeliveryScalarRelationFilter, Prisma.AuditExportDeliveryWhereInput>
+  criticalOperations?: Prisma.CriticalOperationListRelationFilter
 }
 
 export type AuditArchiveReceiptOrderByWithRelationInput = {
@@ -293,6 +294,7 @@ export type AuditArchiveReceiptOrderByWithRelationInput = {
   signature?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
   delivery?: Prisma.AuditExportDeliveryOrderByWithRelationInput
+  criticalOperations?: Prisma.CriticalOperationOrderByRelationAggregateInput
 }
 
 export type AuditArchiveReceiptWhereUniqueInput = Prisma.AtLeast<{
@@ -313,6 +315,7 @@ export type AuditArchiveReceiptWhereUniqueInput = Prisma.AtLeast<{
   signature?: Prisma.BytesFilter<"AuditArchiveReceipt"> | runtime.Bytes
   verifiedAt?: Prisma.DateTimeFilter<"AuditArchiveReceipt"> | Date | string
   delivery?: Prisma.XOR<Prisma.AuditExportDeliveryScalarRelationFilter, Prisma.AuditExportDeliveryWhereInput>
+  criticalOperations?: Prisma.CriticalOperationListRelationFilter
 }, "id" | "batchId_destinationId">
 
 export type AuditArchiveReceiptOrderByWithAggregationInput = {
@@ -365,6 +368,7 @@ export type AuditArchiveReceiptCreateInput = {
   signature: runtime.Bytes
   verifiedAt?: Date | string
   delivery: Prisma.AuditExportDeliveryCreateNestedOneWithoutReceiptInput
+  criticalOperations?: Prisma.CriticalOperationCreateNestedManyWithoutQualifyingReceiptInput
 }
 
 export type AuditArchiveReceiptUncheckedCreateInput = {
@@ -380,6 +384,7 @@ export type AuditArchiveReceiptUncheckedCreateInput = {
   receiptPayload: string
   signature: runtime.Bytes
   verifiedAt?: Date | string
+  criticalOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutQualifyingReceiptInput
 }
 
 export type AuditArchiveReceiptUpdateInput = {
@@ -394,6 +399,7 @@ export type AuditArchiveReceiptUpdateInput = {
   signature?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   delivery?: Prisma.AuditExportDeliveryUpdateOneRequiredWithoutReceiptNestedInput
+  criticalOperations?: Prisma.CriticalOperationUpdateManyWithoutQualifyingReceiptNestedInput
 }
 
 export type AuditArchiveReceiptUncheckedUpdateInput = {
@@ -409,6 +415,7 @@ export type AuditArchiveReceiptUncheckedUpdateInput = {
   receiptPayload?: Prisma.StringFieldUpdateOperationsInput | string
   signature?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  criticalOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutQualifyingReceiptNestedInput
 }
 
 export type AuditArchiveReceiptCreateManyInput = {
@@ -551,6 +558,22 @@ export type AuditArchiveReceiptUncheckedUpdateOneWithoutDeliveryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuditArchiveReceiptUpdateToOneWithWhereWithoutDeliveryInput, Prisma.AuditArchiveReceiptUpdateWithoutDeliveryInput>, Prisma.AuditArchiveReceiptUncheckedUpdateWithoutDeliveryInput>
 }
 
+export type AuditArchiveReceiptCreateNestedOneWithoutCriticalOperationsInput = {
+  create?: Prisma.XOR<Prisma.AuditArchiveReceiptCreateWithoutCriticalOperationsInput, Prisma.AuditArchiveReceiptUncheckedCreateWithoutCriticalOperationsInput>
+  connectOrCreate?: Prisma.AuditArchiveReceiptCreateOrConnectWithoutCriticalOperationsInput
+  connect?: Prisma.AuditArchiveReceiptWhereUniqueInput
+}
+
+export type AuditArchiveReceiptUpdateOneWithoutCriticalOperationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditArchiveReceiptCreateWithoutCriticalOperationsInput, Prisma.AuditArchiveReceiptUncheckedCreateWithoutCriticalOperationsInput>
+  connectOrCreate?: Prisma.AuditArchiveReceiptCreateOrConnectWithoutCriticalOperationsInput
+  upsert?: Prisma.AuditArchiveReceiptUpsertWithoutCriticalOperationsInput
+  disconnect?: Prisma.AuditArchiveReceiptWhereInput | boolean
+  delete?: Prisma.AuditArchiveReceiptWhereInput | boolean
+  connect?: Prisma.AuditArchiveReceiptWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuditArchiveReceiptUpdateToOneWithWhereWithoutCriticalOperationsInput, Prisma.AuditArchiveReceiptUpdateWithoutCriticalOperationsInput>, Prisma.AuditArchiveReceiptUncheckedUpdateWithoutCriticalOperationsInput>
+}
+
 export type AuditArchiveReceiptCreateWithoutDeliveryInput = {
   id?: string
   batchHash: runtime.Bytes
@@ -562,6 +585,7 @@ export type AuditArchiveReceiptCreateWithoutDeliveryInput = {
   receiptPayload: string
   signature: runtime.Bytes
   verifiedAt?: Date | string
+  criticalOperations?: Prisma.CriticalOperationCreateNestedManyWithoutQualifyingReceiptInput
 }
 
 export type AuditArchiveReceiptUncheckedCreateWithoutDeliveryInput = {
@@ -575,6 +599,7 @@ export type AuditArchiveReceiptUncheckedCreateWithoutDeliveryInput = {
   receiptPayload: string
   signature: runtime.Bytes
   verifiedAt?: Date | string
+  criticalOperations?: Prisma.CriticalOperationUncheckedCreateNestedManyWithoutQualifyingReceiptInput
 }
 
 export type AuditArchiveReceiptCreateOrConnectWithoutDeliveryInput = {
@@ -604,6 +629,7 @@ export type AuditArchiveReceiptUpdateWithoutDeliveryInput = {
   receiptPayload?: Prisma.StringFieldUpdateOperationsInput | string
   signature?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  criticalOperations?: Prisma.CriticalOperationUpdateManyWithoutQualifyingReceiptNestedInput
 }
 
 export type AuditArchiveReceiptUncheckedUpdateWithoutDeliveryInput = {
@@ -617,8 +643,112 @@ export type AuditArchiveReceiptUncheckedUpdateWithoutDeliveryInput = {
   receiptPayload?: Prisma.StringFieldUpdateOperationsInput | string
   signature?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  criticalOperations?: Prisma.CriticalOperationUncheckedUpdateManyWithoutQualifyingReceiptNestedInput
 }
 
+export type AuditArchiveReceiptCreateWithoutCriticalOperationsInput = {
+  id?: string
+  batchHash: runtime.Bytes
+  firstSequence: bigint | number
+  lastSequence: bigint | number
+  terminalEventHash: runtime.Bytes
+  acceptedAt: Date | string
+  keyId: string
+  receiptPayload: string
+  signature: runtime.Bytes
+  verifiedAt?: Date | string
+  delivery: Prisma.AuditExportDeliveryCreateNestedOneWithoutReceiptInput
+}
+
+export type AuditArchiveReceiptUncheckedCreateWithoutCriticalOperationsInput = {
+  id?: string
+  batchId: string
+  destinationId: string
+  batchHash: runtime.Bytes
+  firstSequence: bigint | number
+  lastSequence: bigint | number
+  terminalEventHash: runtime.Bytes
+  acceptedAt: Date | string
+  keyId: string
+  receiptPayload: string
+  signature: runtime.Bytes
+  verifiedAt?: Date | string
+}
+
+export type AuditArchiveReceiptCreateOrConnectWithoutCriticalOperationsInput = {
+  where: Prisma.AuditArchiveReceiptWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditArchiveReceiptCreateWithoutCriticalOperationsInput, Prisma.AuditArchiveReceiptUncheckedCreateWithoutCriticalOperationsInput>
+}
+
+export type AuditArchiveReceiptUpsertWithoutCriticalOperationsInput = {
+  update: Prisma.XOR<Prisma.AuditArchiveReceiptUpdateWithoutCriticalOperationsInput, Prisma.AuditArchiveReceiptUncheckedUpdateWithoutCriticalOperationsInput>
+  create: Prisma.XOR<Prisma.AuditArchiveReceiptCreateWithoutCriticalOperationsInput, Prisma.AuditArchiveReceiptUncheckedCreateWithoutCriticalOperationsInput>
+  where?: Prisma.AuditArchiveReceiptWhereInput
+}
+
+export type AuditArchiveReceiptUpdateToOneWithWhereWithoutCriticalOperationsInput = {
+  where?: Prisma.AuditArchiveReceiptWhereInput
+  data: Prisma.XOR<Prisma.AuditArchiveReceiptUpdateWithoutCriticalOperationsInput, Prisma.AuditArchiveReceiptUncheckedUpdateWithoutCriticalOperationsInput>
+}
+
+export type AuditArchiveReceiptUpdateWithoutCriticalOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  batchHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  firstSequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  lastSequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  terminalEventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  acceptedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  signature?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  delivery?: Prisma.AuditExportDeliveryUpdateOneRequiredWithoutReceiptNestedInput
+}
+
+export type AuditArchiveReceiptUncheckedUpdateWithoutCriticalOperationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  batchId?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationId?: Prisma.StringFieldUpdateOperationsInput | string
+  batchHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  firstSequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  lastSequence?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  terminalEventHash?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  acceptedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string
+  receiptPayload?: Prisma.StringFieldUpdateOperationsInput | string
+  signature?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  verifiedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type AuditArchiveReceiptCountOutputType
+ */
+
+export type AuditArchiveReceiptCountOutputType = {
+  criticalOperations: number
+}
+
+export type AuditArchiveReceiptCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  criticalOperations?: boolean | AuditArchiveReceiptCountOutputTypeCountCriticalOperationsArgs
+}
+
+/**
+ * AuditArchiveReceiptCountOutputType without action
+ */
+export type AuditArchiveReceiptCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditArchiveReceiptCountOutputType
+   */
+  select?: Prisma.AuditArchiveReceiptCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AuditArchiveReceiptCountOutputType without action
+ */
+export type AuditArchiveReceiptCountOutputTypeCountCriticalOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CriticalOperationWhereInput
+}
 
 
 export type AuditArchiveReceiptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -635,6 +765,8 @@ export type AuditArchiveReceiptSelect<ExtArgs extends runtime.Types.Extensions.I
   signature?: boolean
   verifiedAt?: boolean
   delivery?: boolean | Prisma.AuditExportDeliveryDefaultArgs<ExtArgs>
+  criticalOperations?: boolean | Prisma.AuditArchiveReceipt$criticalOperationsArgs<ExtArgs>
+  _count?: boolean | Prisma.AuditArchiveReceiptCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["auditArchiveReceipt"]>
 
 export type AuditArchiveReceiptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -687,6 +819,8 @@ export type AuditArchiveReceiptSelectScalar = {
 export type AuditArchiveReceiptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "batchId" | "destinationId" | "batchHash" | "firstSequence" | "lastSequence" | "terminalEventHash" | "acceptedAt" | "keyId" | "receiptPayload" | "signature" | "verifiedAt", ExtArgs["result"]["auditArchiveReceipt"]>
 export type AuditArchiveReceiptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   delivery?: boolean | Prisma.AuditExportDeliveryDefaultArgs<ExtArgs>
+  criticalOperations?: boolean | Prisma.AuditArchiveReceipt$criticalOperationsArgs<ExtArgs>
+  _count?: boolean | Prisma.AuditArchiveReceiptCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AuditArchiveReceiptIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   delivery?: boolean | Prisma.AuditExportDeliveryDefaultArgs<ExtArgs>
@@ -699,6 +833,7 @@ export type $AuditArchiveReceiptPayload<ExtArgs extends runtime.Types.Extensions
   name: "AuditArchiveReceipt"
   objects: {
     delivery: Prisma.$AuditExportDeliveryPayload<ExtArgs>
+    criticalOperations: Prisma.$CriticalOperationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1108,6 +1243,7 @@ readonly fields: AuditArchiveReceiptFieldRefs;
 export interface Prisma__AuditArchiveReceiptClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   delivery<T extends Prisma.AuditExportDeliveryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditExportDeliveryDefaultArgs<ExtArgs>>): Prisma.Prisma__AuditExportDeliveryClient<runtime.Types.Result.GetResult<Prisma.$AuditExportDeliveryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  criticalOperations<T extends Prisma.AuditArchiveReceipt$criticalOperationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditArchiveReceipt$criticalOperationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CriticalOperationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1547,6 +1683,30 @@ export type AuditArchiveReceiptDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many AuditArchiveReceipts to delete.
    */
   limit?: number
+}
+
+/**
+ * AuditArchiveReceipt.criticalOperations
+ */
+export type AuditArchiveReceipt$criticalOperationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CriticalOperation
+   */
+  select?: Prisma.CriticalOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CriticalOperation
+   */
+  omit?: Prisma.CriticalOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CriticalOperationInclude<ExtArgs> | null
+  where?: Prisma.CriticalOperationWhereInput
+  orderBy?: Prisma.CriticalOperationOrderByWithRelationInput | Prisma.CriticalOperationOrderByWithRelationInput[]
+  cursor?: Prisma.CriticalOperationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CriticalOperationScalarFieldEnum | Prisma.CriticalOperationScalarFieldEnum[]
 }
 
 /**
