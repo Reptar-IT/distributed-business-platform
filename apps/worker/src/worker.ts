@@ -2,12 +2,99 @@ import { Worker, type Job } from "bullmq";
 import {Redis} from "ioredis";
 
 import { prisma } from "@platform/database";
+import { createAuditExporter } from "./modules/audit-exporter.js";
 
 const redisUrl = process.env.REDIS_URL ?? "redis://localhost:6380";
 
 const connection = new Redis(redisUrl, {
   maxRetriesPerRequest: null,
 });
+
+const auditExporterDatabaseUrl = process.env.AUDIT_EXPORTER_DATABASE_URL;
+const auditReceiptVerifierUrl = process.env.AUDIT_RECEIPT_VERIFIER_URL;
+const auditReceiptVerifierServiceToken = process.env.AUDIT_RECEIPT_VERIFIER_SERVICE_TOKEN;
+let auditExporter: ReturnType<typeof createAuditExporter> | undefined;
+let auditExportTimer: NodeJS.Timeout | undefined;
+const lastAuditHealthReport = new Map<string, { state: string; at: number }>();
+const auditHealthReportIntervalMs = 5 * 60 * 1000;
+
+if (auditExporterDatabaseUrl && auditReceiptVerifierUrl && auditReceiptVerifierServiceToken) {
+  const destinations = [];
+  for (const destination of [
+    {
+      id: "physical" as const,
+      prefix: "AUDIT_PHYSICAL_ARCHIVE",
+    },
+    {
+      id: "hosted" as const,
+      prefix: "AUDIT_HOSTED_ARCHIVE",
+    },
+  ]) {
+    const url = process.env[`${destination.prefix}_URL`];
+    const ingestToken = process.env[`${destination.prefix}_INGEST_TOKEN`];
+    if (url && ingestToken) {
+      destinations.push({ id: destination.id, url, ingestToken });
+    } else {
+      console.error(`Audit archive destination is not configured: ${destination.id}`);
+    }
+  }
+  auditExporter = createAuditExporter({
+    exporterDatabaseUrl: auditExporterDatabaseUrl,
+    receiptVerifierUrl: auditReceiptVerifierUrl,
+    receiptVerifierServiceToken: auditReceiptVerifierServiceToken,
+    destinations,
+  });
+  const runAuditExport = async () => {
+    try {
+      const report = await auditExporter?.runOnce();
+      if (!report) return;
+      const now = Date.now();
+      for (const health of report.destinations) {
+        const degraded = health.consecutiveFailures > 0;
+        const state = degraded ? `degraded:${health.lastErrorCategory ?? "UNKNOWN"}` : "healthy";
+        const previous = lastAuditHealthReport.get(health.destinationId);
+        if (!previous || previous.state !== state || now - previous.at >= auditHealthReportIntervalMs) {
+          const entry = {
+            service: "audit-exporter",
+            destinationId: health.destinationId,
+            state: degraded ? "degraded" : "healthy",
+            lastSucceededAt: health.lastSucceededAt,
+            consecutiveFailures: health.consecutiveFailures,
+            lastErrorCategory: health.lastErrorCategory,
+          };
+          if (degraded) console.error(JSON.stringify(entry));
+          else console.info(JSON.stringify(entry));
+          lastAuditHealthReport.set(health.destinationId, { state, at: now });
+        }
+      }
+      for (const destinationId of report.retryMetadataFailures) {
+        const key = `retry-metadata:${destinationId}`;
+        const previous = lastAuditHealthReport.get(key);
+        if (!previous || now - previous.at >= auditHealthReportIntervalMs) {
+          console.error(JSON.stringify({ service: "audit-exporter", destinationId, state: "retry-metadata-persistence-failed" }));
+          lastAuditHealthReport.set(key, { state: "retry-metadata-persistence-failed", at: now });
+        }
+      }
+      for (const destinationId of report.processingFailures) {
+        const key = `processing:${destinationId}`;
+        const previous = lastAuditHealthReport.get(key);
+        if (!previous || now - previous.at >= auditHealthReportIntervalMs) {
+          console.error(JSON.stringify({ service: "audit-exporter", destinationId, state: "delivery-processing-failed", errorCategory: "DESTINATION_PROCESSING_FAILED" }));
+          lastAuditHealthReport.set(key, { state: "delivery-processing-failed", at: now });
+        }
+      }
+    } catch {
+      const now = Date.now();
+      const previous = lastAuditHealthReport.get("polling");
+      if (!previous || now - previous.at >= auditHealthReportIntervalMs) {
+        console.error(JSON.stringify({ service: "audit-exporter", state: "polling-failed", errorCategory: "EXPORT_POLL_FAILED" }));
+        lastAuditHealthReport.set("polling", { state: "polling-failed", at: now });
+      }
+    }
+  };
+  await runAuditExport();
+  auditExportTimer = setInterval(() => { void runAuditExport(); }, 2_000);
+}
 
 const worker = new Worker(
   "platform-jobs",
@@ -43,6 +130,9 @@ worker.on("error", (error) => {
 
 const shutdown = async () => {
   console.log("Shutting down worker...");
+
+  if (auditExportTimer) clearInterval(auditExportTimer);
+  await auditExporter?.close();
 
   await worker.close();
   await connection.quit();
