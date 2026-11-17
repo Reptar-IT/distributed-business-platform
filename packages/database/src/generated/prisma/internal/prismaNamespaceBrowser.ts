@@ -57,7 +57,15 @@ export const ModelName = {
   VentureMembership: 'VentureMembership',
   OrganizationalRole: 'OrganizationalRole',
   RoleAssignment: 'RoleAssignment',
-  RoleVacancy: 'RoleVacancy'
+  RoleVacancy: 'RoleVacancy',
+  AuthorizationAuditStream: 'AuthorizationAuditStream',
+  AuthorizationAuditHead: 'AuthorizationAuditHead',
+  AuthorizationAuditEvent: 'AuthorizationAuditEvent',
+  AuditDestination: 'AuditDestination',
+  AuditExportCheckpoint: 'AuditExportCheckpoint',
+  AuditExportBatch: 'AuditExportBatch',
+  AuditExportDelivery: 'AuditExportDelivery',
+  AuditArchiveReceipt: 'AuditArchiveReceipt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -178,6 +186,132 @@ export const RoleVacancyScalarFieldEnum = {
 } as const
 
 export type RoleVacancyScalarFieldEnum = (typeof RoleVacancyScalarFieldEnum)[keyof typeof RoleVacancyScalarFieldEnum]
+
+
+export const AuthorizationAuditStreamScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt'
+} as const
+
+export type AuthorizationAuditStreamScalarFieldEnum = (typeof AuthorizationAuditStreamScalarFieldEnum)[keyof typeof AuthorizationAuditStreamScalarFieldEnum]
+
+
+export const AuthorizationAuditHeadScalarFieldEnum = {
+  streamId: 'streamId',
+  lastSequence: 'lastSequence',
+  lastEventHash: 'lastEventHash',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthorizationAuditHeadScalarFieldEnum = (typeof AuthorizationAuditHeadScalarFieldEnum)[keyof typeof AuthorizationAuditHeadScalarFieldEnum]
+
+
+export const AuthorizationAuditEventScalarFieldEnum = {
+  id: 'id',
+  streamId: 'streamId',
+  sequence: 'sequence',
+  eventType: 'eventType',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  delegatingHumanId: 'delegatingHumanId',
+  callingClientId: 'callingClientId',
+  permissionCode: 'permissionCode',
+  decision: 'decision',
+  decisionReasonCode: 'decisionReasonCode',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  ventureId: 'ventureId',
+  delegationId: 'delegationId',
+  approvalId: 'approvalId',
+  policyVersion: 'policyVersion',
+  operation: 'operation',
+  outcome: 'outcome',
+  requestId: 'requestId',
+  jobId: 'jobId',
+  correlationId: 'correlationId',
+  occurredAt: 'occurredAt',
+  serializationVersion: 'serializationVersion',
+  hashVersion: 'hashVersion',
+  canonicalPayload: 'canonicalPayload',
+  previousHash: 'previousHash',
+  eventHash: 'eventHash'
+} as const
+
+export type AuthorizationAuditEventScalarFieldEnum = (typeof AuthorizationAuditEventScalarFieldEnum)[keyof typeof AuthorizationAuditEventScalarFieldEnum]
+
+
+export const AuditDestinationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  enabled: 'enabled',
+  createdAt: 'createdAt',
+  lastSucceededAt: 'lastSucceededAt',
+  consecutiveFailures: 'consecutiveFailures',
+  lastErrorCategory: 'lastErrorCategory',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuditDestinationScalarFieldEnum = (typeof AuditDestinationScalarFieldEnum)[keyof typeof AuditDestinationScalarFieldEnum]
+
+
+export const AuditExportCheckpointScalarFieldEnum = {
+  streamId: 'streamId',
+  destinationId: 'destinationId',
+  lastAcknowledgedSequence: 'lastAcknowledgedSequence',
+  lastAcknowledgedEventHash: 'lastAcknowledgedEventHash',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuditExportCheckpointScalarFieldEnum = (typeof AuditExportCheckpointScalarFieldEnum)[keyof typeof AuditExportCheckpointScalarFieldEnum]
+
+
+export const AuditExportBatchScalarFieldEnum = {
+  id: 'id',
+  streamId: 'streamId',
+  firstSequence: 'firstSequence',
+  lastSequence: 'lastSequence',
+  eventCount: 'eventCount',
+  previousHash: 'previousHash',
+  terminalEventHash: 'terminalEventHash',
+  batchHash: 'batchHash',
+  canonicalBatch: 'canonicalBatch',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditExportBatchScalarFieldEnum = (typeof AuditExportBatchScalarFieldEnum)[keyof typeof AuditExportBatchScalarFieldEnum]
+
+
+export const AuditExportDeliveryScalarFieldEnum = {
+  batchId: 'batchId',
+  destinationId: 'destinationId',
+  status: 'status',
+  attempts: 'attempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lastErrorCode: 'lastErrorCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuditExportDeliveryScalarFieldEnum = (typeof AuditExportDeliveryScalarFieldEnum)[keyof typeof AuditExportDeliveryScalarFieldEnum]
+
+
+export const AuditArchiveReceiptScalarFieldEnum = {
+  id: 'id',
+  batchId: 'batchId',
+  destinationId: 'destinationId',
+  batchHash: 'batchHash',
+  firstSequence: 'firstSequence',
+  lastSequence: 'lastSequence',
+  terminalEventHash: 'terminalEventHash',
+  acceptedAt: 'acceptedAt',
+  keyId: 'keyId',
+  receiptPayload: 'receiptPayload',
+  signature: 'signature',
+  verifiedAt: 'verifiedAt'
+} as const
+
+export type AuditArchiveReceiptScalarFieldEnum = (typeof AuditArchiveReceiptScalarFieldEnum)[keyof typeof AuditArchiveReceiptScalarFieldEnum]
 
 
 export const SortOrder = {

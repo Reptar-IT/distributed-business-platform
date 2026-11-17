@@ -89,3 +89,38 @@ export const VacancyStatus = {
 } as const
 
 export type VacancyStatus = (typeof VacancyStatus)[keyof typeof VacancyStatus]
+
+
+export const AuthorizationAuditActorType = {
+  HUMAN: 'HUMAN',
+  MACHINE: 'MACHINE',
+  SYSTEM: 'SYSTEM',
+  BOOTSTRAP: 'BOOTSTRAP'
+} as const
+
+export type AuthorizationAuditActorType = (typeof AuthorizationAuditActorType)[keyof typeof AuthorizationAuditActorType]
+
+
+export const AuthorizationAuditDecision = {
+  ALLOW: 'ALLOW',
+  DENY: 'DENY',
+  NOT_APPLICABLE: 'NOT_APPLICABLE'
+} as const
+
+export type AuthorizationAuditDecision = (typeof AuthorizationAuditDecision)[keyof typeof AuthorizationAuditDecision]
+
+
+export const AuditExportStatus = {
+  PENDING: 'PENDING',
+  ACKNOWLEDGED: 'ACKNOWLEDGED'
+} as const
+
+export type AuditExportStatus = (typeof AuditExportStatus)[keyof typeof AuditExportStatus]
+
+
+export const AuditDestinationType = {
+  PHYSICAL: 'PHYSICAL',
+  HOSTED: 'HOSTED'
+} as const
+
+export type AuditDestinationType = (typeof AuditDestinationType)[keyof typeof AuditDestinationType]

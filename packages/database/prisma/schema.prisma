@@ -65,6 +65,29 @@ enum VacancyStatus {
   CANCELLED
 }
 
+enum AuthorizationAuditActorType {
+  HUMAN
+  MACHINE
+  SYSTEM
+  BOOTSTRAP
+}
+
+enum AuthorizationAuditDecision {
+  ALLOW
+  DENY
+  NOT_APPLICABLE
+}
+
+enum AuditExportStatus {
+  PENDING
+  ACKNOWLEDGED
+}
+
+enum AuditDestinationType {
+  PHYSICAL
+  HOSTED
+}
+
 model PlatformUser {
   id          String     @id @default(uuid()) @db.Uuid
   displayName String
@@ -224,4 +247,157 @@ model RoleVacancy {
   @@index([organizationalRoleId, status])
   @@index([sourceVacancyId])
   @@map("role_vacancies")
+}
+
+model AuthorizationAuditStream {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  head         AuthorizationAuditHead?
+  events       AuthorizationAuditEvent[]
+  checkpoints  AuditExportCheckpoint[]
+  batches      AuditExportBatch[]
+
+  @@map("authorization_audit_streams")
+}
+
+model AuthorizationAuditHead {
+  streamId       String   @id @db.Uuid
+  lastSequence   BigInt   @default(0)
+  lastEventHash  Bytes
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  stream AuthorizationAuditStream @relation(fields: [streamId], references: [id], onDelete: Restrict)
+
+  @@map("authorization_audit_heads")
+}
+
+model AuthorizationAuditEvent {
+  id                       String                       @id @default(uuid()) @db.Uuid
+  streamId                 String                       @db.Uuid
+  sequence                 BigInt
+  eventType                String                       @db.VarChar(100)
+  actorType                AuthorizationAuditActorType
+  actorId                  String                       @db.VarChar(200)
+  delegatingHumanId        String?                      @db.VarChar(200)
+  callingClientId          String?                      @db.VarChar(200)
+  permissionCode           String?                      @db.VarChar(200)
+  decision                 AuthorizationAuditDecision  @default(NOT_APPLICABLE)
+  decisionReasonCode       String?                      @db.VarChar(100)
+  targetType               String?                      @db.VarChar(100)
+  targetId                 String?                      @db.VarChar(200)
+  ventureId                String?                      @db.Uuid
+  delegationId             String?                      @db.Uuid
+  approvalId               String?                      @db.Uuid
+  policyVersion            String?                      @db.VarChar(100)
+  operation                String                       @db.VarChar(100)
+  outcome                  String                       @db.VarChar(100)
+  requestId                String?                      @db.VarChar(200)
+  jobId                    String?                      @db.VarChar(200)
+  correlationId            String?                      @db.VarChar(200)
+  occurredAt               DateTime                     @db.Timestamptz(6)
+  serializationVersion     Int                          @default(1)
+  hashVersion              Int                          @default(1)
+  canonicalPayload         String                       @db.Text
+  previousHash             Bytes
+  eventHash                Bytes
+
+  stream AuthorizationAuditStream @relation(fields: [streamId], references: [id], onDelete: Restrict)
+
+  @@unique([streamId, sequence])
+  @@index([actorType, actorId, occurredAt])
+  @@index([targetType, targetId, occurredAt])
+  @@index([correlationId])
+  @@index([ventureId, occurredAt])
+  @@map("authorization_audit_events")
+}
+
+model AuditDestination {
+  id                  String                @id @db.VarChar(80)
+  type                AuditDestinationType
+  enabled             Boolean               @default(true)
+  createdAt           DateTime              @default(now()) @db.Timestamptz(6)
+  lastSucceededAt     DateTime?             @db.Timestamptz(6)
+  consecutiveFailures Int                   @default(0)
+  lastErrorCategory   String?               @db.VarChar(100)
+  updatedAt           DateTime              @default(now()) @updatedAt @db.Timestamptz(6)
+
+  checkpoints AuditExportCheckpoint[]
+  deliveries  AuditExportDelivery[]
+
+  @@map("audit_destinations")
+}
+
+model AuditExportCheckpoint {
+  streamId                    String   @db.Uuid
+  destinationId               String   @db.VarChar(80)
+  lastAcknowledgedSequence    BigInt   @default(0)
+  lastAcknowledgedEventHash   Bytes
+  updatedAt                   DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  stream      AuthorizationAuditStream @relation(fields: [streamId], references: [id], onDelete: Restrict)
+  destination AuditDestination         @relation(fields: [destinationId], references: [id], onDelete: Restrict)
+
+  @@id([streamId, destinationId])
+  @@map("audit_export_checkpoints")
+}
+
+model AuditExportBatch {
+  id                 String           @id @default(uuid()) @db.Uuid
+  streamId           String           @db.Uuid
+  firstSequence      BigInt
+  lastSequence       BigInt
+  eventCount         Int
+  previousHash       Bytes
+  terminalEventHash  Bytes
+  batchHash          Bytes
+  canonicalBatch     String           @db.Text
+  createdAt          DateTime          @default(now()) @db.Timestamptz(6)
+
+  stream      AuthorizationAuditStream @relation(fields: [streamId], references: [id], onDelete: Restrict)
+  deliveries  AuditExportDelivery[]
+
+  @@unique([streamId, firstSequence])
+  @@map("audit_export_batches")
+}
+
+model AuditExportDelivery {
+  batchId       String            @db.Uuid
+  destinationId String            @db.VarChar(80)
+  status        AuditExportStatus @default(PENDING)
+  attempts      Int               @default(0)
+  nextAttemptAt DateTime          @default(now()) @db.Timestamptz(6)
+  lastErrorCode String?           @db.VarChar(100)
+  createdAt     DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+
+  batch       AuditExportBatch @relation(fields: [batchId], references: [id], onDelete: Restrict)
+  destination AuditDestination @relation(fields: [destinationId], references: [id], onDelete: Restrict)
+  receipt     AuditArchiveReceipt?
+
+  @@id([batchId, destinationId])
+  @@index([destinationId, status, nextAttemptAt])
+  @@map("audit_export_deliveries")
+}
+
+model AuditArchiveReceipt {
+  id                String   @id @default(uuid()) @db.Uuid
+  batchId           String   @db.Uuid
+  destinationId     String   @db.VarChar(80)
+  batchHash         Bytes
+  firstSequence     BigInt
+  lastSequence      BigInt
+  terminalEventHash Bytes
+  acceptedAt        DateTime @db.Timestamptz(6)
+  keyId             String   @db.VarChar(100)
+  receiptPayload    String   @db.Text
+  signature         Bytes
+  verifiedAt        DateTime @default(now()) @db.Timestamptz(6)
+
+  delivery    AuditExportDelivery @relation(fields: [batchId, destinationId], references: [batchId, destinationId], onDelete: Restrict)
+
+  @@unique([batchId, destinationId])
+  @@index([destinationId, acceptedAt])
+  @@map("audit_archive_receipts")
 }
