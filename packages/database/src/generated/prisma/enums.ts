@@ -18,6 +18,15 @@ export const UserStatus = {
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
+export const UserIdentityStatus = {
+  ACTIVE: 'ACTIVE',
+  PENDING_OWNER_RECOVERY: 'PENDING_OWNER_RECOVERY',
+  OWNER_RECOVERY_FAILED: 'OWNER_RECOVERY_FAILED'
+} as const
+
+export type UserIdentityStatus = (typeof UserIdentityStatus)[keyof typeof UserIdentityStatus]
+
+
 export const VentureStatus = {
   DRAFT: 'DRAFT',
   UNDER_REVIEW: 'UNDER_REVIEW',
@@ -174,3 +183,36 @@ export const OwnerBootstrapCredentialStatus = {
 } as const
 
 export type OwnerBootstrapCredentialStatus = (typeof OwnerBootstrapCredentialStatus)[keyof typeof OwnerBootstrapCredentialStatus]
+
+
+export const OwnerRecoveryKitStatus = {
+  ACTIVE: 'ACTIVE',
+  REPLACED: 'REPLACED'
+} as const
+
+export type OwnerRecoveryKitStatus = (typeof OwnerRecoveryKitStatus)[keyof typeof OwnerRecoveryKitStatus]
+
+
+export const OwnerRecoveryCodeStatus = {
+  UNUSED: 'UNUSED',
+  CONSUMED: 'CONSUMED',
+  REVOKED: 'REVOKED'
+} as const
+
+export type OwnerRecoveryCodeStatus = (typeof OwnerRecoveryCodeStatus)[keyof typeof OwnerRecoveryCodeStatus]
+
+
+export const OwnerRecoveryStatus = {
+  INITIATED: 'INITIATED',
+  CHALLENGE_PREPARED: 'CHALLENGE_PREPARED',
+  OIDC_PROOF_VERIFIED: 'OIDC_PROOF_VERIFIED',
+  PREPARED: 'PREPARED',
+  AWAITING_ARCHIVE: 'AWAITING_ARCHIVE',
+  READY_TO_FINALIZE: 'READY_TO_FINALIZE',
+  RECONCILIATION_REQUIRED: 'RECONCILIATION_REQUIRED',
+  FINALIZED: 'FINALIZED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type OwnerRecoveryStatus = (typeof OwnerRecoveryStatus)[keyof typeof OwnerRecoveryStatus]

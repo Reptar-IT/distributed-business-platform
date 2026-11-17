@@ -4,6 +4,7 @@ import cors from "@fastify/cors";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createAuthRoutes } from "./auth.routes.js";
 import { registerPlatformAuthentication } from "./auth.middleware.js";
+import { OwnerRecoveryVerificationError } from "./oidc.service.js";
 import type { IdentityService } from "./identity.service.js";
 import type { OidcService } from "./oidc.service.js";
 import type { PlatformSession, SessionStore } from "./session.store.js";
@@ -42,6 +43,12 @@ function createHarness(identity: { id: string; displayName: string } | null = {
       identity: { issuer: "https://issuer.example.test", subject: "linked-subject" },
       verifiedAt: new Date("2026-11-17T12:00:00Z"),
     })),
+    startOwnerRecovery: vi.fn(async () => ({ authorizationUrl: "http://localhost:8080/recovery" })),
+    completeOwnerRecovery: vi.fn(async () => ({
+      operationId: "00000000-0000-4000-8000-000000000009",
+      identity: { issuer: "https://issuer.example.test", subject: "recovered-subject" },
+      verifiedAt: new Date("2026-11-17T12:00:00Z"),
+    })),
     createIdentityLinkConfirmation: vi.fn(async () => ({
       confirmationId,
       browserBinding: "identity-link-browser-binding",
@@ -70,14 +77,16 @@ function createHarness(identity: { id: string; displayName: string } | null = {
     buildLogoutUrl: vi.fn(async (state) => `http://localhost:8080/logout?state=${state}`),
   };
   const sessions: SessionStore = {
-    create: vi.fn(async (userId) => {
-      session = {
+    create: vi.fn(async (userId, identity) => {
+      const createdSession: PlatformSession = {
         userId,
+        identity,
         csrfToken: "csrf-token-test",
         createdAt: Date.now(),
         absoluteExpiresAt: Date.now() + 12 * 60 * 60 * 1000,
       };
-      return { sessionId: testSessionId, session };
+      session = createdSession;
+      return { sessionId: testSessionId, session: createdSession };
     }),
     get: vi.fn(async (sessionId) => sessionId === testSessionId && session
       ? { session, maxAgeMs: 30 * 60 * 1000 }
@@ -98,6 +107,14 @@ function createHarness(identity: { id: string; displayName: string } | null = {
     complete: vi.fn(async () => "LINKED"),
     reject: vi.fn(async () => undefined),
   };
+  const ownerRecoveryKits = {
+    isActiveOwner: vi.fn(async () => true),
+    issueOrReplace: vi.fn(async () => ({ kit_id: "kit-1", generation: 1, replaced: false, codes: Array.from({ length: 10 }, (_, index) => `code-${index}`) })),
+  };
+  const ownerRecoveryCallback = {
+    complete: vi.fn(async () => "PREPARED"),
+    reject: vi.fn(async () => undefined),
+  };
 
   const app = Fastify({ logger: false });
   app.register(cookie);
@@ -110,9 +127,11 @@ function createHarness(identity: { id: string; displayName: string } | null = {
     redirectUri: "http://localhost:3001/api/v1/auth/callback",
     postLogoutRedirectUri: "http://localhost:5174/",
     identityLinks,
+    ownerRecoveryKits,
+    ownerRecoveryCallback,
   }));
 
-  return { app, oidc, sessions, identities, identityLinks };
+  return { app, oidc, sessions, identities, identityLinks, ownerRecoveryKits, ownerRecoveryCallback };
 }
 
 function cookiePair(setCookie: string | string[] | undefined, prefix: string): string {
@@ -276,9 +295,77 @@ describe("BFF authentication routes", () => {
     expect(sessionResponse.json()).toMatchObject({
       user: { id: "platform-user-1", displayName: "DBP Member" },
       csrfToken: "csrf-token-test",
+      isPlatformOwner: true,
     });
-    expect(sessions.create).toHaveBeenCalledWith("platform-user-1");
+    expect(sessions.create).toHaveBeenCalledWith("platform-user-1", {
+      issuer: "http://localhost:8080/realms/distributed-business-platform",
+      subject: "sub-1",
+    });
     expect(sessionResponse.headers["set-cookie"]).toContain("HttpOnly");
+    await app.close();
+  });
+
+  it("accepts fresh owner-recovery proof without creating an ordinary login session", async () => {
+    const { app, oidc, sessions, ownerRecoveryCallback } = createHarness();
+    const state = "or_state_value_012345678901234567890";
+    const response = await app.inject({ method: "GET", url: `/api/v1/auth/callback?code=opaque-code&state=${state}` });
+    expect(response.statusCode).toBe(302);
+    expect(response.headers.location).toBe("http://localhost:5174/?owner_recovery=processing");
+    expect(oidc.completeOwnerRecovery).toHaveBeenCalledWith(expect.any(URL), state);
+    expect(ownerRecoveryCallback.complete).toHaveBeenCalledWith({
+      operationId: "00000000-0000-4000-8000-000000000009",
+      issuer: "https://issuer.example.test",
+      subject: "recovered-subject",
+      verifiedAt: new Date("2026-11-17T12:00:00Z"),
+    });
+    expect(sessions.create).not.toHaveBeenCalled();
+    await app.close();
+  });
+
+  it("records a bounded OIDC recovery-proof failure without exposing it in the browser response", async () => {
+    const { app, oidc, sessions, ownerRecoveryCallback } = createHarness();
+    vi.mocked(oidc.completeOwnerRecovery).mockRejectedValueOnce(new OwnerRecoveryVerificationError(
+      "00000000-0000-4000-8000-000000000009", "oidc_proof_rejected",
+    ));
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/auth/callback?code=opaque-code&state=or_state_value_012345678901234567890",
+    });
+    expect(response.statusCode).toBe(302);
+    expect(response.headers.location).toBe("http://localhost:5174/?owner_recovery=failed");
+    expect(ownerRecoveryCallback.reject).toHaveBeenCalledWith("00000000-0000-4000-8000-000000000009", "oidc_proof_rejected");
+    expect(sessions.create).not.toHaveBeenCalled();
+    await app.close();
+  });
+
+  it("issues a ten-code kit only from the authenticated owner session with exact origin and CSRF proof", async () => {
+    const { app, ownerRecoveryKits } = createHarness();
+    const sessionCookie = await completeLogin(app);
+    const response = await app.inject({
+      method: "POST",
+      url: "/api/v1/auth/owner/recovery-kit",
+      headers: { cookie: sessionCookie, origin: "http://localhost:5174", "x-csrf-token": "csrf-token-test" },
+      payload: {},
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.json().codes).toHaveLength(10);
+    expect(response.headers["cache-control"]).toBe("no-store");
+    expect(ownerRecoveryKits.issueOrReplace).toHaveBeenCalledWith({
+      platformUserId: "platform-user-1",
+      issuer: "http://localhost:8080/realms/distributed-business-platform",
+      subject: "sub-1",
+    });
+    const deniedOrigin = await app.inject({
+      method: "POST", url: "/api/v1/auth/owner/recovery-kit",
+      headers: { cookie: sessionCookie, origin: "https://attacker.test", "x-csrf-token": "csrf-token-test" }, payload: {},
+    });
+    expect(deniedOrigin.statusCode).toBe(403);
+    const deniedCsrf = await app.inject({
+      method: "POST", url: "/api/v1/auth/owner/recovery-kit",
+      headers: { cookie: sessionCookie, origin: "http://localhost:5174", "x-csrf-token": "wrong" }, payload: {},
+    });
+    expect(deniedCsrf.statusCode).toBe(403);
+    expect(ownerRecoveryKits.issueOrReplace).toHaveBeenCalledOnce();
     await app.close();
   });
 

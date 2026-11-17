@@ -69,16 +69,34 @@ describe("identity and OIDC services", () => {
     const findUnique = vi.fn()
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce({
+        status: "ACTIVE",
         user: { id: "user-2", displayName: "Suspended", status: "SUSPENDED" },
         verification: { id: "verified-link-2" },
+        ownerRecoveryVerification: null,
       })
       .mockResolvedValueOnce({
+        status: "ACTIVE",
         user: { id: "user-3", displayName: "Active", status: "ACTIVE" },
         verification: { id: "verified-link-3" },
+        ownerRecoveryVerification: null,
       })
       .mockResolvedValueOnce({
+        status: "ACTIVE",
         user: { id: "user-4", displayName: "Unverified", status: "ACTIVE" },
         verification: null,
+        ownerRecoveryVerification: null,
+      })
+      .mockResolvedValueOnce({
+        status: "PENDING_OWNER_RECOVERY",
+        user: { id: "user-5", displayName: "Pending", status: "ACTIVE" },
+        verification: null,
+        ownerRecoveryVerification: { activatedAt: null },
+      })
+      .mockResolvedValueOnce({
+        status: "ACTIVE",
+        user: { id: "user-6", displayName: "Recovered", status: "ACTIVE" },
+        verification: null,
+        ownerRecoveryVerification: { activatedAt: new Date() },
       });
     const prisma = {
       userIdentity: { findUnique },
@@ -93,9 +111,11 @@ describe("identity and OIDC services", () => {
       displayName: "Active",
     });
     expect(await identities.resolveActiveIdentity("issuer", "unverified-sub")).toBeNull();
+    expect(await identities.resolveActiveIdentity("issuer", "pending-sub")).toBeNull();
+    expect(await identities.resolveActiveIdentity("issuer", "recovered-sub")).toEqual({ id: "user-6", displayName: "Recovered" });
     expect(findUnique).toHaveBeenCalledWith({
       where: { issuer_subject: { issuer: "issuer", subject: "active-sub" } },
-      include: { user: true, verification: true },
+      include: { user: true, verification: true, ownerRecoveryVerification: true },
     });
   });
 
@@ -213,6 +233,67 @@ describe("identity and OIDC services", () => {
       expectedNonce: "nonce_value_012345678901234567890",
     });
     await expect(service.completeIdentityLink(new URL("https://api.example.test/callback"), state)).rejects.toThrow("Expired identity-link transaction");
+  });
+
+  it("binds owner-recovery OIDC proof to one operation with fresh Authorization Code and S256 PKCE", async () => {
+    const redis = new MemoryRedis();
+    const service = createOidcService({
+      redis: redis as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    const operationId = "00000000-0000-4000-8000-000000000009";
+    await service.startOwnerRecovery(operationId);
+    const state = "or_state_value_012345678901234567890";
+    const transaction = JSON.parse(redis.values.get(`dbp:oidc:owner-recovery:${state}`)!);
+    expect(transaction).toMatchObject({ operationId, nonce: "nonce_value_012345678901234567890", codeVerifier: "a-long-pkce-code-verifier-value" });
+    expect(transaction).not.toHaveProperty("code");
+    expect(oidcMocks.buildAuthorizationUrl).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
+      redirect_uri: "https://api.example.test/api/v1/auth/callback",
+      state,
+      nonce: "nonce_value_012345678901234567890",
+      code_challenge_method: "S256",
+      prompt: "login",
+      max_age: "0",
+    }));
+    oidcMocks.authorizationCodeGrant.mockResolvedValueOnce({ claims: () => ({
+      iss: "https://idp.example.test/realm",
+      sub: "recovery-subject",
+      azp: "dbp-web",
+      auth_time: Math.floor(Date.now() / 1000),
+    }) });
+    const proof = await service.completeOwnerRecovery(
+      new URL(`https://api.example.test/api/v1/auth/callback?code=opaque&state=${state}`),
+      state,
+    );
+    expect(proof).toEqual({
+      operationId,
+      identity: { issuer: "https://idp.example.test/realm", subject: "recovery-subject" },
+      verifiedAt: expect.any(Date),
+    });
+    await expect(service.completeOwnerRecovery(new URL("https://api.example.test/api/v1/auth/callback"), state))
+      .rejects.toThrow("Expired owner-recovery transaction");
+  });
+
+  it("rejects stale or differently authorized owner-recovery OIDC tokens", async () => {
+    const service = createOidcService({
+      redis: new MemoryRedis() as unknown as Redis,
+      issuer: "https://idp.example.test/realm",
+      clientId: "dbp-web",
+      clientSecret: "synthetic-test-secret",
+      redirectUri: "https://api.example.test/api/v1/auth/callback",
+      postLogoutRedirectUri: "https://app.example.test/",
+    });
+    await service.startOwnerRecovery("00000000-0000-4000-8000-000000000009");
+    const state = "or_state_value_012345678901234567890";
+    oidcMocks.authorizationCodeGrant.mockResolvedValueOnce({ claims: () => ({
+      iss: "https://idp.example.test/realm", sub: "recovery-subject", azp: "another-client", auth_time: Math.floor(Date.now() / 1000),
+    }) });
+    await expect(service.completeOwnerRecovery(new URL(`https://api.example.test/api/v1/auth/callback?state=${state}`), state))
+      .rejects.toMatchObject({ operationId: "00000000-0000-4000-8000-000000000009", outcomeCode: "oidc_proof_rejected" });
   });
 
   it("rejects identity-link proof without recent auth_time", async () => {

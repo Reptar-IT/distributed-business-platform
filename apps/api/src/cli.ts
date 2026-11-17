@@ -8,6 +8,8 @@ import { Redis } from "ioredis";
 import { createIdentityLinkOperatorService } from "./modules/identity-link/identity-link.service.js";
 import { createOidcService } from "./modules/auth/oidc.service.js";
 import { createPlatformOwnerOperatorService } from "./modules/owner/owner-bootstrap.service.js";
+import { createOwnerRecoveryOperatorService } from "./modules/owner/owner-recovery.service.js";
+import { parseRecoveryVerifierKeyring } from "./modules/owner/recovery-codes.js";
 import { readSecretNoEcho } from "./modules/owner/secure-terminal.js";
 
 const USER_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -135,6 +137,65 @@ async function showOwnerBootstrapStatus(credentialId: string): Promise<void> {
   }
 }
 
+function ownerRecoveryKeyring() {
+  const encodedKeys = process.env.OWNER_RECOVERY_VERIFIER_KEYS_JSON;
+  const currentKeyId = process.env.OWNER_RECOVERY_CURRENT_VERIFIER_KEY_ID;
+  if (!encodedKeys || !currentKeyId) throw new Error("Owner-recovery CLI configuration is incomplete");
+  return parseRecoveryVerifierKeyring(encodedKeys, currentKeyId);
+}
+
+async function beginOwnerRecovery(): Promise<void> {
+  const databaseUrl = process.env.OWNER_RECOVERY_OPERATOR_DATABASE_URL;
+  const issuer = process.env.OIDC_ISSUER_URL;
+  const clientId = process.env.OIDC_CLIENT_ID;
+  const clientSecret = process.env.OIDC_CLIENT_SECRET;
+  const redirectUri = process.env.OIDC_REDIRECT_URI;
+  const redisUrl = process.env.REDIS_URL;
+  if (!databaseUrl || !issuer || !clientId || !clientSecret || !redirectUri || !redisUrl) {
+    throw new Error("Owner-recovery CLI configuration is incomplete");
+  }
+  const keyring = ownerRecoveryKeyring();
+  const terminal = createOwnerRecoveryOperatorService(databaseUrl, keyring);
+  const redis = new Redis(redisUrl, { maxRetriesPerRequest: 1 });
+  let code = "";
+  try {
+    code = await readSecretNoEcho(input, output, "Enter one unused recovery code (input hidden): ");
+    const operationId = await terminal.begin({ code, issuer });
+    const oidc = createOidcService({
+      redis,
+      issuer,
+      clientId,
+      clientSecret,
+      redirectUri,
+      postLogoutRedirectUri: redirectUri,
+    });
+    const { authorizationUrl } = await oidc.startOwnerRecovery(operationId);
+    await terminal.markChallengePrepared(operationId);
+    output.write(`Recovery operation ${operationId} is waiting for fresh identity proof.\nOpen this URL in the identity holder's browser within five minutes:\n${authorizationUrl}\n`);
+  } finally {
+    code = "";
+    keyring.keys.forEach((key) => key.fill(0));
+    await redis.quit();
+    await terminal.close();
+  }
+}
+
+async function showOwnerRecoveryStatus(operationId: string): Promise<void> {
+  if (!CREDENTIAL_ID_PATTERN.test(operationId)) throw new Error("A valid recovery operation UUID is required");
+  const databaseUrl = process.env.OWNER_RECOVERY_OPERATOR_DATABASE_URL;
+  if (!databaseUrl) throw new Error("Owner-recovery CLI configuration is incomplete");
+  const keyring = ownerRecoveryKeyring();
+  const terminal = createOwnerRecoveryOperatorService(databaseUrl, keyring);
+  try {
+    const status = await terminal.status(operationId);
+    if (!status) throw new Error("Recovery operation was not found");
+    output.write(`${JSON.stringify(status, null, 2)}\n`);
+  } finally {
+    keyring.keys.forEach((key) => key.fill(0));
+    await terminal.close();
+  }
+}
+
 try {
   const [command, argument, maybeUserId, ...extra] = process.argv.slice(2);
   if (extra.length > 0) throw new Error("Invalid command arguments");
@@ -142,6 +203,8 @@ try {
   else if (command === "owner-credential" && argument === "issue" && maybeUserId) await issueOwnerCredential(maybeUserId);
   else if (command === "owner-bootstrap" && argument === "run" && maybeUserId) await bootstrapOwner(maybeUserId);
   else if (command === "owner-bootstrap" && argument === "status" && maybeUserId) await showOwnerBootstrapStatus(maybeUserId);
+  else if (command === "owner-recovery" && argument === "run" && !maybeUserId) await beginOwnerRecovery();
+  else if (command === "owner-recovery" && argument === "status" && maybeUserId) await showOwnerRecoveryStatus(maybeUserId);
   else throw new Error("Invalid platform CLI command");
 } catch {
   output.write("Operation failed or was rejected. No secret values are displayed.\n");

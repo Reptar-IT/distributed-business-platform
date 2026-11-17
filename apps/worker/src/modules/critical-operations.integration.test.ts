@@ -1,4 +1,4 @@
-import { generateKeyPairSync, randomUUID } from "node:crypto";
+import { createHmac, generateKeyPairSync, randomBytes, randomUUID } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -366,6 +366,172 @@ suite("critical-operation PostgreSQL 17 and archive integration", () => {
         `SELECT count(*)::text AS count FROM public.authorization_audit_events WHERE "eventType"='platform-owner-designation-activated' AND "correlationId"=$1`,[operationId],
       );
       expect(audit.rows[0]!.count).toBe("1");
+
+      const recoveryOperatorUrl=await roleUrl("dbp_owner_recovery_operator_test","dbp_owner_recovery_operator");
+      const recoveryCallbackUrl=await roleUrl("dbp_owner_recovery_callback_test","dbp_owner_recovery_callback");
+      const recoveryOperator=new Pool({connectionString:recoveryOperatorUrl,max:2});
+      const recoveryCallback=new Pool({connectionString:recoveryCallbackUrl,max:1});
+      const verifierKey=Buffer.alloc(32,0x6d);
+      const makeKit=()=>{
+        const codes=Array.from({length:10},()=>`dbp-rc-v1.${randomBytes(32).toString("base64url")}`);
+        return {
+          codes,
+          kitId:randomUUID(),
+          records:codes.map((code)=>({
+            id:randomUUID(),keyId:"recovery-test-v1",
+            verifier:createHmac("sha256",verifierKey).update("DBP-OWNER-RECOVERY-CODE-v1\0","utf8").update(code,"utf8").digest("hex"),
+          })),
+        };
+      };
+      const issueKit=async(material:ReturnType<typeof makeKit>)=>runtime.query(
+        "SELECT * FROM public.issue_or_replace_owner_recovery_kit($1::uuid,$2,$3,$4::uuid,$5::jsonb)",
+        [userId,"https://issuer.example.test/realm","bootstrap-owner-subject",material.kitId,JSON.stringify(material.records)],
+      );
+      try{
+        const originalKit=makeKit();
+        const originalIssue=await issueKit(originalKit);
+        expect(originalIssue.rows[0]).toMatchObject({generation:1,replaced:false});
+        expect((await admin.query<{count:string}>(`SELECT count(*)::text AS count FROM public.owner_recovery_codes WHERE "kitId"=$1`,[originalKit.kitId])).rows[0]!.count).toBe("10");
+
+        const replacement=makeKit();
+        await admin.query(`CREATE FUNCTION public.test_fail_owner_recovery_kit_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+          BEGIN IF NEW.\"eventType\"='owner-recovery-kit-replaced' THEN RAISE EXCEPTION 'injected recovery-kit audit failure'; END IF; RETURN NEW; END $$`);
+        await admin.query(`CREATE TRIGGER test_fail_owner_recovery_kit_audit BEFORE INSERT ON public.authorization_audit_events FOR EACH ROW EXECUTE FUNCTION public.test_fail_owner_recovery_kit_audit()`);
+        try{await expect(issueKit(replacement)).rejects.toThrow(/injected recovery-kit audit failure/);}
+        finally{
+          await admin.query("DROP TRIGGER test_fail_owner_recovery_kit_audit ON public.authorization_audit_events");
+          await admin.query("DROP FUNCTION public.test_fail_owner_recovery_kit_audit()");
+        }
+        const afterFailedReplacement=await admin.query<{active:string;unused:string}>(
+          `SELECT (SELECT count(*)::text FROM public.owner_recovery_kits WHERE status='ACTIVE') AS active,
+                  (SELECT count(*)::text FROM public.owner_recovery_codes WHERE \"kitId\"=$1 AND status='UNUSED') AS unused`,[originalKit.kitId]);
+        expect(afterFailedReplacement.rows[0]).toEqual({active:"1",unused:"10"});
+
+        const replacementIssue=await issueKit(replacement);
+        expect(replacementIssue.rows[0]).toMatchObject({generation:2,replaced:true});
+        expect((await admin.query<{count:string}>(`SELECT count(*)::text AS count FROM public.owner_recovery_codes WHERE "kitId"=$1 AND status='REVOKED'`,[originalKit.kitId])).rows[0]!.count).toBe("10");
+        expect((await admin.query("SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='owner_recovery_codes' AND column_name IN ('code','plaintext')")).rowCount).toBe(0);
+
+        const recoveryOperationId=randomUUID();
+        const candidate=(code:string)=>JSON.stringify([{keyId:"recovery-test-v1",verifier:createHmac("sha256",verifierKey)
+          .update("DBP-OWNER-RECOVERY-CODE-v1\0","utf8").update(code,"utf8").digest("hex")}]);
+        const invalid=await recoveryOperator.query<{begin_platform_owner_recovery:string|null}>(
+          "SELECT public.begin_platform_owner_recovery($1::uuid,$2,$3::jsonb) AS begin_platform_owner_recovery",
+          [randomUUID(),"https://issuer.example.test/realm",candidate(`dbp-rc-v1.${randomBytes(32).toString("base64url")}`)],
+        );
+        expect(invalid.rows[0]!.begin_platform_owner_recovery).toBeNull();
+
+        const validCandidates=candidate(replacement.codes[0]!);
+        const started=await Promise.all([
+          recoveryOperator.query<{begin_platform_owner_recovery:string|null}>("SELECT public.begin_platform_owner_recovery($1::uuid,$2,$3::jsonb) AS begin_platform_owner_recovery",[recoveryOperationId,"https://issuer.example.test/realm",validCandidates]),
+          recoveryOperator.query<{begin_platform_owner_recovery:string|null}>("SELECT public.begin_platform_owner_recovery($1::uuid,$2,$3::jsonb) AS begin_platform_owner_recovery",[randomUUID(),"https://issuer.example.test/realm",validCandidates]),
+        ]);
+        const acceptedOperation=started.map((result)=>result.rows[0]!.begin_platform_owner_recovery);
+        expect(acceptedOperation).toEqual([recoveryOperationId,recoveryOperationId]);
+        await recoveryOperator.query("SELECT public.mark_platform_owner_recovery_challenge_prepared($1::uuid)",[recoveryOperationId]);
+        await expect(recoveryOperator.query("SELECT 1 FROM public.owner_recovery_codes")).rejects.toThrow();
+        const operatorPrivilege=await admin.query<{can_inspect_codes:boolean;can_issue_kit:boolean}>(
+          `SELECT has_table_privilege('dbp_owner_recovery_operator_test','public.owner_recovery_codes','SELECT') AS can_inspect_codes,
+                  has_function_privilege('dbp_owner_recovery_operator_test','public.issue_or_replace_owner_recovery_kit(uuid,text,text,uuid,jsonb)','EXECUTE') AS can_issue_kit`);
+        expect(operatorPrivilege.rows[0]).toEqual({can_inspect_codes:false,can_issue_kit:false});
+        await expect(runtime.query("SELECT 1 FROM public.owner_recovery_codes")).rejects.toThrow();
+        const helperPrivilege=await admin.query<{runtime_can_lock_owner:boolean;operator_can_lock_owner:boolean;callback_can_inspect_codes:boolean}>(
+          `SELECT has_function_privilege('dbp_critical_runtime_test','public.lock_active_platform_owner()','EXECUTE') AS runtime_can_lock_owner,
+                  has_function_privilege('dbp_owner_recovery_operator_test','public.lock_active_platform_owner()','EXECUTE') AS operator_can_lock_owner,
+                  has_table_privilege('dbp_owner_recovery_callback_test','public.owner_recovery_codes','SELECT') AS callback_can_inspect_codes`);
+        expect(helperPrivilege.rows[0]).toEqual({runtime_can_lock_owner:false,operator_can_lock_owner:false,callback_can_inspect_codes:false});
+
+        const newSubject="owner-recovery-subject";
+        const verifiedAt=new Date();
+        await admin.query(`CREATE FUNCTION public.test_fail_owner_recovery_pending_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+          BEGIN IF NEW.\"eventType\"='owner-recovery-pending-identity-created' THEN RAISE EXCEPTION 'injected pending-identity audit failure'; END IF; RETURN NEW; END $$`);
+        await admin.query(`CREATE TRIGGER test_fail_owner_recovery_pending_audit BEFORE INSERT ON public.authorization_audit_events FOR EACH ROW EXECUTE FUNCTION public.test_fail_owner_recovery_pending_audit()`);
+        try{
+          await expect(recoveryCallback.query("SELECT public.complete_platform_owner_recovery($1::uuid,$2,$3,$4::timestamptz,$5::uuid)",
+            [recoveryOperationId,"https://issuer.example.test/realm",newSubject,verifiedAt,randomUUID()])).rejects.toThrow(/injected pending-identity audit failure/);
+        }finally{
+          await admin.query("DROP TRIGGER test_fail_owner_recovery_pending_audit ON public.authorization_audit_events");
+          await admin.query("DROP FUNCTION public.test_fail_owner_recovery_pending_audit()");
+        }
+        expect((await admin.query("SELECT 1 FROM public.user_identities WHERE subject=$1",[newSubject])).rowCount).toBe(0);
+        expect((await admin.query<{status:string}>("SELECT status::text FROM public.owner_recovery_operations WHERE id=$1",[recoveryOperationId])).rows[0]!.status).toBe("CHALLENGE_PREPARED");
+        await recoveryCallback.query("SELECT public.complete_platform_owner_recovery($1::uuid,$2,$3,$4::timestamptz,$5::uuid)",
+          [recoveryOperationId,"https://issuer.example.test/realm",newSubject,verifiedAt,randomUUID()]);
+        const pendingIdentity=await admin.query<{status:string;email:string|null;user_id:string;recovery_operation:string}> (
+          `SELECT status::text,email,\"userId\" AS user_id,\"ownerRecoveryOperationId\" AS recovery_operation FROM public.user_identities WHERE subject=$1`,[newSubject]);
+        expect(pendingIdentity.rows[0]).toEqual({status:"PENDING_OWNER_RECOVERY",email:null,user_id:userId,recovery_operation:recoveryOperationId});
+        expect((await admin.query("SELECT 1 FROM public.user_identity_verifications WHERE subject=$1",[newSubject])).rowCount).toBe(0);
+        expect((await admin.query("SELECT status::text FROM public.owner_recovery_codes WHERE id=$1",[replacement.records[0]!.id])).rows[0]!.status).toBe("CONSUMED");
+        await expect(recoveryCallback.query("SELECT public.complete_platform_owner_recovery($1::uuid,$2,$3,$4::timestamptz,$5::uuid)",
+          [recoveryOperationId,"https://issuer.example.test/realm",newSubject,verifiedAt,randomUUID()])).resolves.toBeTruthy();
+
+        await service.advance();
+        await service.advance();
+        const awaiting=await admin.query<{status:string;recovery_status:string;identity_status:string}>(
+          `SELECT op.status::text AS status,r.status::text AS recovery_status,u.status::text AS identity_status
+             FROM public.critical_operations op JOIN public.owner_recovery_operations r ON r.\"criticalOperationId\"=op.id
+             JOIN public.user_identities u ON u.\"ownerRecoveryOperationId\"=r.id WHERE r.id=$1`,[recoveryOperationId]);
+        expect(awaiting.rows[0]).toEqual({status:"AWAITING_ARCHIVE",recovery_status:"AWAITING_ARCHIVE",identity_status:"PENDING_OWNER_RECOVERY"});
+        expect((await runtime.query("SELECT public.resolve_active_platform_owner($1::uuid) AS designation",[userId])).rows[0]!.designation)
+          .toBe((await admin.query<{id:string}>("SELECT id FROM public.platform_owner_designations WHERE status='ACTIVE'")).rows[0]!.id);
+
+        await deliverPhysical();
+        await service.advance();
+        const ready=await admin.query<{recovery_status:string;identity_status:string;critical_status:string}>(
+          `SELECT r.status::text AS recovery_status,u.status::text AS identity_status,op.status::text AS critical_status
+             FROM public.owner_recovery_operations r JOIN public.user_identities u ON u.\"ownerRecoveryOperationId\"=r.id
+             JOIN public.critical_operations op ON op.id=r.\"criticalOperationId\" WHERE r.id=$1`,[recoveryOperationId]);
+        expect(ready.rows[0]).toEqual({recovery_status:"READY_TO_FINALIZE",identity_status:"PENDING_OWNER_RECOVERY",critical_status:"READY_TO_ACTIVATE"});
+        await admin.query(`CREATE FUNCTION public.test_fail_owner_recovery_final_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+          BEGIN IF NEW.\"eventType\"='owner-recovery-finalized' THEN RAISE EXCEPTION 'injected recovery-finalization audit failure'; END IF; RETURN NEW; END $$`);
+        await admin.query(`CREATE TRIGGER test_fail_owner_recovery_final_audit BEFORE INSERT ON public.authorization_audit_events FOR EACH ROW EXECUTE FUNCTION public.test_fail_owner_recovery_final_audit()`);
+        try{await expect(service.advance()).rejects.toThrow(/injected recovery-finalization audit failure/);}
+        finally{
+          await admin.query("DROP TRIGGER test_fail_owner_recovery_final_audit ON public.authorization_audit_events");
+          await admin.query("DROP FUNCTION public.test_fail_owner_recovery_final_audit()");
+        }
+        const finalRollback=await admin.query<{recovery_status:string;identity_status:string;critical_status:string}>(
+          `SELECT r.status::text AS recovery_status,u.status::text AS identity_status,op.status::text AS critical_status
+             FROM public.owner_recovery_operations r JOIN public.user_identities u ON u.\"ownerRecoveryOperationId\"=r.id
+             JOIN public.critical_operations op ON op.id=r.\"criticalOperationId\" WHERE r.id=$1`,[recoveryOperationId]);
+        expect(finalRollback.rows[0]).toEqual({recovery_status:"READY_TO_FINALIZE",identity_status:"PENDING_OWNER_RECOVERY",critical_status:"READY_TO_ACTIVATE"});
+        await service.advance();
+        const finalized=await admin.query<{recovery_status:string;identity_status:string;critical_status:string;activated:boolean}>(
+          `SELECT r.status::text AS recovery_status,u.status::text AS identity_status,op.status::text AS critical_status,(v.\"activatedAt\" IS NOT NULL) AS activated
+             FROM public.owner_recovery_operations r JOIN public.user_identities u ON u.\"ownerRecoveryOperationId\"=r.id
+             JOIN public.critical_operations op ON op.id=r.\"criticalOperationId\"
+             JOIN public.owner_recovery_verifications v ON v.\"recoveryOperationId\"=r.id WHERE r.id=$1`,[recoveryOperationId]);
+        expect(finalized.rows[0]).toEqual({recovery_status:"FINALIZED",identity_status:"ACTIVE",critical_status:"COMPLETED",activated:true});
+        expect((await runtime.query("SELECT public.resolve_active_platform_owner($1::uuid) AS designation",[userId])).rows[0]!.designation)
+          .toBe((await admin.query<{id:string}>("SELECT id FROM public.platform_owner_designations WHERE status='ACTIVE'")).rows[0]!.id);
+        const recoveryAudit=await admin.query<{events:string}>(
+          `SELECT count(*)::text AS events FROM public.authorization_audit_events WHERE \"correlationId\" IN ($1::text,(SELECT \"criticalOperationId\"::text FROM public.owner_recovery_operations WHERE id=$1::uuid)) AND \"eventType\" IN ('owner-recovery-initiated','owner-recovery-code-consumed','owner-recovery-challenge-prepared','owner-recovery-oidc-proof','owner-recovery-pending-identity-created','owner-recovery-critical-operation-prepared','owner-recovery-awaiting-archive','owner-recovery-archive-qualified','owner-recovery-finalized')`,[recoveryOperationId]);
+        expect(Number(recoveryAudit.rows[0]!.events)).toBeGreaterThanOrEqual(9);
+
+        const expiredOperationId=randomUUID();
+        const expiredStart=await recoveryOperator.query<{begin_platform_owner_recovery:string|null}>(
+          "SELECT public.begin_platform_owner_recovery($1::uuid,$2,$3::jsonb) AS begin_platform_owner_recovery",
+          [expiredOperationId,"https://issuer.example.test/realm",candidate(replacement.codes[1]!)],
+        );
+        expect(expiredStart.rows[0]!.begin_platform_owner_recovery).toBe(expiredOperationId);
+        await recoveryOperator.query("SELECT public.mark_platform_owner_recovery_challenge_prepared($1::uuid)",[expiredOperationId]);
+        await admin.query("ALTER TABLE public.owner_recovery_operations DISABLE TRIGGER owner_recovery_operations_restricted_write");
+        try{await admin.query("UPDATE public.owner_recovery_operations SET \"expiresAt\"=clock_timestamp()-interval '1 second' WHERE id=$1",[expiredOperationId]);}
+        finally{await admin.query("ALTER TABLE public.owner_recovery_operations ENABLE TRIGGER owner_recovery_operations_restricted_write");}
+        const expiryWorker=new Pool({connectionString:criticalUrl,max:1});
+        try{expect((await expiryWorker.query("SELECT public.expire_platform_owner_recoveries(100) AS count")).rows[0]!.count).toBe(1);}
+        finally{await expiryWorker.end();}
+        expect((await recoveryOperator.query("SELECT * FROM public.get_platform_owner_recovery_status($1::uuid)",[expiredOperationId])).rows[0]!.recovery_status).toBe("EXPIRED");
+        expect((await admin.query("SELECT status::text FROM public.owner_recovery_codes WHERE id=$1",[replacement.records[1]!.id])).rows[0]!.status).toBe("CONSUMED");
+        const replay=await recoveryOperator.query<{begin_platform_owner_recovery:string|null}>(
+          "SELECT public.begin_platform_owner_recovery($1::uuid,$2,$3::jsonb) AS begin_platform_owner_recovery",
+          [randomUUID(),"https://issuer.example.test/realm",candidate(replacement.codes[1]!)],
+        );
+        expect(replay.rows[0]!.begin_platform_owner_recovery).toBeNull();
+      }finally{
+        verifierKey.fill(0);
+        await Promise.all([recoveryOperator.end(),recoveryCallback.end()]);
+      }
     }finally{
       await Promise.all([ownerOperator.end(),identityOperator.end(),identityCallback.end()]);
     }

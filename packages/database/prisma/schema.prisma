@@ -13,6 +13,12 @@ enum UserStatus {
   DEACTIVATED
 }
 
+enum UserIdentityStatus {
+  ACTIVE
+  PENDING_OWNER_RECOVERY
+  OWNER_RECOVERY_FAILED
+}
+
 enum VentureStatus {
   DRAFT
   UNDER_REVIEW
@@ -123,6 +129,30 @@ enum OwnerBootstrapCredentialStatus {
   REVOKED
 }
 
+enum OwnerRecoveryKitStatus {
+  ACTIVE
+  REPLACED
+}
+
+enum OwnerRecoveryCodeStatus {
+  UNUSED
+  CONSUMED
+  REVOKED
+}
+
+enum OwnerRecoveryStatus {
+  INITIATED
+  CHALLENGE_PREPARED
+  OIDC_PROOF_VERIFIED
+  PREPARED
+  AWAITING_ARCHIVE
+  READY_TO_FINALIZE
+  RECONCILIATION_REQUIRED
+  FINALIZED
+  FAILED
+  EXPIRED
+}
+
 model PlatformUser {
   id          String     @id @default(uuid()) @db.Uuid
   displayName String
@@ -134,6 +164,9 @@ model PlatformUser {
   identityVerifications UserIdentityVerification[]
   ownerDesignations PlatformOwnerDesignation[]
   ownerBootstrapCredentials OwnerBootstrapCredential[]
+  ownerRecoveryKits OwnerRecoveryKit[]
+  ownerRecoveryOperations OwnerRecoveryOperation[]
+  ownerRecoveryVerifications OwnerRecoveryVerification[]
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -148,11 +181,16 @@ model UserIdentity {
   subject       String
   email         String?
   emailVerified Boolean  @default(false)
+  status        UserIdentityStatus @default(ACTIVE)
+  ownerRecoveryOperationId String? @unique @db.Uuid
 
   user          PlatformUser @relation(fields: [userId], references: [id], onDelete: Cascade)
   verification  UserIdentityVerification?
   bootstrapCredentials OwnerBootstrapCredential[]
   ownerDesignations PlatformOwnerDesignation[]
+  ownerRecoveryOperation OwnerRecoveryOperation? @relation(fields: [ownerRecoveryOperationId], references: [id], onDelete: Restrict)
+  ownerRecoveryVerification OwnerRecoveryVerification?
+  ownerRecoveryKits OwnerRecoveryKit[] @relation("OwnerRecoveryKitAuthIdentity")
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -228,6 +266,92 @@ model OwnerBootstrapCredential {
   @@map("owner_bootstrap_credentials")
 }
 
+model OwnerRecoveryKit {
+  id                      String @id @db.Uuid
+  designationId           String @db.Uuid
+  platformUserId          String @db.Uuid
+  authenticatedIdentityId String @db.Uuid
+  authenticatedIssuer     String
+  authenticatedSubject    String
+  generation              Int
+  status                  OwnerRecoveryKitStatus @default(ACTIVE)
+  issuedAt                DateTime @default(now()) @db.Timestamptz(6)
+  replacedAt              DateTime? @db.Timestamptz(6)
+  designation             PlatformOwnerDesignation @relation(fields: [designationId], references: [id], onDelete: Restrict)
+  user                    PlatformUser @relation(fields: [platformUserId], references: [id], onDelete: Restrict)
+  authenticatedIdentity   UserIdentity @relation("OwnerRecoveryKitAuthIdentity", fields: [authenticatedIdentityId, platformUserId, authenticatedIssuer, authenticatedSubject], references: [id, userId, issuer, subject], onDelete: Restrict)
+  codes                   OwnerRecoveryCode[]
+
+  @@unique([designationId, generation])
+  @@index([platformUserId, issuedAt])
+  @@map("owner_recovery_kits")
+}
+
+model OwnerRecoveryCode {
+  id                       String @id @db.Uuid
+  kitId                    String @db.Uuid
+  verifierKeyId            String @db.VarChar(100)
+  verifier                 Bytes
+  status                   OwnerRecoveryCodeStatus @default(UNUSED)
+  consumedAt               DateTime? @db.Timestamptz(6)
+  usedByRecoveryOperationId String? @unique @db.Uuid
+  createdAt                DateTime @default(now()) @db.Timestamptz(6)
+  kit                      OwnerRecoveryKit @relation(fields: [kitId], references: [id], onDelete: Restrict)
+  usedByRecovery           OwnerRecoveryOperation? @relation("OwnerRecoveryCodeUse", fields: [usedByRecoveryOperationId], references: [id], onDelete: Restrict)
+  recovery                OwnerRecoveryOperation? @relation("OwnerRecoveryCode")
+
+  @@unique([verifierKeyId, verifier])
+  @@index([kitId, status])
+  @@map("owner_recovery_codes")
+}
+
+model OwnerRecoveryOperation {
+  id                  String @id @db.Uuid
+  designationId       String @db.Uuid
+  platformUserId      String @db.Uuid
+  recoveryCodeId      String @unique @db.Uuid
+  expectedIssuer      String
+  status              OwnerRecoveryStatus @default(INITIATED)
+  expiresAt           DateTime @db.Timestamptz(6)
+  initiatedAt         DateTime @default(now()) @db.Timestamptz(6)
+  challengePreparedAt DateTime? @db.Timestamptz(6)
+  proofVerifiedAt     DateTime? @db.Timestamptz(6)
+  preparedAt          DateTime? @db.Timestamptz(6)
+  archiveQualifiedAt  DateTime? @db.Timestamptz(6)
+  finalizedAt         DateTime? @db.Timestamptz(6)
+  failedAt            DateTime? @db.Timestamptz(6)
+  outcomeCode         String? @db.VarChar(100)
+  criticalOperationId String? @unique @db.Uuid
+  designation         PlatformOwnerDesignation @relation(fields: [designationId], references: [id], onDelete: Restrict)
+  user                PlatformUser @relation(fields: [platformUserId], references: [id], onDelete: Restrict)
+  recoveryCode        OwnerRecoveryCode @relation("OwnerRecoveryCode", fields: [recoveryCodeId], references: [id], onDelete: Restrict)
+  consumedCode        OwnerRecoveryCode? @relation("OwnerRecoveryCodeUse")
+  criticalOperation   CriticalOperation? @relation("OwnerRecoveryCriticalOperation", fields: [criticalOperationId], references: [id], onDelete: Restrict)
+  pendingIdentity     UserIdentity?
+  verification        OwnerRecoveryVerification?
+
+  @@index([status, expiresAt])
+  @@index([designationId, initiatedAt])
+  @@map("owner_recovery_operations")
+}
+
+model OwnerRecoveryVerification {
+  id                  String @id @db.Uuid
+  recoveryOperationId String @unique @db.Uuid
+  userIdentityId      String @unique @db.Uuid
+  platformUserId      String @db.Uuid
+  issuer              String
+  subject             String
+  proofMethod         String @db.VarChar(100)
+  verifiedAt          DateTime @db.Timestamptz(6)
+  activatedAt         DateTime? @db.Timestamptz(6)
+  operation           OwnerRecoveryOperation @relation(fields: [recoveryOperationId], references: [id], onDelete: Restrict)
+  identity            UserIdentity @relation(fields: [userIdentityId], references: [id], onDelete: Restrict)
+  user                PlatformUser @relation(fields: [platformUserId], references: [id], onDelete: Restrict)
+
+  @@map("owner_recovery_verifications")
+}
+
 model PlatformOwnerDesignation {
   id                    String                          @id @db.Uuid
   platformUserId        String                          @db.Uuid
@@ -240,6 +364,8 @@ model PlatformOwnerDesignation {
   identity              UserIdentity                    @relation(fields: [userIdentityId, platformUserId], references: [id, userId], onDelete: Restrict)
   criticalOperation     CriticalOperation               @relation("OwnerBootstrapOperation", fields: [criticalOperationId], references: [id], onDelete: Restrict)
   initializationRecord PlatformInitialization?
+  recoveryKits OwnerRecoveryKit[]
+  recoveryOperations OwnerRecoveryOperation[]
 
   @@index([platformUserId, status])
   @@map("platform_owner_designations")
@@ -558,6 +684,7 @@ model CriticalOperation {
   gate                       CriticalOperationGate?
   ownerDesignation           PlatformOwnerDesignation? @relation("OwnerBootstrapOperation")
   bootstrapCredential        OwnerBootstrapCredential? @relation("OwnerBootstrapCredentialOperation")
+  ownerRecoveryOperation     OwnerRecoveryOperation? @relation("OwnerRecoveryCriticalOperation")
   createdAt                  DateTime                @default(now()) @db.Timestamptz(6)
   updatedAt                  DateTime                @default(now()) @updatedAt @db.Timestamptz(6)
   completedAt                DateTime?               @db.Timestamptz(6)

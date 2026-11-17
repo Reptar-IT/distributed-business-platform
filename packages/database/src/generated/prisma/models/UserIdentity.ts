@@ -31,6 +31,8 @@ export type UserIdentityMinAggregateOutputType = {
   subject: string | null
   email: string | null
   emailVerified: boolean | null
+  status: $Enums.UserIdentityStatus | null
+  ownerRecoveryOperationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +44,8 @@ export type UserIdentityMaxAggregateOutputType = {
   subject: string | null
   email: string | null
   emailVerified: boolean | null
+  status: $Enums.UserIdentityStatus | null
+  ownerRecoveryOperationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +57,8 @@ export type UserIdentityCountAggregateOutputType = {
   subject: number
   email: number
   emailVerified: number
+  status: number
+  ownerRecoveryOperationId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +72,8 @@ export type UserIdentityMinAggregateInputType = {
   subject?: true
   email?: true
   emailVerified?: true
+  status?: true
+  ownerRecoveryOperationId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +85,8 @@ export type UserIdentityMaxAggregateInputType = {
   subject?: true
   email?: true
   emailVerified?: true
+  status?: true
+  ownerRecoveryOperationId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +98,8 @@ export type UserIdentityCountAggregateInputType = {
   subject?: true
   email?: true
   emailVerified?: true
+  status?: true
+  ownerRecoveryOperationId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +184,8 @@ export type UserIdentityGroupByOutputType = {
   subject: string
   email: string | null
   emailVerified: boolean
+  status: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserIdentityCountAggregateOutputType | null
@@ -204,12 +218,17 @@ export type UserIdentityWhereInput = {
   subject?: Prisma.StringFilter<"UserIdentity"> | string
   email?: Prisma.StringNullableFilter<"UserIdentity"> | string | null
   emailVerified?: Prisma.BoolFilter<"UserIdentity"> | boolean
+  status?: Prisma.EnumUserIdentityStatusFilter<"UserIdentity"> | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.UuidNullableFilter<"UserIdentity"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserIdentity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserIdentity"> | Date | string
   user?: Prisma.XOR<Prisma.PlatformUserScalarRelationFilter, Prisma.PlatformUserWhereInput>
   verification?: Prisma.XOR<Prisma.UserIdentityVerificationNullableScalarRelationFilter, Prisma.UserIdentityVerificationWhereInput> | null
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialListRelationFilter
   ownerDesignations?: Prisma.PlatformOwnerDesignationListRelationFilter
+  ownerRecoveryOperation?: Prisma.XOR<Prisma.OwnerRecoveryOperationNullableScalarRelationFilter, Prisma.OwnerRecoveryOperationWhereInput> | null
+  ownerRecoveryVerification?: Prisma.XOR<Prisma.OwnerRecoveryVerificationNullableScalarRelationFilter, Prisma.OwnerRecoveryVerificationWhereInput> | null
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitListRelationFilter
 }
 
 export type UserIdentityOrderByWithRelationInput = {
@@ -219,16 +238,22 @@ export type UserIdentityOrderByWithRelationInput = {
   subject?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  ownerRecoveryOperationId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.PlatformUserOrderByWithRelationInput
   verification?: Prisma.UserIdentityVerificationOrderByWithRelationInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialOrderByRelationAggregateInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationOrderByRelationAggregateInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationOrderByWithRelationInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationOrderByWithRelationInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitOrderByRelationAggregateInput
 }
 
 export type UserIdentityWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  ownerRecoveryOperationId?: string
   issuer_subject?: Prisma.UserIdentityIssuerSubjectCompoundUniqueInput
   id_userId?: Prisma.UserIdentityIdUserIdCompoundUniqueInput
   id_userId_issuer_subject?: Prisma.UserIdentityIdUserIdIssuerSubjectCompoundUniqueInput
@@ -240,13 +265,17 @@ export type UserIdentityWhereUniqueInput = Prisma.AtLeast<{
   subject?: Prisma.StringFilter<"UserIdentity"> | string
   email?: Prisma.StringNullableFilter<"UserIdentity"> | string | null
   emailVerified?: Prisma.BoolFilter<"UserIdentity"> | boolean
+  status?: Prisma.EnumUserIdentityStatusFilter<"UserIdentity"> | $Enums.UserIdentityStatus
   createdAt?: Prisma.DateTimeFilter<"UserIdentity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserIdentity"> | Date | string
   user?: Prisma.XOR<Prisma.PlatformUserScalarRelationFilter, Prisma.PlatformUserWhereInput>
   verification?: Prisma.XOR<Prisma.UserIdentityVerificationNullableScalarRelationFilter, Prisma.UserIdentityVerificationWhereInput> | null
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialListRelationFilter
   ownerDesignations?: Prisma.PlatformOwnerDesignationListRelationFilter
-}, "id" | "issuer_subject" | "id_userId" | "id_userId_issuer_subject">
+  ownerRecoveryOperation?: Prisma.XOR<Prisma.OwnerRecoveryOperationNullableScalarRelationFilter, Prisma.OwnerRecoveryOperationWhereInput> | null
+  ownerRecoveryVerification?: Prisma.XOR<Prisma.OwnerRecoveryVerificationNullableScalarRelationFilter, Prisma.OwnerRecoveryVerificationWhereInput> | null
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitListRelationFilter
+}, "id" | "ownerRecoveryOperationId" | "issuer_subject" | "id_userId" | "id_userId_issuer_subject">
 
 export type UserIdentityOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -255,6 +284,8 @@ export type UserIdentityOrderByWithAggregationInput = {
   subject?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  ownerRecoveryOperationId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserIdentityCountOrderByAggregateInput
@@ -272,6 +303,8 @@ export type UserIdentityScalarWhereWithAggregatesInput = {
   subject?: Prisma.StringWithAggregatesFilter<"UserIdentity"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"UserIdentity"> | string | null
   emailVerified?: Prisma.BoolWithAggregatesFilter<"UserIdentity"> | boolean
+  status?: Prisma.EnumUserIdentityStatusWithAggregatesFilter<"UserIdentity"> | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.UuidNullableWithAggregatesFilter<"UserIdentity"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserIdentity"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserIdentity"> | Date | string
 }
@@ -282,12 +315,16 @@ export type UserIdentityCreateInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.PlatformUserCreateNestedOneWithoutIdentitiesInput
   verification?: Prisma.UserIdentityVerificationCreateNestedOneWithoutIdentityInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutIdentityInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutPendingIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityUncheckedCreateInput = {
@@ -297,11 +334,15 @@ export type UserIdentityUncheckedCreateInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedCreateNestedOneWithoutIdentityInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityUpdateInput = {
@@ -310,12 +351,16 @@ export type UserIdentityUpdateInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput
   verification?: Prisma.UserIdentityVerificationUpdateOneWithoutIdentityNestedInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutPendingIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityUncheckedUpdateInput = {
@@ -325,11 +370,15 @@ export type UserIdentityUncheckedUpdateInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedUpdateOneWithoutIdentityNestedInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityCreateManyInput = {
@@ -339,6 +388,8 @@ export type UserIdentityCreateManyInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -349,6 +400,7 @@ export type UserIdentityUpdateManyMutationInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,6 +412,8 @@ export type UserIdentityUncheckedUpdateManyInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -398,6 +452,8 @@ export type UserIdentityCountOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  ownerRecoveryOperationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -409,6 +465,8 @@ export type UserIdentityMaxOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  ownerRecoveryOperationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -420,6 +478,8 @@ export type UserIdentityMinOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  ownerRecoveryOperationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -427,6 +487,11 @@ export type UserIdentityMinOrderByAggregateInput = {
 export type UserIdentityScalarRelationFilter = {
   is?: Prisma.UserIdentityWhereInput
   isNot?: Prisma.UserIdentityWhereInput
+}
+
+export type UserIdentityNullableScalarRelationFilter = {
+  is?: Prisma.UserIdentityWhereInput | null
+  isNot?: Prisma.UserIdentityWhereInput | null
 }
 
 export type UserIdentityCreateNestedManyWithoutUserInput = {
@@ -479,6 +544,10 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type EnumUserIdentityStatusFieldUpdateOperationsInput = {
+  set?: $Enums.UserIdentityStatus
+}
+
 export type UserIdentityCreateNestedOneWithoutVerificationInput = {
   create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutVerificationInput, Prisma.UserIdentityUncheckedCreateWithoutVerificationInput>
   connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutVerificationInput
@@ -507,6 +576,66 @@ export type UserIdentityUpdateOneRequiredWithoutBootstrapCredentialsNestedInput 
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserIdentityUpdateToOneWithWhereWithoutBootstrapCredentialsInput, Prisma.UserIdentityUpdateWithoutBootstrapCredentialsInput>, Prisma.UserIdentityUncheckedUpdateWithoutBootstrapCredentialsInput>
 }
 
+export type UserIdentityCreateNestedOneWithoutOwnerRecoveryKitsInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryKitsInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryKitsInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryKitsInput
+  connect?: Prisma.UserIdentityWhereUniqueInput
+}
+
+export type UserIdentityUpdateOneRequiredWithoutOwnerRecoveryKitsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryKitsInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryKitsInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryKitsInput
+  upsert?: Prisma.UserIdentityUpsertWithoutOwnerRecoveryKitsInput
+  connect?: Prisma.UserIdentityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserIdentityUpdateToOneWithWhereWithoutOwnerRecoveryKitsInput, Prisma.UserIdentityUpdateWithoutOwnerRecoveryKitsInput>, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryKitsInput>
+}
+
+export type UserIdentityCreateNestedOneWithoutOwnerRecoveryOperationInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryOperationInput
+  connect?: Prisma.UserIdentityWhereUniqueInput
+}
+
+export type UserIdentityUncheckedCreateNestedOneWithoutOwnerRecoveryOperationInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryOperationInput
+  connect?: Prisma.UserIdentityWhereUniqueInput
+}
+
+export type UserIdentityUpdateOneWithoutOwnerRecoveryOperationNestedInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryOperationInput
+  upsert?: Prisma.UserIdentityUpsertWithoutOwnerRecoveryOperationInput
+  disconnect?: Prisma.UserIdentityWhereInput | boolean
+  delete?: Prisma.UserIdentityWhereInput | boolean
+  connect?: Prisma.UserIdentityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserIdentityUpdateToOneWithWhereWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUpdateWithoutOwnerRecoveryOperationInput>, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryOperationInput>
+}
+
+export type UserIdentityUncheckedUpdateOneWithoutOwnerRecoveryOperationNestedInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryOperationInput
+  upsert?: Prisma.UserIdentityUpsertWithoutOwnerRecoveryOperationInput
+  disconnect?: Prisma.UserIdentityWhereInput | boolean
+  delete?: Prisma.UserIdentityWhereInput | boolean
+  connect?: Prisma.UserIdentityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserIdentityUpdateToOneWithWhereWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUpdateWithoutOwnerRecoveryOperationInput>, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryOperationInput>
+}
+
+export type UserIdentityCreateNestedOneWithoutOwnerRecoveryVerificationInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryVerificationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryVerificationInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryVerificationInput
+  connect?: Prisma.UserIdentityWhereUniqueInput
+}
+
+export type UserIdentityUpdateOneRequiredWithoutOwnerRecoveryVerificationNestedInput = {
+  create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryVerificationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryVerificationInput>
+  connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerRecoveryVerificationInput
+  upsert?: Prisma.UserIdentityUpsertWithoutOwnerRecoveryVerificationInput
+  connect?: Prisma.UserIdentityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserIdentityUpdateToOneWithWhereWithoutOwnerRecoveryVerificationInput, Prisma.UserIdentityUpdateWithoutOwnerRecoveryVerificationInput>, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryVerificationInput>
+}
+
 export type UserIdentityCreateNestedOneWithoutOwnerDesignationsInput = {
   create?: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerDesignationsInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerDesignationsInput>
   connectOrCreate?: Prisma.UserIdentityCreateOrConnectWithoutOwnerDesignationsInput
@@ -527,11 +656,15 @@ export type UserIdentityCreateWithoutUserInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   verification?: Prisma.UserIdentityVerificationCreateNestedOneWithoutIdentityInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutIdentityInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutPendingIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityUncheckedCreateWithoutUserInput = {
@@ -540,11 +673,15 @@ export type UserIdentityUncheckedCreateWithoutUserInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedCreateNestedOneWithoutIdentityInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityCreateOrConnectWithoutUserInput = {
@@ -583,6 +720,8 @@ export type UserIdentityScalarWhereInput = {
   subject?: Prisma.StringFilter<"UserIdentity"> | string
   email?: Prisma.StringNullableFilter<"UserIdentity"> | string | null
   emailVerified?: Prisma.BoolFilter<"UserIdentity"> | boolean
+  status?: Prisma.EnumUserIdentityStatusFilter<"UserIdentity"> | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.UuidNullableFilter<"UserIdentity"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserIdentity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserIdentity"> | Date | string
 }
@@ -593,11 +732,15 @@ export type UserIdentityCreateWithoutVerificationInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.PlatformUserCreateNestedOneWithoutIdentitiesInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutIdentityInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutPendingIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityUncheckedCreateWithoutVerificationInput = {
@@ -607,10 +750,14 @@ export type UserIdentityUncheckedCreateWithoutVerificationInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityCreateOrConnectWithoutVerificationInput = {
@@ -635,11 +782,15 @@ export type UserIdentityUpdateWithoutVerificationInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutPendingIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityUncheckedUpdateWithoutVerificationInput = {
@@ -649,10 +800,14 @@ export type UserIdentityUncheckedUpdateWithoutVerificationInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityCreateWithoutBootstrapCredentialsInput = {
@@ -661,11 +816,15 @@ export type UserIdentityCreateWithoutBootstrapCredentialsInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.PlatformUserCreateNestedOneWithoutIdentitiesInput
   verification?: Prisma.UserIdentityVerificationCreateNestedOneWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutIdentityInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutPendingIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityUncheckedCreateWithoutBootstrapCredentialsInput = {
@@ -675,10 +834,14 @@ export type UserIdentityUncheckedCreateWithoutBootstrapCredentialsInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedCreateNestedOneWithoutIdentityInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityCreateOrConnectWithoutBootstrapCredentialsInput = {
@@ -703,11 +866,15 @@ export type UserIdentityUpdateWithoutBootstrapCredentialsInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput
   verification?: Prisma.UserIdentityVerificationUpdateOneWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutPendingIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityUncheckedUpdateWithoutBootstrapCredentialsInput = {
@@ -717,10 +884,266 @@ export type UserIdentityUncheckedUpdateWithoutBootstrapCredentialsInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedUpdateOneWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutAuthenticatedIdentityNestedInput
+}
+
+export type UserIdentityCreateWithoutOwnerRecoveryKitsInput = {
+  id?: string
+  issuer: string
+  subject: string
+  email?: string | null
+  emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.PlatformUserCreateNestedOneWithoutIdentitiesInput
+  verification?: Prisma.UserIdentityVerificationCreateNestedOneWithoutIdentityInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutIdentityInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutIdentityInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutPendingIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationCreateNestedOneWithoutIdentityInput
+}
+
+export type UserIdentityUncheckedCreateWithoutOwnerRecoveryKitsInput = {
+  id?: string
+  userId: string
+  issuer: string
+  subject: string
+  email?: string | null
+  emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verification?: Prisma.UserIdentityVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutIdentityInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedOneWithoutIdentityInput
+}
+
+export type UserIdentityCreateOrConnectWithoutOwnerRecoveryKitsInput = {
+  where: Prisma.UserIdentityWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryKitsInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryKitsInput>
+}
+
+export type UserIdentityUpsertWithoutOwnerRecoveryKitsInput = {
+  update: Prisma.XOR<Prisma.UserIdentityUpdateWithoutOwnerRecoveryKitsInput, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryKitsInput>
+  create: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryKitsInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryKitsInput>
+  where?: Prisma.UserIdentityWhereInput
+}
+
+export type UserIdentityUpdateToOneWithWhereWithoutOwnerRecoveryKitsInput = {
+  where?: Prisma.UserIdentityWhereInput
+  data: Prisma.XOR<Prisma.UserIdentityUpdateWithoutOwnerRecoveryKitsInput, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryKitsInput>
+}
+
+export type UserIdentityUpdateWithoutOwnerRecoveryKitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  issuer?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput
+  verification?: Prisma.UserIdentityVerificationUpdateOneWithoutIdentityNestedInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutIdentityNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutPendingIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUpdateOneWithoutIdentityNestedInput
+}
+
+export type UserIdentityUncheckedUpdateWithoutOwnerRecoveryKitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  issuer?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verification?: Prisma.UserIdentityVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+}
+
+export type UserIdentityCreateWithoutOwnerRecoveryOperationInput = {
+  id?: string
+  issuer: string
+  subject: string
+  email?: string | null
+  emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.PlatformUserCreateNestedOneWithoutIdentitiesInput
+  verification?: Prisma.UserIdentityVerificationCreateNestedOneWithoutIdentityInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutIdentityInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutAuthenticatedIdentityInput
+}
+
+export type UserIdentityUncheckedCreateWithoutOwnerRecoveryOperationInput = {
+  id?: string
+  userId: string
+  issuer: string
+  subject: string
+  email?: string | null
+  emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verification?: Prisma.UserIdentityVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutIdentityInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutAuthenticatedIdentityInput
+}
+
+export type UserIdentityCreateOrConnectWithoutOwnerRecoveryOperationInput = {
+  where: Prisma.UserIdentityWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryOperationInput>
+}
+
+export type UserIdentityUpsertWithoutOwnerRecoveryOperationInput = {
+  update: Prisma.XOR<Prisma.UserIdentityUpdateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryOperationInput>
+  create: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryOperationInput>
+  where?: Prisma.UserIdentityWhereInput
+}
+
+export type UserIdentityUpdateToOneWithWhereWithoutOwnerRecoveryOperationInput = {
+  where?: Prisma.UserIdentityWhereInput
+  data: Prisma.XOR<Prisma.UserIdentityUpdateWithoutOwnerRecoveryOperationInput, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryOperationInput>
+}
+
+export type UserIdentityUpdateWithoutOwnerRecoveryOperationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  issuer?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput
+  verification?: Prisma.UserIdentityVerificationUpdateOneWithoutIdentityNestedInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutIdentityNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutAuthenticatedIdentityNestedInput
+}
+
+export type UserIdentityUncheckedUpdateWithoutOwnerRecoveryOperationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  issuer?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verification?: Prisma.UserIdentityVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutAuthenticatedIdentityNestedInput
+}
+
+export type UserIdentityCreateWithoutOwnerRecoveryVerificationInput = {
+  id?: string
+  issuer: string
+  subject: string
+  email?: string | null
+  emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.PlatformUserCreateNestedOneWithoutIdentitiesInput
+  verification?: Prisma.UserIdentityVerificationCreateNestedOneWithoutIdentityInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutIdentityInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationCreateNestedManyWithoutIdentityInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutPendingIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutAuthenticatedIdentityInput
+}
+
+export type UserIdentityUncheckedCreateWithoutOwnerRecoveryVerificationInput = {
+  id?: string
+  userId: string
+  issuer: string
+  subject: string
+  email?: string | null
+  emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verification?: Prisma.UserIdentityVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutIdentityInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutAuthenticatedIdentityInput
+}
+
+export type UserIdentityCreateOrConnectWithoutOwnerRecoveryVerificationInput = {
+  where: Prisma.UserIdentityWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryVerificationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryVerificationInput>
+}
+
+export type UserIdentityUpsertWithoutOwnerRecoveryVerificationInput = {
+  update: Prisma.XOR<Prisma.UserIdentityUpdateWithoutOwnerRecoveryVerificationInput, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryVerificationInput>
+  create: Prisma.XOR<Prisma.UserIdentityCreateWithoutOwnerRecoveryVerificationInput, Prisma.UserIdentityUncheckedCreateWithoutOwnerRecoveryVerificationInput>
+  where?: Prisma.UserIdentityWhereInput
+}
+
+export type UserIdentityUpdateToOneWithWhereWithoutOwnerRecoveryVerificationInput = {
+  where?: Prisma.UserIdentityWhereInput
+  data: Prisma.XOR<Prisma.UserIdentityUpdateWithoutOwnerRecoveryVerificationInput, Prisma.UserIdentityUncheckedUpdateWithoutOwnerRecoveryVerificationInput>
+}
+
+export type UserIdentityUpdateWithoutOwnerRecoveryVerificationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  issuer?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput
+  verification?: Prisma.UserIdentityVerificationUpdateOneWithoutIdentityNestedInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutIdentityNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutPendingIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutAuthenticatedIdentityNestedInput
+}
+
+export type UserIdentityUncheckedUpdateWithoutOwnerRecoveryVerificationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  issuer?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verification?: Prisma.UserIdentityVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityCreateWithoutOwnerDesignationsInput = {
@@ -729,11 +1152,15 @@ export type UserIdentityCreateWithoutOwnerDesignationsInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.PlatformUserCreateNestedOneWithoutIdentitiesInput
   verification?: Prisma.UserIdentityVerificationCreateNestedOneWithoutIdentityInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialCreateNestedManyWithoutIdentityInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationCreateNestedOneWithoutPendingIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityUncheckedCreateWithoutOwnerDesignationsInput = {
@@ -743,10 +1170,14 @@ export type UserIdentityUncheckedCreateWithoutOwnerDesignationsInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedCreateNestedOneWithoutIdentityInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedCreateNestedManyWithoutIdentityInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedCreateNestedOneWithoutIdentityInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedCreateNestedManyWithoutAuthenticatedIdentityInput
 }
 
 export type UserIdentityCreateOrConnectWithoutOwnerDesignationsInput = {
@@ -771,11 +1202,15 @@ export type UserIdentityUpdateWithoutOwnerDesignationsInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.PlatformUserUpdateOneRequiredWithoutIdentitiesNestedInput
   verification?: Prisma.UserIdentityVerificationUpdateOneWithoutIdentityNestedInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutPendingIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityUncheckedUpdateWithoutOwnerDesignationsInput = {
@@ -785,10 +1220,14 @@ export type UserIdentityUncheckedUpdateWithoutOwnerDesignationsInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedUpdateOneWithoutIdentityNestedInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityCreateManyUserInput = {
@@ -797,6 +1236,8 @@ export type UserIdentityCreateManyUserInput = {
   subject: string
   email?: string | null
   emailVerified?: boolean
+  status?: $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -807,11 +1248,15 @@ export type UserIdentityUpdateWithoutUserInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verification?: Prisma.UserIdentityVerificationUpdateOneWithoutIdentityNestedInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUpdateManyWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryOperation?: Prisma.OwnerRecoveryOperationUpdateOneWithoutPendingIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityUncheckedUpdateWithoutUserInput = {
@@ -820,11 +1265,15 @@ export type UserIdentityUncheckedUpdateWithoutUserInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verification?: Prisma.UserIdentityVerificationUncheckedUpdateOneWithoutIdentityNestedInput
   bootstrapCredentials?: Prisma.OwnerBootstrapCredentialUncheckedUpdateManyWithoutIdentityNestedInput
   ownerDesignations?: Prisma.PlatformOwnerDesignationUncheckedUpdateManyWithoutIdentityNestedInput
+  ownerRecoveryVerification?: Prisma.OwnerRecoveryVerificationUncheckedUpdateOneWithoutIdentityNestedInput
+  ownerRecoveryKits?: Prisma.OwnerRecoveryKitUncheckedUpdateManyWithoutAuthenticatedIdentityNestedInput
 }
 
 export type UserIdentityUncheckedUpdateManyWithoutUserInput = {
@@ -833,6 +1282,8 @@ export type UserIdentityUncheckedUpdateManyWithoutUserInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserIdentityStatusFieldUpdateOperationsInput | $Enums.UserIdentityStatus
+  ownerRecoveryOperationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -845,11 +1296,13 @@ export type UserIdentityUncheckedUpdateManyWithoutUserInput = {
 export type UserIdentityCountOutputType = {
   bootstrapCredentials: number
   ownerDesignations: number
+  ownerRecoveryKits: number
 }
 
 export type UserIdentityCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bootstrapCredentials?: boolean | UserIdentityCountOutputTypeCountBootstrapCredentialsArgs
   ownerDesignations?: boolean | UserIdentityCountOutputTypeCountOwnerDesignationsArgs
+  ownerRecoveryKits?: boolean | UserIdentityCountOutputTypeCountOwnerRecoveryKitsArgs
 }
 
 /**
@@ -876,6 +1329,13 @@ export type UserIdentityCountOutputTypeCountOwnerDesignationsArgs<ExtArgs extend
   where?: Prisma.PlatformOwnerDesignationWhereInput
 }
 
+/**
+ * UserIdentityCountOutputType without action
+ */
+export type UserIdentityCountOutputTypeCountOwnerRecoveryKitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OwnerRecoveryKitWhereInput
+}
+
 
 export type UserIdentitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -884,12 +1344,17 @@ export type UserIdentitySelect<ExtArgs extends runtime.Types.Extensions.Internal
   subject?: boolean
   email?: boolean
   emailVerified?: boolean
+  status?: boolean
+  ownerRecoveryOperationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
   verification?: boolean | Prisma.UserIdentity$verificationArgs<ExtArgs>
   bootstrapCredentials?: boolean | Prisma.UserIdentity$bootstrapCredentialsArgs<ExtArgs>
   ownerDesignations?: boolean | Prisma.UserIdentity$ownerDesignationsArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs>
+  ownerRecoveryVerification?: boolean | Prisma.UserIdentity$ownerRecoveryVerificationArgs<ExtArgs>
+  ownerRecoveryKits?: boolean | Prisma.UserIdentity$ownerRecoveryKitsArgs<ExtArgs>
   _count?: boolean | Prisma.UserIdentityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userIdentity"]>
 
@@ -900,9 +1365,12 @@ export type UserIdentitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   subject?: boolean
   email?: boolean
   emailVerified?: boolean
+  status?: boolean
+  ownerRecoveryOperationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs>
 }, ExtArgs["result"]["userIdentity"]>
 
 export type UserIdentitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -912,9 +1380,12 @@ export type UserIdentitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   subject?: boolean
   email?: boolean
   emailVerified?: boolean
+  status?: boolean
+  ownerRecoveryOperationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs>
 }, ExtArgs["result"]["userIdentity"]>
 
 export type UserIdentitySelectScalar = {
@@ -924,23 +1395,30 @@ export type UserIdentitySelectScalar = {
   subject?: boolean
   email?: boolean
   emailVerified?: boolean
+  status?: boolean
+  ownerRecoveryOperationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserIdentityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "issuer" | "subject" | "email" | "emailVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["userIdentity"]>
+export type UserIdentityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "issuer" | "subject" | "email" | "emailVerified" | "status" | "ownerRecoveryOperationId" | "createdAt" | "updatedAt", ExtArgs["result"]["userIdentity"]>
 export type UserIdentityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
   verification?: boolean | Prisma.UserIdentity$verificationArgs<ExtArgs>
   bootstrapCredentials?: boolean | Prisma.UserIdentity$bootstrapCredentialsArgs<ExtArgs>
   ownerDesignations?: boolean | Prisma.UserIdentity$ownerDesignationsArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs>
+  ownerRecoveryVerification?: boolean | Prisma.UserIdentity$ownerRecoveryVerificationArgs<ExtArgs>
+  ownerRecoveryKits?: boolean | Prisma.UserIdentity$ownerRecoveryKitsArgs<ExtArgs>
   _count?: boolean | Prisma.UserIdentityCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIdentityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs>
 }
 export type UserIdentityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.PlatformUserDefaultArgs<ExtArgs>
+  ownerRecoveryOperation?: boolean | Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs>
 }
 
 export type $UserIdentityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -950,6 +1428,9 @@ export type $UserIdentityPayload<ExtArgs extends runtime.Types.Extensions.Intern
     verification: Prisma.$UserIdentityVerificationPayload<ExtArgs> | null
     bootstrapCredentials: Prisma.$OwnerBootstrapCredentialPayload<ExtArgs>[]
     ownerDesignations: Prisma.$PlatformOwnerDesignationPayload<ExtArgs>[]
+    ownerRecoveryOperation: Prisma.$OwnerRecoveryOperationPayload<ExtArgs> | null
+    ownerRecoveryVerification: Prisma.$OwnerRecoveryVerificationPayload<ExtArgs> | null
+    ownerRecoveryKits: Prisma.$OwnerRecoveryKitPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -958,6 +1439,8 @@ export type $UserIdentityPayload<ExtArgs extends runtime.Types.Extensions.Intern
     subject: string
     email: string | null
     emailVerified: boolean
+    status: $Enums.UserIdentityStatus
+    ownerRecoveryOperationId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["userIdentity"]>
@@ -1358,6 +1841,9 @@ export interface Prisma__UserIdentityClient<T, Null = never, ExtArgs extends run
   verification<T extends Prisma.UserIdentity$verificationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserIdentity$verificationArgs<ExtArgs>>): Prisma.Prisma__UserIdentityVerificationClient<runtime.Types.Result.GetResult<Prisma.$UserIdentityVerificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bootstrapCredentials<T extends Prisma.UserIdentity$bootstrapCredentialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserIdentity$bootstrapCredentialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerBootstrapCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ownerDesignations<T extends Prisma.UserIdentity$ownerDesignationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserIdentity$ownerDesignationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformOwnerDesignationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownerRecoveryOperation<T extends Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserIdentity$ownerRecoveryOperationArgs<ExtArgs>>): Prisma.Prisma__OwnerRecoveryOperationClient<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryOperationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ownerRecoveryVerification<T extends Prisma.UserIdentity$ownerRecoveryVerificationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserIdentity$ownerRecoveryVerificationArgs<ExtArgs>>): Prisma.Prisma__OwnerRecoveryVerificationClient<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryVerificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ownerRecoveryKits<T extends Prisma.UserIdentity$ownerRecoveryKitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserIdentity$ownerRecoveryKitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnerRecoveryKitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1393,6 +1879,8 @@ export interface UserIdentityFieldRefs {
   readonly subject: Prisma.FieldRef<"UserIdentity", 'String'>
   readonly email: Prisma.FieldRef<"UserIdentity", 'String'>
   readonly emailVerified: Prisma.FieldRef<"UserIdentity", 'Boolean'>
+  readonly status: Prisma.FieldRef<"UserIdentity", 'UserIdentityStatus'>
+  readonly ownerRecoveryOperationId: Prisma.FieldRef<"UserIdentity", 'String'>
   readonly createdAt: Prisma.FieldRef<"UserIdentity", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UserIdentity", 'DateTime'>
 }
@@ -1860,6 +2348,68 @@ export type UserIdentity$ownerDesignationsArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.PlatformOwnerDesignationScalarFieldEnum | Prisma.PlatformOwnerDesignationScalarFieldEnum[]
+}
+
+/**
+ * UserIdentity.ownerRecoveryOperation
+ */
+export type UserIdentity$ownerRecoveryOperationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryOperation
+   */
+  select?: Prisma.OwnerRecoveryOperationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryOperation
+   */
+  omit?: Prisma.OwnerRecoveryOperationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryOperationInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryOperationWhereInput
+}
+
+/**
+ * UserIdentity.ownerRecoveryVerification
+ */
+export type UserIdentity$ownerRecoveryVerificationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryVerification
+   */
+  select?: Prisma.OwnerRecoveryVerificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryVerification
+   */
+  omit?: Prisma.OwnerRecoveryVerificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryVerificationInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryVerificationWhereInput
+}
+
+/**
+ * UserIdentity.ownerRecoveryKits
+ */
+export type UserIdentity$ownerRecoveryKitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnerRecoveryKit
+   */
+  select?: Prisma.OwnerRecoveryKitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnerRecoveryKit
+   */
+  omit?: Prisma.OwnerRecoveryKitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnerRecoveryKitInclude<ExtArgs> | null
+  where?: Prisma.OwnerRecoveryKitWhereInput
+  orderBy?: Prisma.OwnerRecoveryKitOrderByWithRelationInput | Prisma.OwnerRecoveryKitOrderByWithRelationInput[]
+  cursor?: Prisma.OwnerRecoveryKitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnerRecoveryKitScalarFieldEnum | Prisma.OwnerRecoveryKitScalarFieldEnum[]
 }
 
 /**
