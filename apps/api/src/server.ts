@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import cookie from "@fastify/cookie";
 import helmet from "@fastify/helmet";
 import rateLimit from "@fastify/rate-limit";
 import sensible from "@fastify/sensible";
@@ -9,9 +10,17 @@ import swaggerUI from "@fastify/swagger-ui";
 import { prisma } from "@platform/database";
 
 import { Queue } from "bullmq";
+import { Redis } from "ioredis";
+import { createAuthRoutes } from "./modules/auth/auth.routes.js";
+import { registerPlatformAuthentication } from "./modules/auth/auth.middleware.js";
+import { createIdentityService } from "./modules/auth/identity.service.js";
+import { createOidcService } from "./modules/auth/oidc.service.js";
+import { createSessionStore } from "./modules/auth/session.store.js";
 
 const app = Fastify({
-  logger: true,
+  logger: {
+    redact: ["req.url", "req.headers.authorization", "req.headers.cookie"],
+  },
 });
 
 const redisUrl = new URL(
@@ -27,9 +36,39 @@ const jobQueue = new Queue("platform-jobs", {
   },
 });
 
-await app.register(cors, {
-  origin: process.env.WEB_ORIGIN ?? "http://localhost:5173",
+const redis = new Redis(process.env.REDIS_URL ?? "redis://localhost:6380", {
+  maxRetriesPerRequest: null,
 });
+
+const webOrigin = process.env.WEB_ORIGIN ?? "http://localhost:5174";
+const issuer = process.env.OIDC_ISSUER_URL ?? "http://localhost:8080/realms/distributed-business-platform";
+const clientId = process.env.OIDC_CLIENT_ID ?? "distributed-business-platform-web";
+const clientSecret = process.env.OIDC_CLIENT_SECRET;
+const redirectUri = process.env.OIDC_REDIRECT_URI ?? "http://localhost:3001/api/v1/auth/callback";
+const postLogoutRedirectUri = new URL("/api/v1/auth/logout/callback", redirectUri).href;
+
+if (!clientSecret) {
+  throw new Error("OIDC_CLIENT_SECRET must be configured on the API server");
+}
+
+const authSessionStore = createSessionStore(redis);
+const oidcService = createOidcService({
+  redis,
+  issuer,
+  clientId,
+  clientSecret,
+  redirectUri,
+  postLogoutRedirectUri,
+});
+const identityService = createIdentityService(prisma);
+registerPlatformAuthentication(app, { sessions: authSessionStore, identities: identityService });
+
+await app.register(cors, {
+  origin: webOrigin,
+  credentials: true,
+  allowedHeaders: ["Content-Type", "X-CSRF-Token"],
+});
+await app.register(cookie);
 
 await app.register(helmet);
 await app.register(rateLimit, {
@@ -51,6 +90,15 @@ await app.register(swagger, {
 await app.register(swaggerUI, {
   routePrefix: "/documentation",
 });
+
+await app.register(createAuthRoutes({
+  oidc: oidcService,
+  sessions: authSessionStore,
+  identities: identityService,
+  webOrigin,
+  redirectUri,
+  postLogoutRedirectUri,
+}));
 
 app.get("/api/v1/health", async (_request, reply) => {
   try {
@@ -110,6 +158,7 @@ const start = async () => {
 const shutdown = async () => {
   await app.close();
   await jobQueue.close();
+  await redis.quit();
   await prisma.$disconnect();
   process.exit(0);
 };
